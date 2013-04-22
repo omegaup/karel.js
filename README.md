@@ -1,4 +1,4 @@
 Karel.js
 ========
 
-Karel en todas partes
+Compilador y evaluador de Karel en javascript
