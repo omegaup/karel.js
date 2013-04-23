@@ -11,6 +11,9 @@ var KarelIDE = function(elem, code, w, h) {
 	self.breakpoints = {};
 	self.world = new World(100, 100);
 	self.karel = self.world.karel;
+	self.karel.addEventListener('debug', function(ev) {
+		console.log(ev.message);
+	});
 	self.w = w;
 	self.h = h;
 	self.di = 0;

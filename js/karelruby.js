@@ -2,8 +2,8 @@
 var karelruby = (function(){
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"program":3,"def_list":4,"expr_list":5,"EOF":6,"def":7,"NEWLINE":8,"DEF":9,"line":10,"var":11,"END":12,"(":13,")":14,"expr":15,"FORWARD":16,"LEFT":17,"PICKBUZZER":18,"LEAVEBUZZER":19,"HALT":20,"call":21,"repeat":22,"cond":23,"loop":24,"IF":25,"term":26,"ELSE":27,"WHILE":28,"integer":29,"TIMES":30,"non_var_integer":31,"OR":32,"and_term":33,"AND":34,"not_term":35,"NOT":36,"clause":37,"IFZ":38,"bool_fun":39,"IFNFWALL":40,"IFFWALL":41,"IFNLWALL":42,"IFLWALL":43,"IFNRWALL":44,"IFRWALL":45,"IFWBUZZER":46,"IFNWBUZZER":47,"IFBBUZZER":48,"IFNBBUZZER":49,"IFW":50,"IFN":51,"IFS":52,"IFE":53,"IFNW":54,"IFNN":55,"IFNS":56,"IFNE":57,"NUM":58,"INC":59,"DEC":60,"VAR":61,"$accept":0,"$end":1},
-terminals_: {2:"error",6:"EOF",8:"NEWLINE",9:"DEF",12:"END",13:"(",14:")",16:"FORWARD",17:"LEFT",18:"PICKBUZZER",19:"LEAVEBUZZER",20:"HALT",25:"IF",27:"ELSE",28:"WHILE",30:"TIMES",32:"OR",34:"AND",36:"NOT",38:"IFZ",40:"IFNFWALL",41:"IFFWALL",42:"IFNLWALL",43:"IFLWALL",44:"IFNRWALL",45:"IFRWALL",46:"IFWBUZZER",47:"IFNWBUZZER",48:"IFBBUZZER",49:"IFNBBUZZER",50:"IFW",51:"IFN",52:"IFS",53:"IFE",54:"IFNW",55:"IFNN",56:"IFNS",57:"IFNE",58:"NUM",59:"INC",60:"DEC",61:"VAR"},
+symbols_: {"error":2,"program":3,"def_list":4,"expr_list":5,"EOF":6,"def":7,"NEWLINE":8,"DEF":9,"line":10,"var":11,"END":12,"(":13,")":14,"expr":15,"FORWARD":16,"LEFT":17,"PICKBUZZER":18,"LEAVEBUZZER":19,"HALT":20,"call":21,"repeat":22,"cond":23,"loop":24,"IF":25,"term":26,"ELSE":27,"WHILE":28,"integer":29,"TIMES":30,"non_var_integer":31,"OR":32,"and_term":33,"AND":34,"not_term":35,"NOT":36,"clause":37,"IFZ":38,"bool_fun":39,"IFNFWALL":40,"IFFWALL":41,"IFNLWALL":42,"IFLWALL":43,"IFNRWALL":44,"IFRWALL":45,"IFWBUZZER":46,"IFNWBUZZER":47,"IFBBUZZER":48,"IFNBBUZZER":49,"IFW":50,"IFN":51,"IFE":52,"IFS":53,"IFNW":54,"IFNN":55,"IFNE":56,"IFNS":57,"NUM":58,"INC":59,"DEC":60,"VAR":61,"$accept":0,"$end":1},
+terminals_: {2:"error",6:"EOF",8:"NEWLINE",9:"DEF",12:"END",13:"(",14:")",16:"FORWARD",17:"LEFT",18:"PICKBUZZER",19:"LEAVEBUZZER",20:"HALT",25:"IF",27:"ELSE",28:"WHILE",30:"TIMES",32:"OR",34:"AND",36:"NOT",38:"IFZ",40:"IFNFWALL",41:"IFFWALL",42:"IFNLWALL",43:"IFLWALL",44:"IFNRWALL",45:"IFRWALL",46:"IFWBUZZER",47:"IFNWBUZZER",48:"IFBBUZZER",49:"IFNBBUZZER",50:"IFW",51:"IFN",52:"IFE",53:"IFS",54:"IFNW",55:"IFNN",56:"IFNE",57:"IFNS",58:"NUM",59:"INC",60:"DEC",61:"VAR"},
 productions_: [0,[3,3],[3,2],[4,3],[4,2],[7,6],[7,9],[5,3],[5,2],[15,1],[15,1],[15,1],[15,1],[15,1],[15,1],[15,1],[15,1],[15,1],[23,6],[23,9],[24,6],[21,1],[21,4],[22,6],[22,6],[26,3],[26,1],[33,3],[33,1],[35,2],[35,1],[37,4],[37,1],[37,3],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[39,1],[29,1],[29,1],[31,1],[31,4],[31,4],[11,1],[10,0]],
 performAction: function anonymous(yytext,yyleng,yylineno,yy,yystate,$$,_$) {
 
@@ -92,7 +92,7 @@ case 21: this.$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $$[$0]], ['LINE', y
 break;
 case 22: this.$ = [['LINE', yylineno]].concat($$[$0-1]).concat([['CALL', $$[$0-3]], ['LINE', yylineno]]); 
 break;
-case 23: this.$ = $$[$0-5].concat($$[$0-3]).concat([['DUP'], ['JLEZ', $$[$0-1].length + 2]]).concat($$[$0-1]).concat([['DEC'], ['JMP', -1 -($$[$0-1].length + 4)], ['POP']]); 
+case 23: this.$ = [['PARAM', $$[$0-5]]].concat($$[$0-3]).concat([['DUP'], ['JLEZ', $$[$0-1].length + 2]]).concat($$[$0-1]).concat([['DEC'], ['JMP', -1 -($$[$0-1].length + 4)], ['POP']]); 
 break;
 case 24: this.$ = $$[$0-5].concat($$[$0-3]).concat([['DUP'], ['JLEZ', $$[$0-1].length + 2]]).concat($$[$0-1]).concat([['DEC'], ['JMP', -1 -($$[$0-1].length + 4)], ['POP']]); 
 break;
@@ -501,17 +501,17 @@ case 24: return 49;
 break;
 case 25: return 51; 
 break;
-case 26: return 52; 
+case 26: return 53; 
 break;
-case 27: return 53; 
+case 27: return 52; 
 break;
 case 28: return 50; 
 break;
 case 29: return 55; 
 break;
-case 30: return 56; 
+case 30: return 57; 
 break;
-case 31: return 57; 
+case 31: return 56; 
 break;
 case 32: return 54; 
 break;

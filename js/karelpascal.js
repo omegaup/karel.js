@@ -2,8 +2,8 @@
 var karelpascal = (function(){
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"program":3,"BEGINPROG":4,"def_list":5,"BEGINEXEC":6,"expr_list":7,"ENDEXEC":8,"ENDPROG":9,"EOF":10,"def":11,";":12,"DEF":13,"line":14,"var":15,"AS":16,"expr":17,"(":18,")":19,"FORWARD":20,"LEFT":21,"PICKBUZZER":22,"LEAVEBUZZER":23,"HALT":24,"call":25,"cond":26,"loop":27,"repeat":28,"BEGIN":29,"END":30,"integer":31,"IF":32,"term":33,"THEN":34,"ELSE":35,"WHILE":36,"DO":37,"REPEAT":38,"TIMES":39,"OR":40,"and_term":41,"AND":42,"not_term":43,"NOT":44,"clause":45,"IFZ":46,"bool_fun":47,"IFNFWALL":48,"IFFWALL":49,"IFNLWALL":50,"IFLWALL":51,"IFNRWALL":52,"IFRWALL":53,"IFWBUZZER":54,"IFNWBUZZER":55,"IFBBUZZER":56,"IFNBBUZZER":57,"IFW":58,"IFN":59,"IFS":60,"IFE":61,"IFNW":62,"IFNN":63,"IFNS":64,"IFNE":65,"NUM":66,"INC":67,"DEC":68,"VAR":69,"$accept":0,"$end":1},
-terminals_: {2:"error",4:"BEGINPROG",6:"BEGINEXEC",8:"ENDEXEC",9:"ENDPROG",10:"EOF",12:";",13:"DEF",16:"AS",18:"(",19:")",20:"FORWARD",21:"LEFT",22:"PICKBUZZER",23:"LEAVEBUZZER",24:"HALT",29:"BEGIN",30:"END",32:"IF",34:"THEN",35:"ELSE",36:"WHILE",37:"DO",38:"REPEAT",39:"TIMES",40:"OR",42:"AND",44:"NOT",46:"IFZ",48:"IFNFWALL",49:"IFFWALL",50:"IFNLWALL",51:"IFLWALL",52:"IFNRWALL",53:"IFRWALL",54:"IFWBUZZER",55:"IFNWBUZZER",56:"IFBBUZZER",57:"IFNBBUZZER",58:"IFW",59:"IFN",60:"IFS",61:"IFE",62:"IFNW",63:"IFNN",64:"IFNS",65:"IFNE",66:"NUM",67:"INC",68:"DEC",69:"VAR"},
+symbols_: {"error":2,"program":3,"BEGINPROG":4,"def_list":5,"BEGINEXEC":6,"expr_list":7,"ENDEXEC":8,"ENDPROG":9,"EOF":10,"def":11,";":12,"DEF":13,"line":14,"var":15,"AS":16,"expr":17,"(":18,")":19,"FORWARD":20,"LEFT":21,"PICKBUZZER":22,"LEAVEBUZZER":23,"HALT":24,"call":25,"cond":26,"loop":27,"repeat":28,"BEGIN":29,"END":30,"integer":31,"IF":32,"term":33,"THEN":34,"ELSE":35,"WHILE":36,"DO":37,"REPEAT":38,"TIMES":39,"OR":40,"and_term":41,"AND":42,"not_term":43,"NOT":44,"clause":45,"IFZ":46,"bool_fun":47,"IFNFWALL":48,"IFFWALL":49,"IFNLWALL":50,"IFLWALL":51,"IFNRWALL":52,"IFRWALL":53,"IFWBUZZER":54,"IFNWBUZZER":55,"IFBBUZZER":56,"IFNBBUZZER":57,"IFW":58,"IFN":59,"IFE":60,"IFS":61,"IFNW":62,"IFNN":63,"IFNE":64,"IFNS":65,"NUM":66,"INC":67,"DEC":68,"VAR":69,"$accept":0,"$end":1},
+terminals_: {2:"error",4:"BEGINPROG",6:"BEGINEXEC",8:"ENDEXEC",9:"ENDPROG",10:"EOF",12:";",13:"DEF",16:"AS",18:"(",19:")",20:"FORWARD",21:"LEFT",22:"PICKBUZZER",23:"LEAVEBUZZER",24:"HALT",29:"BEGIN",30:"END",32:"IF",34:"THEN",35:"ELSE",36:"WHILE",37:"DO",38:"REPEAT",39:"TIMES",40:"OR",42:"AND",44:"NOT",46:"IFZ",48:"IFNFWALL",49:"IFFWALL",50:"IFNLWALL",51:"IFLWALL",52:"IFNRWALL",53:"IFRWALL",54:"IFWBUZZER",55:"IFNWBUZZER",56:"IFBBUZZER",57:"IFNBBUZZER",58:"IFW",59:"IFN",60:"IFE",61:"IFS",62:"IFNW",63:"IFNN",64:"IFNE",65:"IFNS",66:"NUM",67:"INC",68:"DEC",69:"VAR"},
 productions_: [0,[3,7],[3,6],[5,3],[5,2],[11,5],[11,8],[7,3],[7,2],[17,1],[17,1],[17,1],[17,1],[17,1],[17,1],[17,1],[17,1],[17,1],[17,3],[25,1],[25,4],[26,5],[26,7],[27,5],[28,5],[33,3],[33,1],[41,3],[41,1],[43,2],[43,1],[45,4],[45,1],[45,3],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[47,1],[31,1],[31,1],[31,4],[31,4],[15,1],[14,0]],
 performAction: function anonymous(yytext,yyleng,yylineno,yy,yystate,$$,_$) {
 
@@ -517,17 +517,17 @@ case 33: return 57;
 break;
 case 34: return 59; 
 break;
-case 35: return 60; 
+case 35: return 61; 
 break;
-case 36: return 61; 
+case 36: return 60; 
 break;
 case 37: return 58; 
 break;
 case 38: return 63; 
 break;
-case 39: return 64; 
+case 39: return 65; 
 break;
-case 40: return 65; 
+case 40: return 64; 
 break;
 case 41: return 62; 
 break;

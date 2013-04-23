@@ -233,17 +233,17 @@ bool_fun
     { $$ = [['ORIENTATION'], ['LOAD', 0], ['EQ']]; }
   | IFN
     { $$ = [['ORIENTATION'], ['LOAD', 1], ['EQ']]; }
-  | IFS
-    { $$ = [['ORIENTATION'], ['LOAD', 2], ['EQ']]; }
   | IFE
+    { $$ = [['ORIENTATION'], ['LOAD', 2], ['EQ']]; }
+  | IFS
     { $$ = [['ORIENTATION'], ['LOAD', 3], ['EQ']]; }
   | IFNW
     { $$ = [['ORIENTATION'], ['LOAD', 0], ['EQ'], ['NOT']]; }
   | IFNN
     { $$ = [['ORIENTATION'], ['LOAD', 1], ['EQ'], ['NOT']]; }
-  | IFNS
-    { $$ = [['ORIENTATION'], ['LOAD', 2], ['EQ'], ['NOT']]; }
   | IFNE
+    { $$ = [['ORIENTATION'], ['LOAD', 2], ['EQ'], ['NOT']]; }
+  | IFNS
     { $$ = [['ORIENTATION'], ['LOAD', 3], ['EQ'], ['NOT']]; }
   ;
 
