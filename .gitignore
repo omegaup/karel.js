@@ -1,1 +1,4 @@
 *.geany
+node_modules
+karel-distrib.js
+karel-distrib.min.js

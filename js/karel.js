@@ -64,8 +64,8 @@ Karel.prototype = new EventTarget();
 Karel.prototype.move = function(i, j) {
 	var self = this;
 
-	self.state.i = self.startstate.i = parseInt(i);
-	self.state.j = self.startstate.j = parseInt(j);
+	self.state.i = self.startstate.i = parseInt(i, 10);
+	self.state.j = self.startstate.j = parseInt(j, 10);
 };
 
 Karel.prototype.rotate = function(orientation) {
@@ -181,7 +181,7 @@ Karel.prototype.next = function() {
 		},
 		
 		'NOT': function(state, params) {
-			state.stack.push((state.stack.pop() == 0) ? 1 : 0);
+			state.stack.push((state.stack.pop() === 0) ? 1 : 0);
 		},
 		
 		'AND': function(state, params) {
@@ -197,20 +197,20 @@ Karel.prototype.next = function() {
 		},
 		
 		'EZ': function(state, params) {
-			if (state.stack.pop() == 0) {
+			if (state.stack.pop() === 0) {
 				state.error = params[0];
 				state.running = false;
 			}
 		},
 		
 		'JZ': function(state, params) {
-			if (state.stack.pop() == 0) {
+			if (state.stack.pop() === 0) {
 				state.pc += params[0];
 			}
 		},
 		
 		'JNZ': function(state, params) {
-			if (state.stack.pop() != 0) {
+			if (state.stack.pop() !== 0) {
 				state.pc += params[0];
 			}
 		},
@@ -301,7 +301,7 @@ Karel.prototype.next = function() {
 		
 		'PARAM': function(state, params) {
 			state.stack.push(state.stack[state.sp + 2 + params[0]]);
-		},
+		}
 	};
 	
 	try {
@@ -327,16 +327,16 @@ Karel.prototype.next = function() {
 		}
 		
 		if (self.debug) {
-			var ev = new Event('debug');
-			ev.target = self;
-			ev.message = JSON.stringify(opcode);
-			ev.debugType = 'opcode';
-			self.dispatchEvent(ev);
-
 			var ev2 = new Event('debug');
 			ev2.target = self;
-			ev2.message = JSON.stringify(self.state);
+			ev2.message = JSON.stringify(opcode);
+			ev2.debugType = 'opcode';
 			self.dispatchEvent(ev2);
+
+			var ev3 = new Event('debug');
+			ev3.target = self;
+			ev3.message = JSON.stringify(self.state);
+			self.dispatchEvent(ev3);
 		}
 	} catch (e) {
 		self.state.running = false;
@@ -385,13 +385,13 @@ World.prototype.toggleWall = function(i, j, orientation) {
 	if (orientation < 0 || orientation >= 4 || 0 > i || i >= self.h || 0 > j || j >= self.w) return;
 	self.wallMap[self.w * i + j] ^= (1 << orientation);
 	
-	if (orientation == 0 && j > 1) {
+	if (orientation === 0 && j > 1) {
 		self.wallMap[self.w * i + (j - 1)] ^= (1 << 2);
-	} else if (orientation == 1 && i < self.h) {
+	} else if (orientation === 1 && i < self.h) {
 		self.wallMap[self.w * (i + 1) + j] ^= (1 << 3);
-	} else if (orientation == 2 && j < self.w) {
+	} else if (orientation === 2 && j < self.w) {
 		self.wallMap[self.w * i + (j + 1)] ^= (1 << 0);
-	} else if (orientation == 3 && i > 1) {
+	} else if (orientation === 3 && i > 1) {
 		self.wallMap[self.w * (i - 1) + j] ^= (1 << 1);
 	}
 	
@@ -404,10 +404,10 @@ World.prototype.addWall = function(i, j, orientation) {
 	if (orientation < 0 || orientation >= 4 || 0 > i || i >= self.h || 0 > j || j >= self.w) return;
 	self.wallMap[self.w * i + j] |= (1 << orientation);
 	
-	if (orientation == 0 && j > 1) self.wallMap[self.w * i + (j - 1)] |= (1 << 2);
-	else if (orientation == 1 && i < self.h) self.wallMap[self.w * (i + 1) + j] |= (1 << 3);
-	else if (orientation == 2 && j < self.w) self.wallMap[self.w * i + (j + 1)] |= (1 << 0);
-	else if (orientation == 3 && i > 1) self.wallMap[self.w * (i - 1) + j] |= (1 << 1);
+	if (orientation === 0 && j > 1) self.wallMap[self.w * i + (j - 1)] |= (1 << 2);
+	else if (orientation === 1 && i < self.h) self.wallMap[self.w * (i + 1) + j] |= (1 << 3);
+	else if (orientation === 2 && j < self.w) self.wallMap[self.w * i + (j + 1)] |= (1 << 0);
+	else if (orientation === 3 && i > 1) self.wallMap[self.w * (i - 1) + j] |= (1 << 1);
 	
 	self.dirty = true;
 };
@@ -467,23 +467,23 @@ World.prototype.load = function(text) {
 	
 	$('monton', self.xml).each(function(index) {
 		var monton = $(this);
-		var i = parseInt(monton.attr('y'));
-		var j = parseInt(monton.attr('x'));
-		self.setBuzzers(i, j, parseInt(monton.attr('zumbadores')));
+		var i = parseInt(monton.attr('y'), 10);
+		var j = parseInt(monton.attr('x'), 10);
+		self.setBuzzers(i, j, parseInt(monton.attr('zumbadores'), 10));
 	});
 	
 	$('pared', self.xml).each(function(index) {
 		var pared = $(this);
-		var i = parseInt(pared.attr('y1')) + 1;
-		var j = parseInt(pared.attr('x1')) + 1;
+		var i = parseInt(pared.attr('y1'), 10) + 1;
+		var j = parseInt(pared.attr('x1'), 10) + 1;
 		
 		if (pared.attr('x2')) {
-			var j2 = parseInt(pared.attr('x2')) + 1;
+			var j2 = parseInt(pared.attr('x2'), 10) + 1;
 			
 			if (j2 > j) self.addWall(i, j, 3);
 			else self.addWall(i, j2, 3);
 		} else if(pared.attr('y2')) {
-			var i2 = parseInt(pared.attr('y2')) + 1;
+			var i2 = parseInt(pared.attr('y2'), 10) + 1;
 			
 			if (i2 > i) self.addWall(i, j, 0);
 			else self.addWall(i2, j, 0);
@@ -491,10 +491,10 @@ World.prototype.load = function(text) {
 	});
 	
 	var programa = $('programa', self.xml);
-	self.di = self.h / 2 - parseInt(programa.attr('yKarel'));
-	self.dj = self.w / 2 - parseInt(programa.attr('xKarel'));
+	self.di = self.h / 2 - parseInt(programa.attr('yKarel'), 10);
+	self.dj = self.w / 2 - parseInt(programa.attr('xKarel'), 10);
 	self.karel.rotate(programa.attr('direccionKarel'));
-	self.karel.move(parseInt(programa.attr('yKarel')), parseInt(programa.attr('xKarel')));
+	self.karel.move(parseInt(programa.attr('yKarel'), 10), parseInt(programa.attr('xKarel'), 10));
 	
 	self.reset();
 };
@@ -546,7 +546,7 @@ World.prototype.save = function() {
 			result += ' ' + xml.attributes[i].name + '="' + xml.attributes[i].value + '"';
 		}
 		
-		if (childResult == "") {
+		if (childResult === "") {
 			result += " /&gt;\n";
 		} else {
 			result += ">\n";

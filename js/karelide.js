@@ -202,13 +202,13 @@ var KarelIDE = function(elem, code, w, h) {
 										.attr('type', 'text')
 										.val(buzzers)
 										.blur(function() {
-											self.setBuzzers(ii, jj, parseInt($(this).val()));
+											self.setBuzzers(ii, jj, parseInt($(this).val(), 10));
 											target.empty();
 											self.redraw();
 										})
 										.keypress(function(ev) {
 											if(!(0x30 <= ev.which && ev.which <= 0x39)) {
-												self.setBuzzers(ii, jj, parseInt($(this).val()));
+												self.setBuzzers(ii, jj, parseInt($(this).val(), 10));
 												target.empty();
 												self.redraw();
 											}
@@ -372,7 +372,7 @@ KarelIDE.prototype.redraw = function() {
 				var ii = i - self.di;
 				var jj = j - self.dj;
 				var buzzers = self.world.buzzers(ii, jj);
-				if (buzzers == 0) {
+				if (buzzers === 0) {
 					cell.html('');
 				} else if (buzzers == -1) {
 					cell.html('&infin;');
@@ -412,8 +412,8 @@ KarelIDE.prototype.reset = function() {
 };
 
 KarelIDE.prototype.cell = function(i, j) {
-	var ii = parseInt(i) + this.di;
-	var jj = parseInt(j) + this.dj;
+	var ii = parseInt(i, 10) + this.di;
+	var jj = parseInt(j, 10) + this.dj;
 	if (0 <= ii && ii < this.h && 0 <= jj && jj < this.w) {
 		return $('.c' + ii + '_' + jj, this.root);
 	} else {
