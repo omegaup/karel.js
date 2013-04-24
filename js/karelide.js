@@ -10,8 +10,8 @@ var KarelIDE = function(elem, code, w, h) {
 	self.lastActiveLine = 0;
 	self.breakpoints = {};
 	self.world = new World(100, 100);
-	self.karel = self.world.karel;
-	self.karel.addEventListener('debug', function(ev) {
+	self.runtime = self.world.runtime;
+	self.runtime.addEventListener('debug', function(ev) {
 		console.log(ev.message);
 	});
 	self.w = w;
@@ -40,7 +40,7 @@ var KarelIDE = function(elem, code, w, h) {
 	}
 	
 	function step() {
-		if (!self.karel.step()) {
+		if (!self.runtime.step()) {
 			clearInterval(self.interval);
 			self.interval = null;
 			self.running = false;
@@ -51,11 +51,11 @@ var KarelIDE = function(elem, code, w, h) {
 		self.redraw();
 	
 		self.editor.removeLineClass(self.lastActiveLine, 'text', 'active');
-		self.lastActiveLine = self.karel.state.line;
+		self.lastActiveLine = self.runtime.state.line;
 		self.editor.addLineClass(self.lastActiveLine, 'text', 'active');
 		self.editor.scrollIntoView({line: self.lastActiveLine, pos: 0}, 5);
 		
-		if (self.breakpoints[self.lastActiveLine] || self.karel.debug) { 
+		if (self.breakpoints[self.lastActiveLine] || self.runtime.debug) { 
 			clearInterval(self.interval);
 			self.interval = null;
 		}
@@ -78,7 +78,7 @@ var KarelIDE = function(elem, code, w, h) {
 						$(this).button("option", { label: 'pause', icons: {primary: 'ui-icon-pause'}});
 						
 						self.reset();
-						self.karel.load(new karelruby.Parser().parse(self.editor.getValue()));
+						self.runtime.load(new karelruby.Parser().parse(self.editor.getValue()));
 						self.running = true;
 		
 						self.interval = setInterval(step, 50);
@@ -104,7 +104,7 @@ var KarelIDE = function(elem, code, w, h) {
 				.click(function() {
 					if (!self.running) {
 						self.reset();
-						self.karel.load(new karelruby.Parser().parse(self.editor.getValue()));
+						self.runtime.load(new karelruby.Parser().parse(self.editor.getValue()));
 						self.running = true;
 					}
 					
@@ -125,18 +125,18 @@ var KarelIDE = function(elem, code, w, h) {
 				.click(function() {
 					if (!self.running) {
 						self.reset();
-						self.karel.load(new karelruby.Parser().parse(self.editor.getValue()));
+						self.runtime.load(new karelruby.Parser().parse(self.editor.getValue()));
 						self.running = true;
 					}
 		
-					while (self.karel.step() && !self.breakpoints[self.karel.state.line]);
+					while (self.runtime.step() && !self.breakpoints[self.runtime.state.line]);
 					self.redraw();
-					self.running = self.karel.state.running;
+					self.running = self.runtime.state.running;
 													
 					$('.toolbar .play', self.root).button("option", { label: 'play', icons: {primary: 'ui-icon-play'}});
 		
 					self.editor.removeLineClass(self.lastActiveLine, 'text', 'active');
-					self.lastActiveLine = self.karel.state.line;
+					self.lastActiveLine = self.runtime.state.line;
 					self.editor.addLineClass(self.lastActiveLine, 'text', 'active');
 					self.editor.scrollIntoView({line: self.lastActiveLine, pos: 0}, 5);
 				})
@@ -352,15 +352,15 @@ var KarelIDE = function(elem, code, w, h) {
 KarelIDE.prototype.redraw = function() {
 	var self = this;
 	
-	var ii = self.karel.state.i + self.di;
-	var jj = self.karel.state.j + self.dj;
+	var ii = self.world.i + self.di;
+	var jj = self.world.j + self.dj;
 	
 	if (ii < 3 || (ii + 3) >= self.h) {
-		self.di = self.h / 2 - self.karel.state.i;
+		self.di = self.h / 2 - self.world.i;
 		self.world.dirty = true;
 	}
 	if (jj < 3 || (jj + 3) >= self.w) {
-		self.dj = self.w / 2 - self.karel.state.j;
+		self.dj = self.w / 2 - self.world.j;
 		self.world.dirty = true;
 	}
 
@@ -392,8 +392,8 @@ KarelIDE.prototype.redraw = function() {
 		self.world.dirty = false;
 	}
 
-	$('.karel', this.root).html(arrows[self.karel.state.orientation]);
-	var cell = self.cell(self.karel.state.i, self.karel.state.j);
+	$('.karel', this.root).html(arrows[self.world.orientation]);
+	var cell = self.cell(self.world.i, self.world.j);
 	if (cell) {
 		$('.karel', this.root).offset(cell.offset()).show();
 	} else {
@@ -405,8 +405,8 @@ KarelIDE.prototype.reset = function() {
 	var self = this;
 
 	self.world.reset();
-	self.di = self.h / 2 - self.karel.startstate.i;
-	self.dj = self.w / 2 - self.karel.startstate.j;
+	self.di = self.h / 2 - self.world.start_i;
+	self.dj = self.w / 2 - self.world.start_j;
 
 	self.redraw();
 };

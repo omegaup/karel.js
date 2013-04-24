@@ -42,64 +42,34 @@ EventTarget.prototype.dispatchEvent = function(evt) {
   * All opcodes are represented as an array where the first element is the
   * opcode name, followed by zero or one parameters.
   */
-var Karel = function(world) {
+var Runtime = function(world) {
 	var self = this;
 
 	self.debug = false;
 	self.world = world;
 	
 	self.program = [['HALT']];
-	self.startstate = {
-		i: 0,
-		j: 0,
-		orientation: 0,
-		buzzers: 0
-	};
 	
 	self.reset();
 };
 
-Karel.prototype = new EventTarget();
+Runtime.prototype = new EventTarget();
 
-Karel.prototype.move = function(i, j) {
-	var self = this;
-
-	self.state.i = self.startstate.i = parseInt(i, 10);
-	self.state.j = self.startstate.j = parseInt(j, 10);
-};
-
-Karel.prototype.rotate = function(orientation) {
-	var self = this;
-
-	var orientations = ['OESTE', 'NORTE', 'ESTE', 'SUR'];
-	self.state.orientation = self.startstate.orientation = Math.max(0, orientations.indexOf(orientation));
-};
-
-Karel.prototype.setBuzzers = function(buzzers) {
-	var self = this;
-
-	self.state.buzzers = self.startstate.buzzers = buzzers;
-};
-
-Karel.prototype.load = function(opcodes) {
+Runtime.prototype.load = function(opcodes) {
 	var self = this;
 
 	self.program = opcodes;
 	self.reset();
 };
 
-Karel.prototype.reset = function() {
+Runtime.prototype.reset = function() {
 	var self = this;
 
 	self.state = {
-		i: self.startstate.i,
-		j: self.startstate.j,
 		pc: 0,
 		sp: -1,
 		line: 0,
 		stack: [],
-		orientation: self.startstate.orientation,
-		buzzers: self.startstate.buzzers,
 		
 		// Flags
 		jumped: false,
@@ -114,7 +84,7 @@ Karel.prototype.reset = function() {
 	}
 };
 
-Karel.prototype.step = function() {
+Runtime.prototype.step = function() {
 	var self = this;
 
 	while (self.state.running) {
@@ -129,7 +99,7 @@ Karel.prototype.step = function() {
 	return self.state.running;
 };
 
-Karel.prototype.next = function() {
+Runtime.prototype.next = function() {
 	var self = this;
 
 	if (!self.state.running) return;
@@ -146,18 +116,18 @@ Karel.prototype.next = function() {
 		},
 		
 		'LEFT': function(state, params) {
-			state.orientation--;
-			if (state.orientation < 0) {
-				state.orientation = 3;
+			world.orientation--;
+			if (world.orientation < 0) {
+				world.orientation = 3;
 			}
 		},
 		
 		'WORLDWALLS': function(state, params) {
-			state.stack.push(world.walls(state.i, state.j));
+			state.stack.push(world.walls(world.i, world.j));
 		},
 		
 		'ORIENTATION': function(state, params) {
-			state.stack.push(state.orientation);
+			state.stack.push(world.orientation);
 		},
 		
 		'ROTL': function(state, params) {
@@ -229,29 +199,30 @@ Karel.prototype.next = function() {
 			var di = [0, 1, 0, -1];
 			var dj = [-1, 0, 1, 0];
 			
-			state.i += di[state.orientation];
-			state.j += dj[state.orientation];
+			world.i += di[world.orientation];
+			world.j += dj[world.orientation];
+			world.dirty = true;
 		},
 		
 		'WORLDBUZZERS': function(state, params) {
-			state.stack.push(world.buzzers(state.i, state.j));
+			state.stack.push(world.buzzers(world.i, world.j));
 		},
 		
 		'BAGBUZZERS': function(state, params) {
-			state.stack.push(state.buzzers);
+			state.stack.push(world.buzzers);
 		},
 		
 		'PICKBUZZER': function(state, params) {
-			world.pickBuzzer(state.i, state.j);
-			if (state.buzzers != -1) {
-				state.buzzers++;
+			world.pickBuzzer(world.i, world.j);
+			if (world.buzzers != -1) {
+				world.buzzers++;
 			}
 		},
 		
 		'LEAVEBUZZER': function(state, params) {
-			world.leaveBuzzer(state.i, state.j);
-			if (state.buzzers != -1) {
-				state.buzzers--;
+			world.leaveBuzzer(world.i, world.j);
+			if (world.buzzers != -1) {
+				world.buzzers--;
 			}
 		},
 		
@@ -351,7 +322,7 @@ var World = function(w, h) {
 
 	self.w = w;
 	self.h = h;
-	self.karel = new Karel(self);
+	self.runtime = new Runtime(self);
 	if (ArrayBuffer) {
 		self.map = new Int16Array(new ArrayBuffer(self.w * self.h * 2));
 		self.currentMap = new Int16Array(new ArrayBuffer(self.w * self.h * 2));
@@ -369,6 +340,16 @@ var World = function(w, h) {
 			}
 		}
 	}
+	
+	self.orientation = 0;
+	self.startOrientation = 0;
+	self.start_i = 0;
+	self.i = 0;
+	self.start_j = 0;
+	self.j = 0;
+	self.startBagBuzzers = 0;
+	self.bagBuzzers = 0;
+	
 	self.dirty = true;
 };
 
@@ -493,8 +474,8 @@ World.prototype.load = function(text) {
 	var programa = $('programa', self.xml);
 	self.di = self.h / 2 - parseInt(programa.attr('yKarel'), 10);
 	self.dj = self.w / 2 - parseInt(programa.attr('xKarel'), 10);
-	self.karel.rotate(programa.attr('direccionKarel'));
-	self.karel.move(parseInt(programa.attr('yKarel'), 10), parseInt(programa.attr('xKarel'), 10));
+	self.rotate(programa.attr('direccionKarel'));
+	self.move(parseInt(programa.attr('yKarel'), 10), parseInt(programa.attr('xKarel'), 10));
 	
 	self.reset();
 };
@@ -562,11 +543,32 @@ World.prototype.save = function() {
 	return serialize(root.documentElement, 0);
 };
 
+World.prototype.move = function(i, j) {
+	var self = this;
+
+	self.i = self.start_i = parseInt(i, 10);
+	self.j = self.start_j = parseInt(j, 10);
+};
+
+World.prototype.rotate = function(orientation) {
+	var self = this;
+
+	var orientations = ['OESTE', 'NORTE', 'ESTE', 'SUR'];
+	self.orientation = self.startOrientation = Math.max(0, orientations.indexOf(orientation));
+};
+
+World.prototype.setBagBuzzers = function(buzzers) {
+	var self = this;
+
+	self.bagBuzzers = self.startBagBuzzers = buzzers;
+};
+
 World.prototype.reset = function() {
 	var self = this;
 	
-	self.karel.state.orientation = self.karel.startstate.orientation;
-	self.karel.move(self.karel.startstate.i, self.karel.startstate.j);
+	self.orientation = self.startOrientation;
+	self.move(self.start_i, self.start_j);
+	self.bagBuzzers = self.startBagBuzzers;
 	
 	for (var i = 0; i < self.currentMap.length; i++) {
 		self.currentMap[i] = self.map[i];
