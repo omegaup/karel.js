@@ -120,6 +120,7 @@ Runtime.prototype.next = function() {
 			if (world.orientation < 0) {
 				world.orientation = 3;
 			}
+			world.dirty = true;
 		},
 		
 		'WORLDWALLS': function(state, params) {
@@ -209,20 +210,20 @@ Runtime.prototype.next = function() {
 		},
 		
 		'BAGBUZZERS': function(state, params) {
-			state.stack.push(world.buzzers);
+			state.stack.push(world.bagBuzzers);
 		},
 		
 		'PICKBUZZER': function(state, params) {
 			world.pickBuzzer(world.i, world.j);
-			if (world.buzzers != -1) {
-				world.buzzers++;
+			if (world.bagBuzzers != -1) {
+				world.bagBuzzers++;
 			}
 		},
 		
 		'LEAVEBUZZER': function(state, params) {
 			world.leaveBuzzer(world.i, world.j);
-			if (world.buzzers != -1) {
-				world.buzzers--;
+			if (world.bagBuzzers != -1) {
+				world.bagBuzzers--;
 			}
 		},
 		
@@ -573,6 +574,8 @@ World.prototype.reset = function() {
 	for (var i = 0; i < self.currentMap.length; i++) {
 		self.currentMap[i] = self.map[i];
 	}
+	
+	self.runtime.reset();
 	
 	self.dirty = true;
 };
