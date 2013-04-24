@@ -2,7 +2,6 @@
   "name": "karel.js",
   "version": "0.1.0",
   "description": "Compilador y evaluador de Karel en javascript",
-  "main": "grunt.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,7 +12,6 @@
   "author": "OmegaUp",
   "license": "MIT",
   "readmeFilename": "README.md",
-  "gitHead": "a18fbda3a49d3335b1302d0f5ba68b29fc7f3643",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.0",

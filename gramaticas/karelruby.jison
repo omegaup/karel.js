@@ -44,7 +44,6 @@
 "y"                             { return 'AND'; }
 "("                             { return '('; }
 ")"                             { return ')'; }
-"."				{ return 'DOT'; }
 [0-9]+                          { return 'NUM'; }
 [a-zA-Z][a-zA-Z0-9-]*           { return 'VAR'; }
 <<EOF>>                         { return 'EOF'; }
