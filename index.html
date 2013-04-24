@@ -11,6 +11,7 @@
     <script src="js/karelruby.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/karelpascal.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/klexer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css">
     <style type="text/css" media="screen">
@@ -28,87 +29,6 @@
         max-height: 100px;
       }
     </style>
-    <script>
-      $(document).ready(function(){
-        editor = ace.edit("editor");
-        editor.setTheme("ace/theme/github");
-        editor.getSession().setMode("ace/mode/text");
-
-        var world = $("#world")[0];
-        var mundo = new World(100, 100);
-        mundo.load($('script#xmlMundo')[0].textContent);
-        paint(world.getContext('2d'), mundo, world.width, world.height);
-
-        var interval = null;
-
-        function step() {
-          while (!mundo.dirty && mundo.runtime.step());
-
-          mundo.dirty = false;
-
-          paint(world.getContext('2d'), mundo, world.width, world.height);
-
-          if (!mundo.runtime.state.running) {
-            clearInterval(interval);
-            interval = null;
-          }
-        }
-
-        $("#compilar").click(function(event){
-          var sintaxis = detecta_sintaxis(editor.getValue());
-          d = new Date();
-          try {
-            if(sintaxis == 'pascal')
-              var compiled = new karelpascal.Parser().parse(editor.getValue());
-            else if(sintaxis == 'ruby')
-              var compiled = new karelruby.Parser().parse(editor.getValue());
-            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+sintaxis+')');
-            editor.focus();
-          } catch(e) {
-            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+sintaxis+')</p>');
-            editor.focus();
-          }
-        });
-        $("#ejecutar").click(function(event){
-          var sintaxis = detecta_sintaxis(editor.getValue());
-          var d = new Date();
-          try {
-            if(sintaxis == 'pascal')
-              var compiled = new karelpascal.Parser().parse(editor.getValue());
-            else if(sintaxis == 'ruby')
-              var compiled = new karelruby.Parser().parse(editor.getValue());
-            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+sintaxis+')');
-
-            mundo.reset();
-            mundo.runtime.load(compiled);
-            while (mundo.runtime.step());
-            paint(world.getContext('2d'), mundo, world.width, world.height);
-            editor.focus();
-          } catch(e) {
-            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+sintaxis+')');
-            editor.focus();
-          }
-        });
-        $("#paso").click(function(event){
-          var sintaxis = detecta_sintaxis(editor.getValue());
-          var d = new Date();
-          try {
-            if(sintaxis == 'pascal')
-              var compiled = new karelpascal.Parser().parse(editor.getValue());
-            else if(sintaxis == 'ruby')
-              var compiled = new karelruby.Parser().parse(editor.getValue());
-            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+sintaxis+')');
-
-            mundo.reset();
-            mundo.runtime.load(compiled);
-            interval = setInterval(step, 500);
-          } catch(e) {
-            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+sintaxis+')');
-            editor.focus();
-          }
-        });
-      });
-    </script>
   </head>
   <body>
     <div class="navbar navbar-fixed-top">
@@ -167,10 +87,16 @@
       <div class="row">
         <div class="span12">
           <div class="btn-group">
-            <button class="btn">Código</button>
-            <button class="btn" data-toggle="tooltip" title="Nuevo"><i class="icon-star"></i></button>
-            <button class="btn" data-toggle="tooltip" title="Abrir"><i class="icon-folder-open"></i></button>
-            <button class="btn" data-toggle="tooltip" title="Guardar"><i class="icon-download-alt"></i></button>
+            <button class="btn dropdown-toggle" data-toggle="dropdown" title="Nuevo"><i class="icon-star"></i> Nuevo código <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a>Ruby</a></li>
+              <li><a>Pascal</a></li>
+              <li><a>Java</a></li>
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button class="btn" data-toggle="tooltip" title="Abrir código"><i class="icon-folder-open"></i></button>
+            <button class="btn" data-toggle="tooltip" title="Guardar código"><i class="icon-download-alt"></i></button>
           </div>
           <div class="btn-group">
             <button class="btn">Mundo</button>
