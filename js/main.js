@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  //Prepatación del editor
   editor = ace.edit("editor");
   editor.setTheme("ace/theme/github");
   editor.getSession().setMode("ace/mode/text");
@@ -11,6 +12,7 @@ $(document).ready(function(){
   var interval = null;
 
   function step() {
+    //Avanza un paso en la ejecución del código
     while (!mundo.dirty && mundo.runtime.step());
 
     mundo.dirty = false;
@@ -38,7 +40,7 @@ $(document).ready(function(){
       editor.focus();
     }
   });
-  $("#ejecutar").click(function(event){
+  $("#futuro").click(function(event){
     var sintaxis = detecta_sintaxis(editor.getValue());
     var d = new Date();
     try {
@@ -58,7 +60,7 @@ $(document).ready(function(){
       editor.focus();
     }
   });
-  $("#paso").click(function(event){
+  $("#ejecutar").click(function(event){
     var sintaxis = detecta_sintaxis(editor.getValue());
     var d = new Date();
     try {
@@ -70,10 +72,46 @@ $(document).ready(function(){
 
       mundo.reset();
       mundo.runtime.load(compiled);
-      interval = setInterval(step, 500);
+      interval = setInterval(step, $("#retraso_txt").val());
     } catch(e) {
       $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+sintaxis+')');
       editor.focus();
     }
+  });
+  $("#rubysyntax").click(function(event){
+    editor.setValue("#TODO poner codigo aqui");
+    editor.focus();
+  });
+  $("#pascalsyntax").click(function(event){
+    editor.setValue("iniciar-programa\n    inicia-ejecucion\n        {TODO poner codigo aqui}\n        apagate;\n    termina-ejecucion\nfinalizar-programa", 1);
+    editor.focus();
+  });
+  $("#javasyntax").click(function(event){
+    editor.setValue("class karel {\n    karel() {\n        //TODO poner codigo aqui\n        turnoff();\n    }\n}", 1);
+    editor.focus();
+  });
+  $("#retraso_minus").click(function(){
+    var valor = $("#retraso_txt").val()*1;
+    if(valor > 50){
+      valor -= 50;
+      $("#retraso_txt").val(valor);
+    }
+  });
+  $("#retraso_plus").click(function(){
+    var valor = $("#retraso_txt").val()*1;
+    if(valor < 1000){
+      valor += 50;
+      $("#retraso_txt").val(valor);
+    }
+  });
+  $("#retraso_txt").blur(function(event){
+    var valor = $("#retraso_txt").val()*1;
+    if(valor < 50 || valor > 1000) {
+      $("#retraso_txt").val(500);
+    }
+  });
+  $("#worldclean").click(function(event){
+    mundo.load($('script#xmlMundo')[0].textContent);
+    paint(world.getContext('2d'), mundo, world.width, world.height);
   });
 });

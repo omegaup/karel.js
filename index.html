@@ -89,9 +89,9 @@
           <div class="btn-group">
             <button class="btn dropdown-toggle" data-toggle="dropdown" title="Nuevo"><i class="icon-star"></i> Nuevo código <span class="caret"></span></button>
             <ul class="dropdown-menu">
-              <li><a>Ruby</a></li>
-              <li><a>Pascal</a></li>
-              <li><a>Java</a></li>
+              <li><a id="rubysyntax">Ruby</a></li>
+              <li><a id="pascalsyntax">Pascal</a></li>
+              <li><a id="javasyntax">Java</a></li>
             </ul>
           </div>
           <div class="btn-group">
@@ -99,18 +99,20 @@
             <button class="btn" data-toggle="tooltip" title="Guardar código"><i class="icon-download-alt"></i></button>
           </div>
           <div class="btn-group">
-            <button class="btn">Mundo</button>
-            <button class="btn" data-toggle="tooltip" title="Nuevo"><i class="icon-star"></i></button>
+            <button class="btn"><i class="icon-star"></i> Nuevo mundo</button>
+          </div>
+          <div class="btn-group">
             <button class="btn" data-toggle="tooltip" title="Abrir"><i class="icon-folder-open"></i></button>
             <button class="btn" data-toggle="tooltip" title="Guardar"><i class="icon-download-alt"></i></button>
           </div>
           <div class="btn-group">
-            <button class="btn" data-toggle="tooltip" title="Limpiar el mundo a su estado original"><i class="icon-repeat"></i></button>
+            <button class="btn" data-toggle="tooltip" title="Regresar el mundo a su estado original" id="worldclean"><i class="icon-repeat"></i></button>
           </div>
           <div class="btn-group">
             <button class="btn" data-toggle="tooltip" title="Compilar" id="compilar"><i class="icon-th-large"></i></button>
             <button class="btn" data-toggle="tooltip" title="Ejecutar" id="ejecutar"><i class="icon-play"></i></button>
             <button class="btn" data-toggle="tooltip" title="Paso a paso" id="paso"><i class="icon-forward"></i></button>
+            <button class="btn" data-toggle="tooltip" title="Ver el futuro" id="futuro"><i class="icon-eye-open"></i></button>
           </div>
           <div class="btn-group">
             <button class="btn" data-toggle="tooltip" title="Volver a 1,1"><i class="icon-home"></i></button>
@@ -230,9 +232,9 @@ finalizar-programa</div>
               </div>
               <div class="input-prepend input-append">
                 <span class="add-on">Retraso</span>
-                <input class="span1" value="500" type="text">
-                <button class="btn"><i class="icon-minus-sign"></i></button>
-                <button class="btn"><i class="icon-plus-sign"></i></button>
+                <input class="span1" value="500" type="text" id="retraso_txt">
+                <button class="btn" id="retraso_minus"><i class="icon-minus-sign"></i></button>
+                <button class="btn" id="retraso_plus"><i class="icon-plus-sign"></i></button>
               </div>
             </div>
           </div>
