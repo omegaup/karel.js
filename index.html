@@ -10,6 +10,7 @@
     <script src="js/mundo.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/karelruby.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/karelpascal.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/klexer.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css">
     <style type="text/css" media="screen">
@@ -54,10 +55,12 @@
         }
 
         $("#compilar").click(function(event){
+          var sintaxis = detecta_sintaxis(editor.getValue());
           d = new Date();
           try {
-            var compiled = new karelpascal.Parser().parse(editor.getValue());
-            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado');
+            if(sintaxis == 'pascal')
+              var compiled = new karelpascal.Parser().parse(editor.getValue());
+            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+sintaxis+')');
             editor.focus();
           } catch(e) {
             $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre></p>');
