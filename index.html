@@ -13,87 +13,87 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css">
     <style type="text/css" media="screen">
-        #editor {
-            height: 400px;
-            float:left;
-        }
-        #world {
-            height: 400px;
-        }
-        .row{
-          margin-top:10px;
-        }
-        #mensajes {
-            max-height: 100px;
-        }
+      #editor {
+        height: 400px;
+        float:left;
+      }
+      #world {
+        height: 400px;
+      }
+      .row{
+        margin-top:10px;
+      }
+      #mensajes {
+        max-height: 100px;
+      }
     </style>
     <script>
       $(document).ready(function(){
-          var editor = ace.edit("editor");
-          editor.setTheme("ace/theme/github");
-          editor.getSession().setMode("ace/mode/text");
+        editor = ace.edit("editor");
+        editor.setTheme("ace/theme/github");
+        editor.getSession().setMode("ace/mode/text");
 
-          var world = $("#world")[0];
-          var mundo = new World(100, 100);
-          mundo.load($('script#xmlMundo')[0].textContent);
+        var world = $("#world")[0];
+        var mundo = new World(100, 100);
+        mundo.load($('script#xmlMundo')[0].textContent);
+        paint(world.getContext('2d'), mundo, world.width, world.height);
+
+        var interval = null;
+
+        function step() {
+          while (!mundo.dirty && mundo.runtime.step());
+
+          mundo.dirty = false;
+
           paint(world.getContext('2d'), mundo, world.width, world.height);
-          
-          var interval = null;
-          
-          function step() {
-        	while (!mundo.dirty && mundo.runtime.step());
-		
-		mundo.dirty = false;
-		
-                paint(world.getContext('2d'), mundo, world.width, world.height);
-          
-		if (!mundo.runtime.state.running) {
-			clearInterval(interval);
-			interval = null;
-		}
-	}
 
-          $("#compilar").click(function(event){
-              d = new Date();
-              try {
-                  var compiled = new karelpascal.Parser().parse(editor.getValue());
-                  $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado');
-                  editor.focus();
-              } catch(e) {
-                  $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre></p>');
-                  editor.focus();
-              }
-          });
-          $("#ejecutar").click(function(event){
-              var d = new Date();
-              try {
-                  var compiled = new karelpascal.Parser().parse(editor.getValue());
-                  $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado');
-                  
-                  mundo.reset();
-                  mundo.runtime.load(compiled);
-                  while (mundo.runtime.step());
-                  paint(world.getContext('2d'), mundo, world.width, world.height);
-                  editor.focus();
-              } catch(e) {
-                  $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre>');
-                  editor.focus();
-              }
-          });
-          $("#paso").click(function(event){
-              var d = new Date();
-              try {
-                  var compiled = new karelpascal.Parser().parse(editor.getValue());
-                  $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado');
-                  
-                  mundo.reset();
-                  mundo.runtime.load(compiled);
-                  interval = setInterval(step, 500);
-              } catch(e) {
-                  $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre>');
-                  editor.focus();
-              }
-          });
+          if (!mundo.runtime.state.running) {
+            clearInterval(interval);
+            interval = null;
+          }
+        }
+
+        $("#compilar").click(function(event){
+          d = new Date();
+          try {
+            var compiled = new karelpascal.Parser().parse(editor.getValue());
+            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado');
+            editor.focus();
+          } catch(e) {
+            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre></p>');
+            editor.focus();
+          }
+        });
+        $("#ejecutar").click(function(event){
+          var d = new Date();
+          try {
+            var compiled = new karelpascal.Parser().parse(editor.getValue());
+            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado');
+
+            mundo.reset();
+            mundo.runtime.load(compiled);
+            while (mundo.runtime.step());
+            paint(world.getContext('2d'), mundo, world.width, world.height);
+            editor.focus();
+          } catch(e) {
+            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre>');
+            editor.focus();
+          }
+        });
+        $("#paso").click(function(event){
+          var d = new Date();
+          try {
+            var compiled = new karelpascal.Parser().parse(editor.getValue());
+            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado');
+
+            mundo.reset();
+            mundo.runtime.load(compiled);
+            interval = setInterval(step, 500);
+          } catch(e) {
+            $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre>');
+            editor.focus();
+          }
+        });
       });
     </script>
   </head>
