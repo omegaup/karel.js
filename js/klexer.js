@@ -20,7 +20,7 @@ KLexer = function(cadena, debug){
 
     this.numeros = "0123456789"
     this.palabras = "abcdfeghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-"
-    this.simbolos = "(){}*/;,|&!//" //Simbolos permitidos para esta sintaxis
+    this.simbolos = "(){}*/;,|&!//#" //Simbolos permitidos para esta sintaxis
     this.espacios = " \n\r\t"
 
     this.caracteres = this.numeros+this.palabras+this.simbolos+this.espacios
@@ -75,6 +75,14 @@ KLexer = function(cadena, debug){
         this.linea += 1
         this.columna = 0
         this.es_primer_token = true
+    }
+
+    this.readline = function() {
+        /* se come todo hasta el siguiente salto de linea */
+        var c;
+        do{
+            c = this.lee_caracter();
+        }while(c!='\n' && c != undefined);
     }
 
     this.lee_token = function(){
@@ -156,7 +164,7 @@ KLexer = function(cadena, debug){
                         break
                 } else if (this.caracter_actual == '#'){
                     this.estado = this.ESTADO_ESPACIO
-                    this.archivo.readline() //LINEA
+                    this.readline() //LINEA
                     this.cambio_de_linea()
                     if (this.token)
                         break
