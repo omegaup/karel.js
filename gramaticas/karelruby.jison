@@ -5,7 +5,7 @@
 
 \n\s*				{ return 'NEWLINE'; }
 [ \t]+                          {/* ignore */}
-"#"[^\n]*\n\s*			{/* ignore */}
+[#][^\n]*\n\s*			{/* ignore */}
 "def"				{ return 'DEF'; }
 "apagate"                       { return 'HALT'; }
 "gira-izquierda"                { return 'LEFT'; }
@@ -55,18 +55,21 @@
 %%
 
 program
-  : def_list expr_list EOF
+  : def_expr_list_opt_newlines EOF
     %{
-    	var program = $expr_list.concat([['LINE', yylineno], ['HALT']]);
+	var def_list = $def_expr_list_opt_newlines[0];
+	var expr_list = $def_expr_list_opt_newlines[1];
+	
+    	var program = expr_list.concat([['LINE', yylineno], ['HALT']]);
     	var functions = {};
     	
-    	for (var i = 0; i < $def_list.length; i++) {
-    		if (functions[$def_list[i][0]]) {
+    	for (var i = 0; i < def_list.length; i++) {
+    		if (functions[def_list[i][0]]) {
     			throw "Function redefinition: " + $def_list[i][0];
     		}
     		
-    		functions[$def_list[i][0]] = program.length;
-    		program = program.concat($def_list[i][1]);
+    		functions[def_list[i][0]] = program.length;
+    		program = program.concat(def_list[i][1]);
     	}
     	
     	for (var i = 0; i < program.length; i++) {
@@ -84,23 +87,44 @@ program
     	
     	return program;
     %}
-  | expr_list EOF
-    { return $expr_list.concat([['HALT']]); }
   ;
   
-def_list
-  : def_list def NEWLINE
-    { $$ = $def_list.concat($def); }
-  | def NEWLINE
-    { $$ = $def; }
+def_expr_list_opt_newlines
+  : newlines def_expr_list
+    { $$ = $def_expr_list; }
+  | def_expr_list
+    { $$ = $def_expr_list; }
+  ;
+  
+def_expr_list
+  : def_expr_list newlines def
+    { $$ = [$def_expr_list[0].concat($def), $def_expr_list[1]]; }
+  | def_expr_list newlines expr
+    { $$ = [$def_expr_list[0], $def_expr_list[1].concat($expr)]; }
+  | def
+    { $$ = [$def, []]; }
+  | expr
+    { $$ = [[], $expr]; }
+  ;
+
+expr_list
+  : expr_list expr newlines
+    { $$ = $expr_list.concat($expr); }
+  | expr newlines
+    { $$ = $expr; }
+  ;
+
+newlines
+  : newlines NEWLINE
+  | NEWLINE
   ;
 
 def
-  : DEF line var NEWLINE expr_list END
+  : DEF line var newlines expr_list END
     { $$ = [[$var, $line.concat($expr_list).concat([['RET']])]]; }
-  | DEF line var '(' var ')' NEWLINE expr_list END
+  | DEF line var '(' var ')' newlines expr_list END
     %{
-    	var result = $line.concat($expr_list).concat([['RET']]);
+    	var result = $line.concat($expr_list).concat([['RET']]);	
     	for (var i = 0; i < result.length; i++) {
     		if (result[i][0] == 'PARAM') {
     			if (result[i][1] == $5) {
@@ -112,13 +136,6 @@ def
     	}
     	$$ = [[$var, result]];
     %}
-  ;
-  
-expr_list
-  : expr_list expr NEWLINE
-    { $$ = $expr_list.concat($expr); }
-  | expr NEWLINE
-    { $$ = $expr; }
   ;
 
 expr
@@ -143,14 +160,14 @@ expr
   ;
 
 cond
-  : IF line term NEWLINE expr_list END
+  : IF line term newlines expr_list END
     { $$ = $term.concat($line).concat([['JZ', $expr_list.length]]).concat($expr_list); }
-  | IF line term NEWLINE expr_list ELSE NEWLINE expr_list END
+  | IF line term newlines expr_list ELSE newlines expr_list END
     { $$ = $term.concat($line).concat([['JZ', 1 + $5.length]]).concat($r).concat([['JMP', $8.length]]).concat($8); }
   ;
 
 loop
-  : WHILE line term NEWLINE expr_list END
+  : WHILE line term newlines expr_list END
     { $$ = $term.concat($line).concat([['JZ', 1 + $expr_list.length]]).concat($expr_list).concat([['JMP', -1 -($term.length + 1 + $expr_list.length + 1)]]); }
   ;
   
@@ -162,9 +179,9 @@ call
   ;
 
 repeat
-  : var TIMES line NEWLINE expr_list END
+  : var TIMES line newlines expr_list END
     { $$ = [['PARAM', $var]].concat($line).concat([['DUP'], ['JLEZ', $expr_list.length + 2]]).concat($expr_list).concat([['DEC'], ['JMP', -1 -($expr_list.length + 4)], ['POP']]); }
-  | non_var_integer TIMES line NEWLINE expr_list END
+  | non_var_integer TIMES line newlines expr_list END
     { $$ = $non_var_integer.concat($line).concat([['DUP'], ['JLEZ', $expr_list.length + 2]]).concat($expr_list).concat([['DEC'], ['JMP', -1 -($expr_list.length + 4)], ['POP']]); }
   ;
 

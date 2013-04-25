@@ -1,6 +1,49 @@
 $(document).ready(function(){
-  //Prepatación del editor
-  editor = ace.edit("editor");
+  function getSyntax(str) {
+    var rules = [
+      /^\s+/,
+      /^\/\/[^\n]*/,
+      /^#[^\n]*/,
+      /^(?:\/\*(?:[^*]|\*[^)])*\*\/)/,
+      /^\(\*([^*]|\*[^)])*\*\)/,
+      /^[^a-zA-Z0-9_-]+/,
+      /^[a-zA-Z0-9_-]+/
+    ];
+    var i = 0;
+    
+    while (i < str.length) {
+      for (var j = 0; j < rules.length; j++) {
+        var m = rules[j].exec(str.substring(i));
+        if (m !== null) {
+          if (j == rules.length - 1) {
+            // el primer token de verdad.
+            if (m[0] == 'class') {
+              return {parser: new kareljava.Parser(), name: 'java'};
+            } else if (m[0] == 'iniciar-programa') {
+              return {parser: new karelpascal.Parser(), name: 'pascal'};
+            } else {
+              return {parser: new karelruby.Parser(), name: 'ruby'};
+            }
+          } else {
+            // comentario o no-token.
+            i += m[0].length;
+            break;
+          }
+        }
+      }
+    }
+    
+    return {parser: new karelruby.Parser(), name: 'ruby'};
+  }
+  
+  function getErrorLocation(parser) {
+    // Return an object with the following properties: first_line, last_line,
+    // first_column, last_column.
+    return parser.lexer.yylloc;
+  }
+  
+  //Preparación del editor
+  var editor = ace.edit("editor");
   editor.setTheme("ace/theme/github");
   editor.getSession().setMode("ace/mode/text");
 
@@ -26,29 +69,23 @@ $(document).ready(function(){
   }
 
   $("#compilar").click(function(event){
-    var sintaxis = detecta_sintaxis(editor.getValue());
-    d = new Date();
+    var d = new Date();
+    var syntax = getSyntax(editor.getValue());
     try {
-      if(sintaxis == 'pascal')
-        var compiled = new karelpascal.Parser().parse(editor.getValue());
-      else if(sintaxis == 'ruby')
-        var compiled = new karelruby.Parser().parse(editor.getValue());
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+sintaxis+')');
+      var compiled = syntax.parser.parse(editor.getValue());
+      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+syntax.name+')');
       editor.focus();
     } catch(e) {
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+sintaxis+')</p>');
+      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+syntax.name+')</p>');
       editor.focus();
     }
   });
   $("#futuro").click(function(event){
-    var sintaxis = detecta_sintaxis(editor.getValue());
     var d = new Date();
+    var syntax = getSyntax(editor.getValue());
     try {
-      if(sintaxis == 'pascal')
-        var compiled = new karelpascal.Parser().parse(editor.getValue());
-      else if(sintaxis == 'ruby')
-        var compiled = new karelruby.Parser().parse(editor.getValue());
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+sintaxis+')');
+      var compiled = syntax.parser.parse(editor.getValue());
+      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+syntax.name+')');
 
       mundo.reset();
       mundo.runtime.load(compiled);
@@ -56,25 +93,22 @@ $(document).ready(function(){
       paint(world.getContext('2d'), mundo, world.width, world.height);
       editor.focus();
     } catch(e) {
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+sintaxis+')');
+      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+syntax.name+')');
       editor.focus();
     }
   });
   $("#ejecutar").click(function(event){
-    var sintaxis = detecta_sintaxis(editor.getValue());
     var d = new Date();
+    var syntax = getSyntax(editor.getValue());
     try {
-      if(sintaxis == 'pascal')
-        var compiled = new karelpascal.Parser().parse(editor.getValue());
-      else if(sintaxis == 'ruby')
-        var compiled = new karelruby.Parser().parse(editor.getValue());
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+sintaxis+')');
+      var compiled = syntax.parser.parse(editor.getValue());
+      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+syntax.name+')');
 
       mundo.reset();
       mundo.runtime.load(compiled);
       interval = setInterval(step, $("#retraso_txt").val());
     } catch(e) {
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+sintaxis+')');
+      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+syntax.name+')');
       editor.focus();
     }
   });
