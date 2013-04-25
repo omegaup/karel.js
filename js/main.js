@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  function getsyntax(str) {
+  function getSyntax(str) {
     var rules = [
       /^\s+/,
       /^\/\/[^\n]*/,
@@ -36,7 +36,13 @@ $(document).ready(function(){
     return {parser: new karelruby.Parser(), name: 'ruby'};
   }
   
-  //Prepatación del editor
+  function getErrorLocation(parser) {
+    // Return an object with the following properties: first_line, last_line,
+    // first_column, last_column.
+    return parser.lexer.yylloc;
+  }
+  
+  //Preparación del editor
   var editor = ace.edit("editor");
   editor.setTheme("ace/theme/github");
   editor.getSession().setMode("ace/mode/text");
@@ -64,20 +70,19 @@ $(document).ready(function(){
 
   $("#compilar").click(function(event){
     var d = new Date();
-    var syntax = getsyntax(editor.getValue());
+    var syntax = getSyntax(editor.getValue());
     try {
       var compiled = syntax.parser.parse(editor.getValue());
       $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+syntax.name+')');
       editor.focus();
     } catch(e) {
-      console.log('' + e);
       $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+syntax.name+')</p>');
       editor.focus();
     }
   });
   $("#futuro").click(function(event){
     var d = new Date();
-    var syntax = getsyntax(editor.getValue());
+    var syntax = getSyntax(editor.getValue());
     try {
       var compiled = syntax.parser.parse(editor.getValue());
       $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+syntax.name+')');
@@ -94,7 +99,7 @@ $(document).ready(function(){
   });
   $("#ejecutar").click(function(event){
     var d = new Date();
-    var syntax = getsyntax(editor.getValue());
+    var syntax = getSyntax(editor.getValue());
     try {
       var compiled = syntax.parser.parse(editor.getValue());
       $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+syntax.name+')');
