@@ -118,4 +118,9 @@ $(document).ready(function(){
     mundo = new World(100, 100);
     paint(world.getContext('2d'), mundo, world.width, world.height);
   });
+  $("#world").click(function(event){
+    var x = event.offsetX;
+    var y = event.offsetY;
+    console.log(x+','+y)
+  });
 });
