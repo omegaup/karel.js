@@ -114,4 +114,8 @@ $(document).ready(function(){
     mundo.load($('script#xmlMundo')[0].textContent);
     paint(world.getContext('2d'), mundo, world.width, world.height);
   });
+  $("#newworld").click(function(event){
+    mundo = new World(100, 100);
+    paint(world.getContext('2d'), mundo, world.width, world.height);
+  });
 });

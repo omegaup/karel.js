@@ -5,46 +5,46 @@ function paint(context, world, mundo_ancho, mundo_alto) {
 
     var primera_fila = 1;
     var primera_columna = 1;
-    
+
     function dibuja_karel(context, world, origen){ //Dibujar a Karel
-    
-	context.fillStyle = '#0000FF';
+
+        context.fillStyle = '#0000FF';
         context.beginPath();
-	if (world.orientation == 0) { // oeste
-	    context.moveTo( origen.x, origen.y+15 );
-	    context.lineTo( origen.x+13, origen.y );
-	    context.lineTo( origen.x+13, origen.y+7 );
-	    context.lineTo( origen.x+27, origen.y+7 );
-	    context.lineTo( origen.x+27, origen.y+23 );
-	    context.lineTo( origen.x+13, origen.y+23 );
-	    context.lineTo( origen.x+13, origen.y+30 );
-	} else if (world.orientation == 1) { // norte
-	    context.moveTo ( origen.x, origen.y+13 );
-	    context.lineTo ( origen.x+15, origen.y );
-	    context.lineTo ( origen.x+30, origen.y+13 );
-	    context.lineTo ( origen.x+23, origen.y+13 );
-	    context.lineTo ( origen.x+23, origen.y+27 );
-	    context.lineTo ( origen.x+7, origen.y+27 );
-	    context.lineTo ( origen.x+7, origen.y+13 );
-	} else if (world.orientation == 2) { // este
-	    context.moveTo ( origen.x+3, origen.y+7 );
-	    context.lineTo ( origen.x+17, origen.y+7 );
-	    context.lineTo ( origen.x+17, origen.y );
-	    context.lineTo ( origen.x+30, origen.y+15 );
-	    context.lineTo ( origen.x+17, origen.y+30 );
-	    context.lineTo ( origen.x+17, origen.y+23 );
-	    context.lineTo ( origen.x+3, origen.y+23 );
-	} else if (world.orientation == 3) { // sur
-	    context.moveTo ( origen.x+7, origen.y+3 );
-	    context.lineTo ( origen.x+23, origen.y+3 );
-	    context.lineTo ( origen.x+23, origen.y+17 );
-	    context.lineTo ( origen.x+30, origen.y+17 );
-	    context.lineTo ( origen.x+15, origen.y+30 );
-	    context.lineTo ( origen.x, origen.y+17);
-	    context.lineTo ( origen.x+7, origen.y+17);
-	}
+        if (world.orientation == 0) { // oeste
+            context.moveTo( origen.x, origen.y+15 );
+            context.lineTo( origen.x+13, origen.y );
+            context.lineTo( origen.x+13, origen.y+7 );
+            context.lineTo( origen.x+27, origen.y+7 );
+            context.lineTo( origen.x+27, origen.y+23 );
+            context.lineTo( origen.x+13, origen.y+23 );
+            context.lineTo( origen.x+13, origen.y+30 );
+        } else if (world.orientation == 1) { // norte
+            context.moveTo ( origen.x, origen.y+13 );
+            context.lineTo ( origen.x+15, origen.y );
+            context.lineTo ( origen.x+30, origen.y+13 );
+            context.lineTo ( origen.x+23, origen.y+13 );
+            context.lineTo ( origen.x+23, origen.y+27 );
+            context.lineTo ( origen.x+7, origen.y+27 );
+            context.lineTo ( origen.x+7, origen.y+13 );
+        } else if (world.orientation == 2) { // este
+            context.moveTo ( origen.x+3, origen.y+7 );
+            context.lineTo ( origen.x+17, origen.y+7 );
+            context.lineTo ( origen.x+17, origen.y );
+            context.lineTo ( origen.x+30, origen.y+15 );
+            context.lineTo ( origen.x+17, origen.y+30 );
+            context.lineTo ( origen.x+17, origen.y+23 );
+            context.lineTo ( origen.x+3, origen.y+23 );
+        } else if (world.orientation == 3) { // sur
+            context.moveTo ( origen.x+7, origen.y+3 );
+            context.lineTo ( origen.x+23, origen.y+3 );
+            context.lineTo ( origen.x+23, origen.y+17 );
+            context.lineTo ( origen.x+30, origen.y+17 );
+            context.lineTo ( origen.x+15, origen.y+30 );
+            context.lineTo ( origen.x, origen.y+17);
+            context.lineTo ( origen.x+7, origen.y+17);
+        }
         context.closePath();
-	context.fill();
+        context.fill();
     }
 
     context.clearRect(0, 0, mundo_ancho, mundo_alto);
@@ -81,10 +81,10 @@ function paint(context, world, mundo_ancho, mundo_alto) {
         //for columna in xrange(primera_columna, primera_columna+num_columnas):
         for(var columna=primera_columna;columna<primera_columna+num_columnas;columna++){
             //Dibujar a karel
-            
+
             if (world.i === fila && world.j === columna) {
                 var referencia = {x: origen.x+(num_columna-1)*30, y: origen.y-(num_fila-1)*30};
-                
+
                 dibuja_karel(context, world, referencia);
             }
 
@@ -152,49 +152,47 @@ function paint(context, world, mundo_ancho, mundo_alto) {
         context.fillText(""+i,10+30*a, mundo_alto-10);
         a += 1
     }
-    
+
     $('#mochila').val(world.bagBuzzers);
 
     //Pad de control
-    //~ context.fillStyle = '#305881'
-//~
-    //~ context.moveTo(tamanio_mundo.x-70+35, 5)
-    //~ context.lineTo(tamanio_mundo.x-70+69, 5+55)
-    //~ context.lineTo(tamanio_mundo.x-70+35, 5+110)
-    //~ context.lineTo(tamanio_mundo.x-70+1, 5+55)
-    //~ context.closePath()
-    //context.fill()
+    context.fillStyle = '#305881'
+    context.beginPath();
+    context.moveTo(tamanio_mundo.x-70+35, 5)
+    context.lineTo(tamanio_mundo.x-70+69, 5+55)
+    context.lineTo(tamanio_mundo.x-70+35, 5+110)
+    context.lineTo(tamanio_mundo.x-70+1, 5+55)
+    context.closePath()
+    context.fill()
 
 
     //Controles de movimiento
-    //~ context.fillStyle = '#60b151'
-    //~ context.moveTo(mundo_ancho-40-10, 40)
-    //~ context.lineTo(mundo_ancho-10-10, 40)
-    //~ context.lineTo(mundo_ancho-25-10, 10)
-    //~ context.closePath()
-    //context.fill()
+    context.fillStyle = '#60b151'
+    context.beginPath();
+    context.moveTo(mundo_ancho-40-10, 40)
+    context.lineTo(mundo_ancho-10-10, 40)
+    context.lineTo(mundo_ancho-25-10, 10)
+    context.closePath()
+    context.fill()
 
-    //~ context.moveTo(mundo_ancho-40-10, 10+70) //Sur
-    //~ context.lineTo(mundo_ancho-10-10, 10+70)
-    //~ context.lineTo(mundo_ancho-25-10, 40+70)
-    //~ context.closePath()
-    //context.fill()
+    context.beginPath();
+    context.moveTo(mundo_ancho-40-10, 10+70) //Sur
+    context.lineTo(mundo_ancho-10-10, 10+70)
+    context.lineTo(mundo_ancho-25-10, 40+70)
+    context.closePath()
+    context.fill()
 
-    //~ context.moveTo(mundo_ancho-25-8, 45) //Este
-    //~ context.lineTo(mundo_ancho-25+30-8, 45+15)
-    //~ context.lineTo(mundo_ancho-25-8, 45+30)
-    //~ context.closePath()
-    //context.fill()
+    context.beginPath();
+    context.moveTo(mundo_ancho-25-8, 45) //Este
+    context.lineTo(mundo_ancho-25+30-8, 45+15)
+    context.lineTo(mundo_ancho-25-8, 45+30)
+    context.closePath()
+    context.fill()
 
-    //~ context.moveTo(mundo_ancho-25-50+30+8, 45) //Oeste
-    //~ context.lineTo(mundo_ancho-25-50+8, 45+15)
-    //~ context.lineTo(mundo_ancho-25-50+30+8, 45+30)
-    //~ context.closePath()
-    //context.fill()
-
-    //Actualizamos el indicador de zumbadores
-    //~ if (mundo.obten_mochila() == -1)
-        //~ builder.get_object('inf_beeperbag_toggle').set_active(True)
-    //~ else
-        //~ builder.get_object('mochila_entry').set_text(str(mundo.obten_mochila()))
+    context.beginPath();
+    context.moveTo(mundo_ancho-25-50+30+8, 45) //Oeste
+    context.lineTo(mundo_ancho-25-50+8, 45+15)
+    context.lineTo(mundo_ancho-25-50+30+8, 45+30)
+    context.closePath()
+    context.fill()
 }
