@@ -10,7 +10,7 @@ $(document).ready(function(){
       /^[a-zA-Z0-9_-]+/
     ];
     var i = 0;
-    
+
     while (i < str.length) {
       for (var j = 0; j < rules.length; j++) {
         var m = rules[j].exec(str.substring(i));
@@ -32,25 +32,27 @@ $(document).ready(function(){
         }
       }
     }
-    
+
     return {parser: new karelruby.Parser(), name: 'ruby'};
   }
-  
+
   function getErrorLocation(parser) {
     // Return an object with the following properties: first_line, last_line,
     // first_column, last_column.
     return parser.lexer.yylloc;
   }
-  
+
   //Preparación del editor
   var editor = ace.edit("editor");
   editor.setTheme("ace/theme/github");
   editor.getSession().setMode("ace/mode/text");
 
   var world = $("#world")[0];
+  var context = world.getContext('2d');
+  var wRender = new WorldRender(context);
   var mundo = new World(100, 100);
   mundo.load($('script#xmlMundo')[0].textContent);
-  paint(world.getContext('2d'), mundo, world.width, world.height);
+  wRender.paint(mundo, world.width, world.height);
 
   var interval = null;
 
@@ -60,7 +62,7 @@ $(document).ready(function(){
 
     mundo.dirty = false;
 
-    paint(world.getContext('2d'), mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height);
 
     if (!mundo.runtime.state.running) {
       clearInterval(interval);
@@ -90,7 +92,7 @@ $(document).ready(function(){
       mundo.reset();
       mundo.runtime.load(compiled);
       while (mundo.runtime.step());
-      paint(world.getContext('2d'), mundo, world.width, world.height);
+      wRender.paint(mundo, world.width, world.height);
       editor.focus();
     } catch(e) {
       $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+syntax.name+')');
@@ -146,15 +148,70 @@ $(document).ready(function(){
   });
   $("#worldclean").click(function(event){
     mundo.load($('script#xmlMundo')[0].textContent);
-    paint(world.getContext('2d'), mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height);
   });
   $("#newworld").click(function(event){
     mundo = new World(100, 100);
-    paint(world.getContext('2d'), mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height);
   });
   $("#world").click(function(event){
     var x = event.offsetX;
     var y = event.offsetY;
     console.log(x+','+y)
+    //Maneja los clicks en el mundo
+    if ((world.width-50)<=x && x <=(world.width-20) && 10<=y && y<=40) {
+        //NORTE
+        if (this.primera_fila+self.num_filas-2 < 100)
+            this.primera_fila += 1
+    } else if ((world.width-50)<=x && x<=(world.width-20) && 80<=y && y<=110) {
+        //SUR
+        if (this.primera_fila > 1)
+            this.primera_fila -= 1
+    } else if ((world.width-50+17)<=x && x<=(world.width-20+17) && 45<=y && y<=75) {
+        //ESTE
+        if (this.primera_columna+self.num_columnas-2 < 100)
+            this.primera_columna += 1
+    } else if ((world.width-50+17-35)<=x && x<=(world.width-20+17-35) && 45<=y && y<=75) {
+        //OESTE
+        if (this.primera_columna > 1)
+            this.primera_columna -= 1
+    } else { //Pasan otras cosas
+        columna = int(x/30) + this.primera_columna-1
+        fila = int((world.height-y)/30) + this.primera_fila-1
+
+        excedente_horizontal = x/30 - int(x/30)
+        excedente_vertical = (world.height-y)/30 - int((world.height-y)/30)
+
+        if (0<fila && fila<101 && 0<columna && columna<101) {
+            if (event.button == 1) {
+                if (.25<excedente_horizontal && excedente_horizontal<.75 && .25<excedente_vertical && excedente_horizontal<.75) {
+                    if (self.borrar_zumbadores)
+                        self.mundo.pon_zumbadores((fila, columna), 0)
+                    else {
+                        zumbadores = self.mundo.obten_zumbadores((fila, columna))
+                        if (zumbadores >= 0)
+                            self.mundo.pon_zumbadores((fila, columna), zumbadores+1)
+                    }
+                } else if (excedente_horizontal > excedente_vertical) {
+                    if (excedente_horizontal > 1 - excedente_vertical)
+                        self.mundo.conmuta_pared((fila, columna), 'este')
+                    else
+                        self.mundo.conmuta_pared((fila, columna), 'sur')
+                } else {
+                    if (excedente_horizontal > 1 - excedente_vertical)
+                        self.mundo.conmuta_pared((fila, columna), 'norte')
+                    else
+                        self.mundo.conmuta_pared((fila, columna), 'oeste')
+                }
+                self.mundo_guardado = False
+            } else if (event.button == 2) {
+                console.log('boton medio')
+            } else if (event.button == 3) {
+                self.coordenadas = (fila, columna)
+                self.builder.get_object('mundo_canvas_context_menu').popup(None, None, None, None, 3, event.time)
+            }
+        }
+    }
+    canvas.queue_draw() //Volvemos a pintar el canvas
   });
 });
