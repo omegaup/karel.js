@@ -161,23 +161,23 @@ $(document).ready(function(){
     //Maneja los clicks en el mundo
     if ((world.width-50)<=x && x <=(world.width-20) && 10<=y && y<=40) {
         //NORTE
-        if (this.primera_fila+self.num_filas-2 < 100)
-            this.primera_fila += 1
+        if (wRender.primera_fila+wRender.num_filas-2 < 100)
+            wRender.primera_fila += 1
     } else if ((world.width-50)<=x && x<=(world.width-20) && 80<=y && y<=110) {
         //SUR
-        if (this.primera_fila > 1)
-            this.primera_fila -= 1
+        if (wRender.primera_fila > 1)
+            wRender.primera_fila -= 1
     } else if ((world.width-50+17)<=x && x<=(world.width-20+17) && 45<=y && y<=75) {
         //ESTE
-        if (this.primera_columna+self.num_columnas-2 < 100)
-            this.primera_columna += 1
+        if (wRender.primera_columna+wRender.num_columnas-2 < 100)
+            wRender.primera_columna += 1
     } else if ((world.width-50+17-35)<=x && x<=(world.width-20+17-35) && 45<=y && y<=75) {
         //OESTE
-        if (this.primera_columna > 1)
-            this.primera_columna -= 1
+        if (wRender.primera_columna > 1)
+            wRender.primera_columna -= 1
     } else { //Pasan otras cosas
-        columna = int(x/30) + this.primera_columna-1
-        fila = int((world.height-y)/30) + this.primera_fila-1
+        columna = int(x/30) + wRender.primera_columna-1
+        fila = int((world.height-y)/30) + wRender.primera_fila-1
 
         excedente_horizontal = x/30 - int(x/30)
         excedente_vertical = (world.height-y)/30 - int((world.height-y)/30)
@@ -212,6 +212,7 @@ $(document).ready(function(){
             }
         }
     }
-    canvas.queue_draw() //Volvemos a pintar el canvas
+    //canvas.queue_draw() //Volvemos a pintar el canvas
+    wRender.paint(mundo, world.width, world.height);
   });
 });

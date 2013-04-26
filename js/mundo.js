@@ -4,10 +4,13 @@ var WorldRender = function(context){
     this.should_draw = true;
     this.context = context;
 
-    this.paint = function(world, mundo_ancho, mundo_alto) {
+    this.primera_fila = 1;
+    this.primera_columna = 1;
 
-        var primera_fila = 1;
-        var primera_columna = 1;
+    this.num_filas = 1
+    this.num_columnas = 1
+
+    this.paint = function(world, mundo_ancho, mundo_alto) {
 
         function dibuja_karel(context, world, origen){ //Dibujar a Karel
 
@@ -63,11 +66,11 @@ var WorldRender = function(context){
         //IMPORTANTE
         var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
 
-        var num_columnas = (tamanio_lienzo.x/30 + Math.ceil((tamanio_lienzo.x%30)/30.))*1
-        var num_filas = (tamanio_lienzo.y/30 + Math.ceil((tamanio_lienzo.y%30)/30.))*1
+        this.num_columnas = (tamanio_lienzo.x/30 + Math.ceil((tamanio_lienzo.x%30)/30.))*1
+        this.num_filas = (tamanio_lienzo.y/30 + Math.ceil((tamanio_lienzo.y%30)/30.))*1
         //Cuadrados de las esquinas
-        for(var i=0;i<num_columnas;i++){
-            for(j=0;j<num_columnas;j++) {
+        for(var i=0;i<this.num_columnas;i++){
+            for(j=0;j<this.num_columnas;j++) {
                 x = origen.x+30*i
                 y = origen.y-30*j
                 context.fillStyle="#656565";
@@ -79,10 +82,10 @@ var WorldRender = function(context){
         num_fila = 1 //Posicion relativa a la pantalla
         num_columna = 1 //Posicion relativa a la pantalla
         //for fila in xrange(primera_fila, primera_fila+num_filas):
-        for(var fila=primera_fila;fila<(primera_fila+num_filas);fila++){
+        for(var fila=this.primera_fila;fila<(this.primera_fila+this.num_filas);fila++){
             num_columna = 1
             //for columna in xrange(primera_columna, primera_columna+num_columnas):
-            for(var columna=primera_columna;columna<primera_columna+num_columnas;columna++){
+            for(var columna=this.primera_columna;columna<this.primera_columna+this.num_columnas;columna++){
                 //Dibujar a karel
 
                 if (world.i === fila && world.j === columna) {
@@ -140,7 +143,7 @@ var WorldRender = function(context){
         this.should_draw = !this.should_draw;
         //Numeros de fila
         var a = 1
-        for (i=primera_fila;i<primera_fila+num_filas;i++){
+        for (i=this.primera_fila;i<this.primera_fila+this.num_filas;i++){
             context.font = "14px monospace"
             context.fillStyle = '#000000'
             context.fillText(""+i,10, mundo_alto-(10+a*30));
@@ -149,7 +152,7 @@ var WorldRender = function(context){
 
         //Numeros de colummna
         a = 1
-        for(i=primera_columna;i<primera_columna+num_columnas;i++){
+        for(i=this.primera_columna;i<this.primera_columna+this.num_columnas;i++){
             context.font = '14px monospace'
             context.fillStyle = '#000000'
             context.fillText(""+i,10+30*a, mundo_alto-10);
