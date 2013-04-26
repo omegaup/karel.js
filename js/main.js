@@ -51,6 +51,7 @@ $(document).ready(function(){
   var context = world.getContext('2d');
   var wRender = new WorldRender(context);
   var borrar_zumbadores = false;
+  var zumbadores_anterior = 0;
   var mundo = new World(100, 100);
   mundo.load($('script#xmlMundo').html());
   wRender.paint(mundo, world.width, world.height);
@@ -211,6 +212,30 @@ $(document).ready(function(){
     wRender.paint(mundo, world.width, world.height);
   });
   $("#inf_zumbadores").click(function(event){
-
+    if($(this).hasClass('active')) { //ya hay infinitos
+      mundo.setBagBuzzers(zumbadores_anterior);
+      $("#mochila").val(zumbadores_anterior);
+      $(this).removeClass('active');
+      $("#mochila").removeAttr('disabled');
+    } else { //hay finitos
+      zumbadores_anterior = $("#mochila").val();
+      mundo.setBagBuzzers(-1);
+      $(this).addClass('active');
+      $("#mochila").attr('disabled', 1);
+    }
+  });
+  $("#quitar_zumbadores").click(function(event){
+    if($(this).hasClass('active')) { //ya hay infinitos
+      borrar_zumbadores = false;
+      $(this).removeClass('active');
+    } else { //hay finitos
+      borrar_zumbadores = true;
+      $(this).addClass('active');
+    }
+  });
+  $("#go_home").click(function(event){
+    wRender.primera_fila = 1;
+    wRender.primera_columna = 1;
+    wRender.paint(mundo, world.width, world.height);
   });
 });
