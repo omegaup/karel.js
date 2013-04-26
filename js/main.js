@@ -52,7 +52,7 @@ $(document).ready(function(){
   var wRender = new WorldRender(context);
   var borrar_zumbadores = false;
   var mundo = new World(100, 100);
-  mundo.load($('script#xmlMundo')[0].textContent);
+  mundo.load($('script#xmlMundo').html());
   wRender.paint(mundo, world.width, world.height);
 
   var interval = null;
@@ -195,12 +195,12 @@ $(document).ready(function(){
                         mundo.setBuzzers(fila, columna, zumbadores+1)
                 }
             } else if (excedente_horizontal > excedente_vertical) {
-                if (excedente_horizontal > 1 - excedente_vertical)
+                if (excedente_horizontal > (1 - excedente_vertical))
                     mundo.toggleWall(fila, columna, 2)
                 else
                     mundo.toggleWall(fila, columna, 3) //sur
             } else {
-                if (excedente_horizontal > 1 - excedente_vertical)
+                if (excedente_horizontal > (1 - excedente_vertical))
                     mundo.toggleWall(fila, columna, 1) //norte
                 else
                     mundo.toggleWall(fila, columna, 0)
@@ -209,5 +209,8 @@ $(document).ready(function(){
     }
     //Volvemos a pintar el canvas
     wRender.paint(mundo, world.width, world.height);
+  });
+  $("#inf_zumbadores").click(function(event){
+
   });
 });
