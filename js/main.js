@@ -159,7 +159,13 @@ $(document).ready(function(){
     mundo = new World(100, 100);
     wRender.paint(mundo, world.width, world.height);
   });
+  $("body").keyup(function(event){
+    if(event.keyCode == 27) {
+      $("#wcontext_menu").css("display", "none");
+    }
+  });
   $("#world").click(function(event){
+    $("#wcontext_menu").css("display", "none");
     var x = event.offsetX;
     var y = event.offsetY;
     //Maneja los clicks en el mundo
@@ -237,5 +243,17 @@ $(document).ready(function(){
     wRender.primera_fila = 1;
     wRender.primera_columna = 1;
     wRender.paint(mundo, world.width, world.height);
+  });
+  $("#world").bind("contextmenu", function(e){
+    //Maneja el click derecho sobre el mundo
+    var x = event.pageX;
+    var y = event.pageY;
+    $("#wcontext_menu").css("top", y+"px");
+    $("#wcontext_menu").css("left", x+"px");
+    $("#wcontext_menu").css("display", "block");
+    return false;
+  });
+  $("#ctx_norte").click(function(event){
+    alert('de')
   });
 });
