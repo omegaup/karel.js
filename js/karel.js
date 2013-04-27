@@ -400,7 +400,6 @@ World.prototype.toggleWall = function(i, j, orientation) {
   var self = this;
 
   if (orientation < 0 || orientation >= 4 || 0 > i || i >= self.h || 0 > j || j >= self.w) return;
-  self.wallMap[self.w * i + j] ^= (1 << orientation);
 
   if (orientation === 0 && j > 1) {
     self.wallMap[self.w * i + (j - 1)] ^= (1 << 2);
