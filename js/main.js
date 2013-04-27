@@ -76,27 +76,37 @@ $(document).ready(function(){
     if (!mundo.runtime.state.running) {
       clearInterval(interval);
       interval = null;
+      if(mundo.runtime.state.error) {
+        $("#mensajes").trigger('error', {mensaje: mundo.runtime.state.error});
+      } else {
+      }
     }
   }
 
-  $("#compilar").click(function(event){
+  $("#mensajes").bind('error', function(event, data){
     var d = new Date();
+    $('#mensajes').prepend('<p class="text-error"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
+  });
+  $("#mensajes").bind('info', function(event, data){
+    var d = new Date();
+    $('#mensajes').prepend('<p class="text-success"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
+  });
+  $("#compilar").click(function(event){
     var syntax = getSyntax(editor.getValue());
     try {
       var compiled = syntax.parser.parse(editor.getValue());
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+syntax.name+')');
+      $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
       editor.focus();
     } catch(e) {
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+syntax.name+')</p>');
+      $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
       editor.focus();
     }
   });
   $("#futuro").click(function(event){
-    var d = new Date();
     var syntax = getSyntax(editor.getValue());
     try {
       var compiled = syntax.parser.parse(editor.getValue());
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+syntax.name+')');
+      $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
 
       mundo.reset();
       mundo.runtime.load(compiled);
@@ -104,7 +114,7 @@ $(document).ready(function(){
       wRender.paint(mundo, world.width, world.height, true);
       editor.focus();
     } catch(e) {
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+syntax.name+')');
+      $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
       editor.focus();
     }
   });
@@ -113,13 +123,13 @@ $(document).ready(function(){
     var syntax = getSyntax(editor.getValue());
     try {
       var compiled = syntax.parser.parse(editor.getValue());
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> Programa compilado (sintaxis '+syntax.name+')');
+      $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
 
       mundo.reset();
       mundo.runtime.load(compiled);
       interval = setInterval(step, $("#retraso_txt").val());
     } catch(e) {
-      $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+syntax.name+')');
+      $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
       editor.focus();
     }
   });
@@ -132,7 +142,7 @@ $(document).ready(function(){
     editor.focus();
   });
   $("#javasyntax").click(function(event){
-    editor.setValue("class karel {\n    karel() {\n        //TODO poner codigo aqui\n        turnoff();\n    }\n}", 1);
+    editor.setValue("class program {\n    program() {\n        //TODO poner codigo aqui\n        turnoff();\n    }\n}", 1);
     editor.focus();
   });
   $("#retraso_minus").click(function(){
@@ -222,10 +232,10 @@ $(document).ready(function(){
                     mundo.toggleWall(fila, columna, 0)
             }
         }
+        $("#xmlMundo").html(mundo.save());
     }
     //Volvemos a pintar el canvas
     wRender.paint(mundo, world.width, world.height);
-    $("#xmlMundo").html(mundo.save());
   });
   $("#inf_zumbadores").click(function(event){
     if($(this).hasClass('active')) { //ya hay infinitos

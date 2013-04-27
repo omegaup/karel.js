@@ -75,7 +75,7 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ayuda <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a><i class="icon-question-sign"></i> Acerca de</a></li>
+                  <li><a href="#acerca_de_modal" data-toggle="modal"><i class="icon-question-sign"></i> Acerca de</a></li>
                 </ul>
               </li>
             </ul>
@@ -260,6 +260,26 @@ finalizar-programa</div>
         <li><a href="#" id="inf_zumbadores_ctx">infinitos zumbadores</a></li>
         <li><a href="#" id="cero_zumbadores">0 zumbadores</a></li>
       </ul>
+    </div>
+    <div id="acerca_de_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Karel.js</h3>
+      </div>
+      <div class="modal-body">
+        <p><i>Karel escrito en javascript</i></p>
+        <p>Desarrollado por:
+        <ul>
+          <li>alanboy</li>
+          <li>joemmanuel</li>
+          <li>Ihchavez</li>
+          <li>Categulario</li>
+        </ul>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+      </div>
     </div>
     <script type="application/x-karel-input" id="xmlMundo"><ejecucion>
   <condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000" />
