@@ -647,7 +647,8 @@ World.prototype.save = function() {
   for (var i = 0; i < self.h; i++) {
     for (var j = 0; j < self.w; j++) {
       var buzzers = self.buzzers(i, j);
-      result.mundos.mundo.monton.push({'#attributes': {x: j, y: i, zumbadores: buzzers == -1 ? 'INFINITO' : buzzers}});
+      if(buzzers != 0) //Si no hay zumbadores no tenemos por qué guardar este registro
+        result.mundos.mundo.monton.push({'#attributes': {x: j, y: i, zumbadores: buzzers == -1 ? 'INFINITO' : buzzers}});
     }
   }
 
