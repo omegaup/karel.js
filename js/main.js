@@ -295,6 +295,23 @@ $(document).ready(function(){
     $("#wcontext_menu").css("display", "block");
     return false;
   });
+  $("#world")[0].onmousewheel = function(event){
+
+    if(event.wheelDeltaX < 0) {
+      wRender.primera_columna += 1;
+    } else if(event.wheelDeltaX > 0) {
+      wRender.primera_columna -= 1;
+    }
+
+    if(event.wheelDeltaY > 0) {
+      wRender.primera_fila += 1;
+    } else if(event.wheelDeltaY < 0) {
+      wRender.primera_fila -= 1;
+    }
+
+    wRender.paint(mundo, world.width, world.height);
+    return false;
+  };
   $("#ctx_norte").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('NORTE');
