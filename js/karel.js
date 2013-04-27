@@ -342,14 +342,23 @@ var World = function(w, h) {
 		}
 	}
 	
+	for (var i = 0; i < self.h; i++) {
+		self.addWall(1, i, 3);
+		self.addWall(i, 1, 0);
+		self.addWall(self.h - 1, i, 1);
+		self.addWall(i, self.w - 1, 2);
+	}
+	
 	self.orientation = 0;
 	self.startOrientation = 0;
-	self.start_i = 0;
-	self.i = 0;
-	self.start_j = 0;
-	self.j = 0;
+	self.start_i = 1;
+	self.i = 1;
+	self.start_j = 1;
+	self.j = 1;
 	self.startBagBuzzers = 0;
 	self.bagBuzzers = 0;
+	self.dumps = {};
+	self.dumpCells = [];
 	
 	self.dirty = true;
 };
@@ -427,10 +436,8 @@ World.prototype.leaveBuzzer = function(i, j) {
 	self.dirty = true;
 };
 
-World.prototype.load = function(text) {
+World.prototype.load = function(doc) {
 	var self = this;
-
-	self.xml = $.parseXML(text);
 	
 	for (var i = 0; i < self.wallMap.length; i++) {
 		self.wallMap[i] = 0;
@@ -447,101 +454,248 @@ World.prototype.load = function(text) {
 		self.addWall(i, self.w - 1, 2);
 	}
 	
-	$('monton', self.xml).each(function(index) {
-		var monton = $(this);
-		var i = parseInt(monton.attr('y'), 10);
-		var j = parseInt(monton.attr('x'), 10);
-		self.setBuzzers(i, j, parseInt(monton.attr('zumbadores'), 10));
-	});
+	self.dumps = {};
+	self.dumpCells = [];
+	self.maxInstructions = 10000000;
+	self.stackSize = 65000;
 	
-	$('pared', self.xml).each(function(index) {
-		var pared = $(this);
-		var i = parseInt(pared.attr('y1'), 10) + 1;
-		var j = parseInt(pared.attr('x1'), 10) + 1;
+	var rules = {
+		condicion: function(condicion) {
+			self.maxInstructions = parseInt(condicion.getAttribute('instruccionesMaximasAEjecutar'));
+			self.stackSize = parseInt(condicion.getAttribute('longitudStack'));
+		},
 		
-		if (pared.attr('x2')) {
-			var j2 = parseInt(pared.attr('x2'), 10) + 1;
+		monton: function(monton) {
+			var i = parseInt(monton.getAttribute('y'), 10);
+			var j = parseInt(monton.getAttribute('x'), 10);
+			self.setBuzzers(i, j, parseInt(monton.getAttribute('zumbadores'), 10));
+		},
+		
+		pared: function(pared) {
+			var i = parseInt(pared.getAttribute('y1'), 10) + 1;
+			var j = parseInt(pared.getAttribute('x1'), 10) + 1;
+		
+			if (pared.attr('x2')) {
+				var j2 = parseInt(pared.getAttribute('x2'), 10) + 1;
 			
-			if (j2 > j) self.addWall(i, j, 3);
-			else self.addWall(i, j2, 3);
-		} else if(pared.attr('y2')) {
-			var i2 = parseInt(pared.attr('y2'), 10) + 1;
+				if (j2 > j) self.addWall(i, j, 3);
+				else self.addWall(i, j2, 3);
+			} else if(pared.attr('y2')) {
+				var i2 = parseInt(pared.getAttribute('y2'), 10) + 1;
 			
-			if (i2 > i) self.addWall(i, j, 0);
-			else self.addWall(i2, j, 0);
+				if (i2 > i) self.addWall(i, j, 0);
+				else self.addWall(i2, j, 0);
+			}
+		},
+		
+		despliega: function(despliega) {
+			self.dumps[despliega.getAttribute('tipo').toLowerCase()] = true;
+		},
+		
+		posicionDump: function(dump) {
+			self.dumpCells.push([dump.getAttribute('y'), dump.getAttribute('x')]);
+		},
+		
+		programa: function(programa) {
+			self.di = self.h / 2 - parseInt(programa.getAttribute('yKarel'), 10);
+			self.dj = self.w / 2 - parseInt(programa.getAttribute('xKarel'), 10);
+			self.rotate(programa.getAttribute('direccionKarel'));
+			self.move(parseInt(programa.getAttribute('yKarel'), 10), parseInt(programa.getAttribute('xKarel'), 10));
 		}
-	});
+	};
 	
-	var programa = $('programa', self.xml);
-	self.di = self.h / 2 - parseInt(programa.attr('yKarel'), 10);
-	self.dj = self.w / 2 - parseInt(programa.attr('xKarel'), 10);
-	self.rotate(programa.attr('direccionKarel'));
-	self.move(parseInt(programa.attr('yKarel'), 10), parseInt(programa.attr('xKarel'), 10));
+	function traverse(node) {
+		var type = node.nodeName;
+		if (rules.hasOwnProperty(node.nodeName)) {
+			rules[node.nodeName](node);
+		}
+	
+		for (var i = 0; i < node.childNodes.length; i++) {
+			if (node.childNodes[i].nodeType == node.ELEMENT_NODE) {
+				traverse(node.childNodes[i]);
+			}
+		}
+	}
+	
+	traverse(doc);
 	
 	self.reset();
 };
 
-World.prototype.save = function() {
+World.prototype.serialize = function(node, name, indentation) {
 	var self = this;
-
-	var root = self.xml;
-	var mundo = $('mundo', self.xml).empty();
 	
-	for (var i = 0; i < self.h; i++) {
-		for (var j = 0; j < self.w; j++) {
-			var buzzers = self.world.buzzers(i, j);
-			if (buzzers == -1) {
-				mundo.append($('<' + 'monton x="' + j + '" y="' + i + '" zumbadores="INFINITO" /' + '>'));
-			} else if (buzzers > 0) {
-				mundo.append($('<' + 'monton x="' + j + '" y="' + i + '" zumbadores="' + buzzers + '" /' + '>'));
-			}
-		}
+	var result = "";
+	for (var i = 0; i < indentation; i++) {
+		result += "\t";
 	}
 	
-	for (var i = 0; i < self.h; i++) {
-		for (var j = 0; j < self.w; j++) {
-			var walls = self.world.walls(i, j);
-			for (var k = 1; k < 16; k <<= 1) {
-				if ((walls & k) == k) {
-					mundo.append($('<' + 'pared x1="' + j + '" y1="' + i + '" zumbadores="INFINITO" /' + '>'));
-				}
-			}
-		}
+	if (typeof node === 'string' || typeof node === 'number') {
+		return result + node;
 	}
 	
-	function serialize(xml, indentation) {
-		if (xml.nodeType == xml.TEXT_NODE) return "";
+	if (Array.isArray(node)) {
+		result = "";
 		
-		var result = "";
-		for (var i = 0; i < indentation; i++) {
-			result += "\t";
+		for (var i = 0; i < node.length; i++) {
+			result += self.serialize(node[i], name, indentation);
 		}
+	} else {
 		var childResult = "";
 		
-		for (var i = 0; i < xml.childNodes.length; i++) {
-			childResult += serialize(xml.childNodes[i], indentation + 1);
+		for (var p in node) {
+			if (!node.hasOwnProperty(p)) continue;
+			if (p[0] == '#') {
+				continue;
+			} else {
+				childResult += self.serialize(node[p], p, indentation + 1);
+			}
 		}
-		
-		result += "&lt;" + xml.nodeName;
-		
-		for (var i = 0; i < xml.attributes.length; i++) {
-			result += ' ' + xml.attributes[i].name + '="' + xml.attributes[i].value + '"';
+	
+		result += "<" + name;
+	
+		if (node.hasOwnProperty('#attributes')) {
+			for (var p in node['#attributes']) {
+				if (!node['#attributes'].hasOwnProperty(p)) continue;
+				result += ' ' + p + '="' + node['#attributes'][p] + '"';
+			}
 		}
-		
-		if (childResult === "") {
-			result += " /&gt;\n";
+	
+		if (node.hasOwnProperty('#text')) {
+			result += ">" + node['#text'] + '</' + name + '>\n';
+		} else if (childResult === "") {
+			result += "/>\n";
 		} else {
 			result += ">\n";
 			result += childResult;
 			for (var i = 0; i < indentation; i++) {
 				result += "\t";
 			}
-			result += "&lt;/" + xml.nodeName + "&gt;\n";
+			result += "</" + name + ">\n";
 		}
-		return result;
+	}
+	
+	return result;
+};
+
+World.prototype.save = function() {
+	var self = this;
+
+	var result = {
+		condiciones: {
+			'#attributes': {instruccionesMaximasAEjecutar: self.maxInstructions, longitudStack: self.stackSize}
+		},
+		mundos: {
+			mundo: {
+				'#attributes': {nombre: 'mundo_0', ancho: self.w, alto: self.h},
+				monton: [],
+				pared: [],
+				posicionDump: []
+			}
+		},
+		programas: {
+			'#attributes': {tipoEjecucion: 'CONTINUA', intruccionesCambioContexto: 1, milisegundosParaPasoAutomatico: 0},
+			programa: {
+				'#attributes': {
+					nombre: "p1",
+					ruta: "{$2$}",
+					mundoDeEjecucion: "mundo_0",
+					xKarel: self.j,
+					yKarel: self.i,
+					direccionKarel: ['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation],
+					mochilaKarel: self.bagBuzzers
+				},
+				despliega: []
+			}
+		}
+	};
+	
+	for (var i = 0; i < self.h; i++) {
+		for (var j = 0; j < self.w; j++) {
+			var buzzers = self.buzzers(i, j);
+			if (buzzers == -1) {
+				result.mundos.mundo.monton.push({'#attributes': {x: j, y: i, zumbadores: 'INFINITO'}});
+			} else if (buzzers > 0) {
+				result.mundos.mundo.monton.push({'#attributes': {x: j, y: i, zumbadores: buzzers}});
+			}
+		}
+	}
+	
+	for (var i = 1; i < self.h; i++) {
+		for (var j = 1; j < self.w; j++) {
+			var walls = self.walls(i, j);
+			for (var k = 2; k < 8; k <<= 1) {
+				if (i == self.h - 1 && k == 2) continue;
+				if (j == self.w - 1 && k == 4) continue;
+				
+				if ((walls & k) == k) {
+					if (k == 2) {
+						result.mundos.mundo.pared.push({'#attributes': {x1: j - 1, y1: i, x2: j}});
+					} else if (k == 4) {
+						result.mundos.mundo.pared.push({'#attributes': {x1: j, y1: i - 1, y2: i}});
+					}
+				}
+			}
+		}
+	}
+	
+	for (var i = 0; i < self.dumpCells.length; i++) {
+		result.mundos.mundo.posicionDump.push({'#attributes': {x: self.dumpCells[i][1], y: self.dumpCells[i][0]}});
+	}
+	
+	for (var p in self.dumps) {
+		if (!self.dumps.hasOwnProperty(p)) continue;
+		result.programas.programa.despliega.push({'#attributes': {tipo: p.toUpperCase()}});
 	}
 
-	return serialize(root.documentElement, 0);
+	return self.serialize(result, 'ejecucion', 0);
+};
+
+World.prototype.output = function() {
+	var self = this;
+	
+	var result = {};
+	
+	if (self.dumps.mundo) {
+		result.mundos = {mundo: {'#attributes': {nombre: 'mundo_0'}, linea: []}};
+		
+		var dumpCells = {};
+		for (var i = 0; i < self.dumpCells.length; i++) {
+			if (!dumpCells.hasOwnProperty(self.dumpCells[i][0])) {
+				dumpCells[self.dumpCells[i][0]] = {};
+			}
+			dumpCells[self.dumpCells[i][0]][self.dumpCells[i][1]] = true;
+		}
+		
+		for (var i = 1; i <= self.h; i++) {
+			var lastNonZero = 0;
+			var line = '';
+			
+			for (var j = 1; j <= self.w; j++) {
+				if (dumpCells[i] && dumpCells[i][j]) {
+					if (self.buzzers(i, j) != 0) {
+						if (lastNonZero < j - 1) {
+							line += '(' + (j - 1 - lastNonZero) + ') ';
+						}
+					 	line += self.buzzers(i, j) + ' ';
+					 	lastNonZero = j;
+					}
+				}
+			}
+			
+			if (line != '') {
+				result.mundos.mundo.linea.push({'#attributes': {linea: i, compresionDeCeros: 'true'}, '#text': line});
+			}
+		}
+	}
+	
+	result.programas = {programa: {'#attributes': {nombre: 'p1'}}};
+	
+	if (!self.error) {
+		result.programas.programa['#attributes'].resultadoEjecucion = 'FIN PROGRAMA';
+	}
+	
+	return self.serialize(result, 'resultados', 0);
 };
 
 World.prototype.move = function(i, j) {
@@ -549,6 +703,7 @@ World.prototype.move = function(i, j) {
 
 	self.i = self.start_i = parseInt(i, 10);
 	self.j = self.start_j = parseInt(j, 10);
+	self.dirty = true;
 };
 
 World.prototype.rotate = function(orientation) {
@@ -556,12 +711,14 @@ World.prototype.rotate = function(orientation) {
 
 	var orientations = ['OESTE', 'NORTE', 'ESTE', 'SUR'];
 	self.orientation = self.startOrientation = Math.max(0, orientations.indexOf(orientation));
+	self.dirty = true;
 };
 
 World.prototype.setBagBuzzers = function(buzzers) {
 	var self = this;
 
 	self.bagBuzzers = self.startBagBuzzers = buzzers;
+	self.dirty = true;
 };
 
 World.prototype.reset = function() {
@@ -579,3 +736,7 @@ World.prototype.reset = function() {
 	
 	self.dirty = true;
 };
+
+if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
+	exports.World = World;
+}
