@@ -41,6 +41,11 @@ $(document).ready(function(){
     // first_column, last_column.
     return parser.lexer.yylloc;
   }
+  
+  function parseWorld(xml) {
+  	// Parses the xml and returns a document object.
+  	return new DOMParser().parseFromString(xml, 'text/xml');
+  }
 
   //Preparación del editor
   var editor = ace.edit("editor");
@@ -55,7 +60,7 @@ $(document).ready(function(){
   var fila_evento;
   var columna_evento;
   var mundo = new World(100, 100);
-  mundo.load($('script#xmlMundo').html());
+  mundo.load(parseWorld($('script#xmlMundo').html()));
   wRender.paint(mundo, world.width, world.height);
 
   var interval = null;
@@ -154,7 +159,7 @@ $(document).ready(function(){
       mundo.setBagBuzzers($('#mochila').val());
   });
   $("#worldclean").click(function(event){
-    mundo.load($('script#xmlMundo')[0].textContent);
+    mundo.load(parseWorld($('script#xmlMundo').html()));
     wRender.paint(mundo, world.width, world.height);
   });
   $("#newworld").click(function(event){
