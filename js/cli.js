@@ -42,7 +42,7 @@ nomnom.command('run')
 
 var opts = nomnom
 	.script('karel.js')
-	.option('vebose', {
+	.option('verbose', {
 		abbr: 'v',
 		flag: true,
 		help: 'be verbose (print debugging messages)'

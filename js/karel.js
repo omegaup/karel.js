@@ -34,6 +34,12 @@ EventTarget.prototype.dispatchEvent = function(evt) {
 	}
 };
 
+if (typeof Event === 'undefined') {
+	var Event = function(type) {
+		this.type = type;
+	};
+}
+
 /**
   * A class that holds the state of computation and executes opcodes.
   * 
@@ -70,6 +76,8 @@ Runtime.prototype.reset = function() {
 		sp: -1,
 		line: 0,
 		stack: [],
+		stackSize: 0,
+		ic: 0,
 		
 		// Flags
 		jumped: false,
@@ -105,6 +113,14 @@ Runtime.prototype.next = function() {
 	if (!self.state.running) return;
 	
 	var world = self.world;
+	
+	self.state.ic += 1;
+	if (self.state.ic >= world.maxInstructions) {
+		self.state.running = false;
+		self.state.error = 'INSTRUCTION LIMIT';
+		
+		return;
+	}
 	
 	var opcodes = {
 		'HALT': function(state, params) {
@@ -215,16 +231,10 @@ Runtime.prototype.next = function() {
 		
 		'PICKBUZZER': function(state, params) {
 			world.pickBuzzer(world.i, world.j);
-			if (world.bagBuzzers != -1) {
-				world.bagBuzzers++;
-			}
 		},
 		
 		'LEAVEBUZZER': function(state, params) {
 			world.leaveBuzzer(world.i, world.j);
-			if (world.bagBuzzers != -1) {
-				world.bagBuzzers--;
-			}
 		},
 		
 		'LOAD': function(state, params) {
@@ -259,6 +269,18 @@ Runtime.prototype.next = function() {
 			state.sp = newSP;
 			state.pc = params[0];
 			state.jumped = true;
+			state.stackSize++;
+			
+			if (state.stackSize >= world.stackSize) {
+				state.running = false;
+				state.error = 'STACK';
+			} else {	
+				var ev = new Event('call');
+				ev.function = params[1];
+				ev.line = state.line;
+				ev.target = self;
+				self.dispatchEvent(ev);
+			}
 		},
 		
 		'RET': function(state, params) {
@@ -269,6 +291,10 @@ Runtime.prototype.next = function() {
 			while (state.stack.length > oldSP) {
 				state.stack.pop();
 			}
+			state.stackSize--;	
+			var ev = new Event('return');
+			ev.target = self;
+			self.dispatchEvent(ev);
 		},
 		
 		'PARAM': function(state, params) {
@@ -422,8 +448,12 @@ World.prototype.pickBuzzer = function(i, j) {
 	var self = this;
 
 	if (0 > i || i >= self.h || 0 > j || j >= self.w) return;
-	if (self.currentMap[self.w * i + j] != -1)
+	if (self.currentMap[self.w * i + j] != -1) {
 		self.currentMap[self.w * i + j]--;
+	}
+	if (self.bagBuzzers != -1) {
+		self.bagBuzzers++;
+	}
 	self.dirty = true;
 };
 
@@ -431,8 +461,12 @@ World.prototype.leaveBuzzer = function(i, j) {
 	var self = this;
 
 	if (0 > i || i >= self.h || 0 > j || j >= self.w) return;
-	if (self.currentMap[self.w * i + j] != -1)
+	if (self.currentMap[self.w * i + j] != -1) {
 		self.currentMap[self.w * i + j]++;
+	}	
+	if (self.bagBuzzers != -1) {
+		self.bagBuzzers--;
+	}
 	self.dirty = true;
 };
 
@@ -460,9 +494,9 @@ World.prototype.load = function(doc) {
 	self.stackSize = 65000;
 	
 	var rules = {
-		condicion: function(condicion) {
-			self.maxInstructions = parseInt(condicion.getAttribute('instruccionesMaximasAEjecutar'));
-			self.stackSize = parseInt(condicion.getAttribute('longitudStack'));
+		condiciones: function(condiciones) {
+			self.maxInstructions = parseInt(condiciones.getAttribute('instruccionesMaximasAEjecutar'));
+			self.stackSize = parseInt(condiciones.getAttribute('longitudStack'));
 		},
 		
 		monton: function(monton) {
@@ -603,7 +637,7 @@ World.prototype.save = function() {
 					xKarel: self.j,
 					yKarel: self.i,
 					direccionKarel: ['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation],
-					mochilaKarel: self.bagBuzzers
+					mochilaKarel: self.bagBuzzers == -1 ? 'INFINITO' : self.bagBuzzers
 				},
 				despliega: []
 			}
@@ -613,11 +647,7 @@ World.prototype.save = function() {
 	for (var i = 0; i < self.h; i++) {
 		for (var j = 0; j < self.w; j++) {
 			var buzzers = self.buzzers(i, j);
-			if (buzzers == -1) {
-				result.mundos.mundo.monton.push({'#attributes': {x: j, y: i, zumbadores: 'INFINITO'}});
-			} else if (buzzers > 0) {
-				result.mundos.mundo.monton.push({'#attributes': {x: j, y: i, zumbadores: buzzers}});
-			}
+			result.mundos.mundo.monton.push({'#attributes': {x: j, y: i, zumbadores: buzzers == -1 ? 'INFINITO' : buzzers}});
 		}
 	}
 	
@@ -691,9 +721,7 @@ World.prototype.output = function() {
 	
 	result.programas = {programa: {'#attributes': {nombre: 'p1'}}};
 	
-	if (!self.error) {
-		result.programas.programa['#attributes'].resultadoEjecucion = 'FIN PROGRAMA';
-	}
+	result.programas.programa['#attributes'].resultadoEjecucion = self.runtime.state.error ? self.runtime.state.error : 'FIN PROGRAMA';
 	
 	return self.serialize(result, 'resultados', 0);
 };
