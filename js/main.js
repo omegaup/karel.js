@@ -297,15 +297,15 @@ $(document).ready(function(){
   });
   $("#world")[0].onmousewheel = function(event){
 
-    if(event.wheelDeltaX < 0) {
+    if(event.wheelDeltaX < 0 && (wRender.primera_columna + wRender.num_columnas)<102) {
       wRender.primera_columna += 1;
-    } else if(event.wheelDeltaX > 0) {
+    } else if(event.wheelDeltaX > 0 && wRender.primera_columna > 1) {
       wRender.primera_columna -= 1;
     }
 
-    if(event.wheelDeltaY > 0) {
+    if(event.wheelDeltaY > 0 && (wRender.primera_fila + wRender.num_filas)<102) {
       wRender.primera_fila += 1;
-    } else if(event.wheelDeltaY < 0) {
+    } else if(event.wheelDeltaY < 0 && wRender.primera_fila > 1) {
       wRender.primera_fila -= 1;
     }
 
