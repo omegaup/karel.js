@@ -101,7 +101,7 @@ $(document).ready(function(){
       mundo.reset();
       mundo.runtime.load(compiled);
       while (mundo.runtime.step());
-      wRender.paint(mundo, world.width, world.height);
+      wRender.paint(mundo, world.width, world.height, true);
       editor.focus();
     } catch(e) {
       $('#mensajes').prepend('<p><strong>['+d.toLocaleString()+']</strong> <pre>'+e+'</pre> (sintaxis '+syntax.name+')');
@@ -157,14 +157,16 @@ $(document).ready(function(){
   });
   $("#mochila").blur(function(event){
       mundo.setBagBuzzers($('#mochila').val());
+      $("#xmlMundo").html(mundo.save());
   });
   $("#worldclean").click(function(event){
     mundo.load(parseWorld($('script#xmlMundo').html()));
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, true);
   });
   $("#newworld").click(function(event){
     mundo = new World(100, 100);
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, true);
+    $("#xmlMundo").html(mundo.save());
   });
   $("body").keyup(function(event){
     if(event.keyCode == 27) {
@@ -223,6 +225,7 @@ $(document).ready(function(){
     }
     //Volvemos a pintar el canvas
     wRender.paint(mundo, world.width, world.height);
+    $("#xmlMundo").html(mundo.save());
   });
   $("#inf_zumbadores").click(function(event){
     if($(this).hasClass('active')) { //ya hay infinitos
@@ -236,6 +239,7 @@ $(document).ready(function(){
       $(this).addClass('active');
       $("#mochila").attr('disabled', 1);
     }
+    $("#xmlMundo").html(mundo.save());
   });
   $("#quitar_zumbadores").click(function(event){
     if($(this).hasClass('active')) { //ya hay infinitos
@@ -245,6 +249,7 @@ $(document).ready(function(){
       borrar_zumbadores = true;
       $(this).addClass('active');
     }
+    $("#xmlMundo").html(mundo.save());
   });
   $("#go_home").click(function(event){
     wRender.primera_fila = 1;
@@ -269,38 +274,45 @@ $(document).ready(function(){
     mundo.rotate('NORTE');
     $("#wcontext_menu").css("display", "none");
     wRender.paint(mundo, world.width, world.height);
+    $("#xmlMundo").html(mundo.save());
   });
   $("#ctx_sur").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('SUR');
     $("#wcontext_menu").css("display", "none");
     wRender.paint(mundo, world.width, world.height);
+    $("#xmlMundo").html(mundo.save());
   });
   $("#ctx_este").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('ESTE');
     $("#wcontext_menu").css("display", "none");
     wRender.paint(mundo, world.width, world.height);
+    $("#xmlMundo").html(mundo.save());
   });
   $("#ctx_oeste").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('OESTE');
     $("#wcontext_menu").css("display", "none");
     wRender.paint(mundo, world.width, world.height);
+    $("#xmlMundo").html(mundo.save());
   });
   $("#n_zumbadores").click(function(event){
     mundo.setBuzzers(fila_evento, columna_evento, prompt("¿Cuántos zumbadores?", '0'));
     $("#wcontext_menu").css("display", "none");
     wRender.paint(mundo, world.width, world.height);
+    $("#xmlMundo").html(mundo.save());
   });
   $("#inf_zumbadores_ctx").click(function(event){
     mundo.setBuzzers(fila_evento, columna_evento, -1);
     $("#wcontext_menu").css("display", "none");
     wRender.paint(mundo, world.width, world.height);
+    $("#xmlMundo").html(mundo.save());
   });
   $("#cero_zumbadores").click(function(event) {
     mundo.setBuzzers(fila_evento, columna_evento, 0);
     $("#wcontext_menu").css("display", "none");
     wRender.paint(mundo, world.width, world.height);
+    $("#xmlMundo").html(mundo.save());
   });
 });
