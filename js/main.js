@@ -41,10 +41,10 @@ $(document).ready(function(){
     // first_column, last_column.
     return parser.lexer.yylloc;
   }
-  
+
   function parseWorld(xml) {
-  	// Parses the xml and returns a document object.
-  	return new DOMParser().parseFromString(xml, 'text/xml');
+    // Parses the xml and returns a document object.
+    return new DOMParser().parseFromString(xml, 'text/xml');
   }
 
   //Preparación del editor
@@ -71,7 +71,7 @@ $(document).ready(function(){
 
     mundo.dirty = false;
 
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, true);
 
     if (!mundo.runtime.state.running) {
       clearInterval(interval);

@@ -10,7 +10,7 @@ var WorldRender = function(context){
     this.num_filas = 1
     this.num_columnas = 1
 
-    this.paint = function(world, mundo_ancho, mundo_alto) {
+    this.paint = function(world, mundo_ancho, mundo_alto, track_karel) {
 
         function dibuja_karel(context, world, origen){ //Dibujar a Karel
 
@@ -68,6 +68,21 @@ var WorldRender = function(context){
 
         this.num_columnas = (tamanio_lienzo.x/30 + Math.ceil((tamanio_lienzo.x%30)/30.))*1
         this.num_filas = (tamanio_lienzo.y/30 + Math.ceil((tamanio_lienzo.y%30)/30.))*1
+
+        if(track_karel) {
+          //Rastrea la ubicación de karel y lo forza a aparecer
+          if(world.i < this.primera_fila) {
+            this.primera_fila = Math.floor(world.i)
+          } else if (world.i > ((this.primera_fila + this.num_filas)-2)) {
+            this.primera_fila = Math.floor(world.i - this.num_filas) +3
+          }
+          if(world.j < this.primera_columna) {
+            this.primera_columna = Math.floor(world.j)
+          } else if (world.j > ((this.primera_columna + this.num_columnas)-2)) {
+            this.primera_columna = Math.floor(world.j - this.num_columnas) +3
+          }
+        }
+
         //Cuadrados de las esquinas
         for(var i=0;i<this.num_columnas;i++){
             for(j=0;j<this.num_columnas;j++) {
