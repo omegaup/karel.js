@@ -47,6 +47,12 @@ $(document).ready(function(){
     return new DOMParser().parseFromString(xml, 'text/xml');
   }
 
+  var ERROR_CODES = {
+    'WALL': 'Karel ha chocado con un muro!',
+    'WORLDUNDERFLOW': 'Karel intentó tomar zumbadores en una posición donde no había!',
+    'BAGUNDERFLOW': 'Karel intentó dejar un zumbador pero su mochila estaba vacía!'
+  }
+
   //Preparación del editor
   var editor = ace.edit("editor");
   editor.setTheme("ace/theme/github");
@@ -77,8 +83,11 @@ $(document).ready(function(){
       clearInterval(interval);
       interval = null;
       if(mundo.runtime.state.error) {
-        $("#mensajes").trigger('error', {mensaje: mundo.runtime.state.error});
+        $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
+        alert(ERROR_CODES[mundo.runtime.state.error]);
       } else {
+        $("#mensajes").trigger('error', {mensaje: 'Ejecución terminada!'});
+        alert('Ejecución terminada!');
       }
     }
   }
@@ -111,6 +120,13 @@ $(document).ready(function(){
       mundo.reset();
       mundo.runtime.load(compiled);
       while (mundo.runtime.step());
+      if(mundo.runtime.state.error) {
+        $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
+        alert(ERROR_CODES[mundo.runtime.state.error]);
+      } else {
+        $("#mensajes").trigger('error', {mensaje: 'Ejecución terminada!'});
+        alert('Ejecución terminada!');
+      }
       wRender.paint(mundo, world.width, world.height, true);
       editor.focus();
     } catch(e) {
