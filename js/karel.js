@@ -347,8 +347,8 @@ Runtime.prototype.next = function() {
 var World = function(w, h) {
 	var self = this;
 
-	self.w = w;
-	self.h = h;
+	self.w = w + 1;
+	self.h = h + 1;
 	self.runtime = new Runtime(self);
 	if (ArrayBuffer) {
 		self.map = new Int16Array(new ArrayBuffer(self.w * self.h * 2));

@@ -3,9 +3,9 @@
 %lex
 %%
 
-\n\s*				{ return 'NEWLINE'; }
-[ \t]+                          {/* ignore */}
-[#][^\n]*\n\s*			{/* ignore */}
+[\n]				{ return 'NEWLINE'; }
+\s+                             {/* ignore */}
+\#[^\n]*			{/* ignore */}
 "def"				{ return 'DEF'; }
 "apagate"                       { return 'HALT'; }
 "gira-izquierda"                { return 'LEFT'; }
@@ -55,10 +55,10 @@
 %%
 
 program
-  : def_expr_list_opt_newlines EOF
+  : opt_newlines def_expr_list opt_newlines EOF
     %{
-	var def_list = $def_expr_list_opt_newlines[0];
-	var expr_list = $def_expr_list_opt_newlines[1];
+	var def_list = $def_expr_list[0];
+	var expr_list = $def_expr_list[1];
 	
     	var program = expr_list.concat([['LINE', yylineno], ['HALT']]);
     	var functions = {};
@@ -89,13 +89,6 @@ program
     %}
   ;
   
-def_expr_list_opt_newlines
-  : newlines def_expr_list
-    { $$ = $def_expr_list; }
-  | def_expr_list
-    { $$ = $def_expr_list; }
-  ;
-  
 def_expr_list
   : def_expr_list newlines def
     { $$ = [$def_expr_list[0].concat($def), $def_expr_list[1]]; }
@@ -112,6 +105,11 @@ expr_list
     { $$ = $expr_list.concat($expr); }
   | expr newlines
     { $$ = $expr; }
+  ;
+ 
+opt_newlines
+  : newlines
+  |
   ;
 
 newlines
