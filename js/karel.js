@@ -34,6 +34,31 @@ EventTarget.prototype.dispatchEvent = function(evt) {
 	}
 };
 
+EventTarget.prototype.fireEvent = function(type, properties) {
+	var self = this;
+	
+	var event = null;
+	
+	// IE does not support the construction of custom events through
+	// standard means. ugh.
+	if (document && document.createEventObject) {
+		event = document.createEventObject();
+		event.type = type;
+	} else {
+		event = new Event(type);
+	}
+	
+	if (properties) {
+		for (var p in properties) {
+			if (properties.hasOwnProperty(p)) {
+				event[p] = properties[p];
+			}
+		}
+	}
+	
+	self.dispatchEvent(event);
+};
+
 if (typeof Event === 'undefined') {
 	var Event = function(type) {
 		this.type = type;
@@ -85,10 +110,7 @@ Runtime.prototype.reset = function() {
 	};
 
 	if (self.debug) {
-		var ev = new Event('debug');
-		ev.target = self;
-		ev.message = JSON.stringify(self.program);
-		self.dispatchEvent(ev);
+		self.fireEvent('debug', {target: self, message: JSON.stringify(self.program)});
 	}
 };
 
@@ -275,11 +297,7 @@ Runtime.prototype.next = function() {
 				state.running = false;
 				state.error = 'STACK';
 			} else {
-				var ev = new Event('call');
-				ev.function = params[1];
-				ev.line = state.line;
-				ev.target = self;
-				self.dispatchEvent(ev);
+				self.fireEvent('call', {'function': params[1], line: state.line, target: self});
 			}
 		},
 
@@ -292,9 +310,7 @@ Runtime.prototype.next = function() {
 				state.stack.pop();
 			}
 			state.stackSize--;
-			var ev = new Event('return');
-			ev.target = self;
-			self.dispatchEvent(ev);
+			self.fireEvent('return', {target: self});
 		},
 
 		'PARAM': function(state, params) {
@@ -307,12 +323,9 @@ Runtime.prototype.next = function() {
 		if (!opcodes[opcode[0]]) {
 			self.state.running = false;
 			if (self.debug) {
-				var ev = new Event('debug');
-				ev.target = self;
-				ev.message = 'Missing opcode ' + opcode[0];
-				ev.debugType = 'opcode';
-				self.dispatchEvent(ev);
+				self.fireEvent('debug', {target: self, message: 'Missing opcode ' + opcode[0], debugType: 'opcode'});
 			}
+			self.state.error = 'INVALIDOPCODE';
 			return false;
 		}
 
@@ -325,19 +338,13 @@ Runtime.prototype.next = function() {
 		}
 
 		if (self.debug) {
-			var ev2 = new Event('debug');
-			ev2.target = self;
-			ev2.message = JSON.stringify(opcode);
-			ev2.debugType = 'opcode';
-			self.dispatchEvent(ev2);
-
-			var ev3 = new Event('debug');
-			ev3.target = self;
-			ev3.message = JSON.stringify(self.state);
-			self.dispatchEvent(ev3);
+			self.fireEvent('debug', {target: self, message: JSON.stringify(opcode), debugType: 'opcode'});
+			self.fireEvent('debug', {target: self, message: JSON.stringify(self.state)});
 		}
 	} catch (e) {
 		self.state.running = false;
+		console.log(e);
+		console.log(e.stack);
 		throw e;
 	}
 
