@@ -247,8 +247,10 @@ $(document).ready(function(){
                     mundo.setBuzzers(fila, columna, 0);
                 } else {
                     zumbadores = mundo.buzzers(fila, columna);
-                    if (zumbadores >= 0)
+                    if (zumbadores >= 0 && !event.ctrlKey)
                         mundo.setBuzzers(fila, columna, zumbadores+1);
+                    else if (zumbadores > 0 && event.ctrlKey)
+                        mundo.setBuzzers(fila, columna, zumbadores-1);
                 }
             } else if (excedente_horizontal > excedente_vertical) {
                 if (excedente_horizontal > (1 - excedente_vertical))
