@@ -50,7 +50,9 @@ $(document).ready(function(){
   var ERROR_CODES = {
     'WALL': 'Karel ha chocado con un muro!',
     'WORLDUNDERFLOW': 'Karel intentó tomar zumbadores en una posición donde no había!',
-    'BAGUNDERFLOW': 'Karel intentó dejar un zumbador pero su mochila estaba vacía!'
+    'BAGUNDERFLOW': 'Karel intentó dejar un zumbador pero su mochila estaba vacía!',
+    'INSTRUCTION LIMIT': 'Karel ha superado el límite de instrucciones!',
+    'STACK': 'La pila de karel se ha desbordado!'
   }
 
   //Preparación del editor
@@ -86,6 +88,7 @@ $(document).ready(function(){
       if(mundo.runtime.state.error) {
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
         alert(ERROR_CODES[mundo.runtime.state.error]);
+        console.log(mundo.runtime.state.error);
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
         alert('Ejecución terminada!');
@@ -301,6 +304,11 @@ $(document).ready(function(){
   $("#go_home").click(function(event){
     wRender.primera_fila = 1;
     wRender.primera_columna = 1;
+    wRender.paint(mundo, world.width, world.height);
+  });
+  $("#follow_karel").click(function(event){
+    wRender.primera_fila = mundo.i;
+    wRender.primera_columna = mundo.j;
     wRender.paint(mundo, world.width, world.height);
   });
   $("#world").bind("contextmenu", function(e){
