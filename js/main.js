@@ -67,6 +67,7 @@ $(document).ready(function(){
   var columna_evento;
   var mundo = new World(100, 100);
   mundo.load(parseWorld($('script#xmlMundo').html()));
+  $("#world").attr('width', $("#world").width());
   wRender.paint(mundo, world.width, world.height);
 
   var interval = null;
@@ -92,6 +93,10 @@ $(document).ready(function(){
     }
   }
 
+  $(window).resize(function(event) {
+    $("#world").attr('width', $("#world").width());
+    wRender.paint(mundo, world.width, world.height);
+  });
   $("#mensajes").bind('error', function(event, data){
     var d = new Date();
     $('#mensajes').prepend('<p class="text-error"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
@@ -151,11 +156,11 @@ $(document).ready(function(){
         $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+evt.line+'</span></div>');
       });
       mundo.runtime.addEventListener('return', function(evt){
-        var arreglo = $("#pila > div");
-        arreglo.reverse();
-        arreglo.pop();
-        arreglo.reverse();
-        $("#pila").html(arr);
+        //~ var arreglo = $("#pila > div");
+        //~ arreglo.reverse();
+        //~ arreglo.pop();
+        //~ arreglo.reverse();
+        //~ $("#pila").html(arr);
       });
       interval = setInterval(step, $("#retraso_txt").val());
     } catch(e) {
