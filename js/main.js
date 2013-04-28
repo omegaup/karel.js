@@ -88,7 +88,6 @@ $(document).ready(function(){
       if(mundo.runtime.state.error) {
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
         alert(ERROR_CODES[mundo.runtime.state.error]);
-        console.log(mundo.runtime.state.error);
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
         alert('Ejecución terminada!');
