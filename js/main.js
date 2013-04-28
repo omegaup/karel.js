@@ -86,7 +86,7 @@ $(document).ready(function(){
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
         alert(ERROR_CODES[mundo.runtime.state.error]);
       } else {
-        $("#mensajes").trigger('error', {mensaje: 'Ejecución terminada!'});
+        $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
         alert('Ejecución terminada!');
       }
     }
@@ -97,6 +97,10 @@ $(document).ready(function(){
     $('#mensajes').prepend('<p class="text-error"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
   });
   $("#mensajes").bind('info', function(event, data){
+    var d = new Date();
+    $('#mensajes').prepend('<p class="text-info"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
+  });
+  $("#mensajes").bind('success', function(event, data){
     var d = new Date();
     $('#mensajes').prepend('<p class="text-success"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
   });
@@ -143,6 +147,16 @@ $(document).ready(function(){
 
       mundo.reset();
       mundo.runtime.load(compiled);
+      mundo.runtime.addEventListener('call', function(evt){
+        $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+evt.line+'</span></div>');
+      });
+      mundo.runtime.addEventListener('return', function(evt){
+        var arreglo = $("#pila > div");
+        arreglo.reverse();
+        arreglo.pop();
+        arreglo.reverse();
+        $("#pila").html(arr);
+      });
       interval = setInterval(step, $("#retraso_txt").val());
     } catch(e) {
       $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
