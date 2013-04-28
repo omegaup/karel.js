@@ -131,14 +131,14 @@ $(document).ready(function(){
       mundo.reset();
       mundo.runtime.load(compiled);
       while (mundo.runtime.step());
+      wRender.paint(mundo, world.width, world.height, true);
       if(mundo.runtime.state.error) {
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
         alert(ERROR_CODES[mundo.runtime.state.error]);
       } else {
-        $("#mensajes").trigger('error', {mensaje: 'Ejecución terminada!'});
+        $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
         alert('Ejecución terminada!');
       }
-      wRender.paint(mundo, world.width, world.height, true);
       editor.focus();
     } catch(e) {
       $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
