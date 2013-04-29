@@ -161,7 +161,7 @@ cond
   : IF line term newlines expr_list END
     { $$ = $term.concat($line).concat([['JZ', $expr_list.length]]).concat($expr_list); }
   | IF line term newlines expr_list ELSE newlines expr_list END
-    { $$ = $term.concat($line).concat([['JZ', 1 + $5.length]]).concat($r).concat([['JMP', $8.length]]).concat($8); }
+    { $$ = $term.concat($line).concat([['JZ', 1 + $5.length]]).concat($5).concat([['JMP', $8.length]]).concat($8); }
   ;
 
 loop
