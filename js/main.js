@@ -113,6 +113,7 @@ $(document).ready(function(){
   });
   $("#compilar").click(function(event){
     var syntax = getSyntax(editor.getValue());
+    $("#pila").html('');
     try {
       var compiled = syntax.parser.parse(editor.getValue());
       $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
@@ -124,6 +125,7 @@ $(document).ready(function(){
   });
   $("#futuro").click(function(event){
     var syntax = getSyntax(editor.getValue());
+    $("#pila").html('');
     try {
       var compiled = syntax.parser.parse(editor.getValue());
       $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
@@ -148,6 +150,7 @@ $(document).ready(function(){
   $("#ejecutar").click(function(event){
     var d = new Date();
     var syntax = getSyntax(editor.getValue());
+    $("#pila").html('');
     try {
       var compiled = syntax.parser.parse(editor.getValue());
       $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
@@ -158,11 +161,7 @@ $(document).ready(function(){
         $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+evt.line+'</span></div>');
       });
       mundo.runtime.addEventListener('return', function(evt){
-        //~ var arreglo = $("#pila > div");
-        //~ arreglo.reverse();
-        //~ arreglo.pop();
-        //~ arreglo.reverse();
-        //~ $("#pila").html(arr);
+        var arreglo = $("#pila > div:first-child").remove();
       });
       interval = setInterval(step, $("#retraso_txt").val());
     } catch(e) {
@@ -207,6 +206,7 @@ $(document).ready(function(){
       $("#xmlMundo").html(mundo.save());
   });
   $("#worldclean").click(function(event){
+    $("#pila").html('');
     mundo.load(parseWorld($('script#xmlMundo').html()));
     wRender.paint(mundo, world.width, world.height, true);
   });
