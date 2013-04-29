@@ -162,7 +162,7 @@ case 22: this.$ = $$[$0];
 break;
 case 23: this.$ = $$[$0-3].concat($$[$0-4]).concat([['JZ', $$[$0-1].length]]).concat($$[$0-1]); 
 break;
-case 24: this.$ = $$[$0-6].concat($$[$0-7]).concat([['JZ', 1 + $$[$0-4].length]]).concat(r).concat([['JMP', $$[$0-1].length]]).concat($$[$0-1]); 
+case 24: this.$ = $$[$0-6].concat($$[$0-7]).concat([['JZ', 1 + $$[$0-4].length]]).concat($$[$0-4]).concat([['JMP', $$[$0-1].length]]).concat($$[$0-1]); 
 break;
 case 25: this.$ = $$[$0-3].concat($$[$0-4]).concat([['JZ', 1 + $$[$0-1].length]]).concat($$[$0-1]).concat([['JMP', -1 -($$[$0-3].length + 1 + $$[$0-1].length + 1)]]); 
 break;
@@ -710,7 +710,7 @@ var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
 case 0: return 11; 
 break;
-case 1: return 11; 
+case 1:/* ignore */
 break;
 case 2:/* ignore */
 break;
@@ -798,7 +798,7 @@ case 43: return 6;
 break;
 }
 },
-rules: [/^(?:#[^\n]*(\n|$))/,/^(?:[\n])/,/^(?:\s+)/,/^(?:def\b)/,/^(?:apagate\b)/,/^(?:gira-izquierda\b)/,/^(?:avanza\b)/,/^(?:coge-zumbador\b)/,/^(?:deja-zumbador\b)/,/^(?:fin\b)/,/^(?:veces\b)/,/^(?:mientras\b)/,/^(?:precede\b)/,/^(?:sucede\b)/,/^(?:si-es-cero\b)/,/^(?:frente-libre\b)/,/^(?:frente-bloqueado\b)/,/^(?:izquierda-libre\b)/,/^(?:izquierda-bloqueada\b)/,/^(?:derecha-libre\b)/,/^(?:derecha-bloqueada\b)/,/^(?:junto-a-zumbador\b)/,/^(?:no-junto-a-zumbador\b)/,/^(?:algun-zumbador-en-la-mochila\b)/,/^(?:ningun-zumbador-en-la-mochila\b)/,/^(?:orientado-al-norte\b)/,/^(?:orientado-al-sur\b)/,/^(?:orientado-al-este\b)/,/^(?:orientado-al-oeste\b)/,/^(?:no-orientado-al-norte\b)/,/^(?:no-orientado-al-sur\b)/,/^(?:no-orientado-al-este\b)/,/^(?:no-orientado-al-oeste\b)/,/^(?:sino\b)/,/^(?:si\b)/,/^(?:no\b)/,/^(?:o\b)/,/^(?:u\b)/,/^(?:y\b)/,/^(?:\()/,/^(?:\))/,/^(?:[0-9]+)/,/^(?:[a-zA-Z][a-zA-Z0-9-]*)/,/^(?:$)/],
+rules: [/^(?:[\n])/,/^(?:\s+)/,/^(?:#[^\n]*)/,/^(?:def\b)/,/^(?:apagate\b)/,/^(?:gira-izquierda\b)/,/^(?:avanza\b)/,/^(?:coge-zumbador\b)/,/^(?:deja-zumbador\b)/,/^(?:fin\b)/,/^(?:veces\b)/,/^(?:mientras\b)/,/^(?:precede\b)/,/^(?:sucede\b)/,/^(?:si-es-cero\b)/,/^(?:frente-libre\b)/,/^(?:frente-bloqueado\b)/,/^(?:izquierda-libre\b)/,/^(?:izquierda-bloqueada\b)/,/^(?:derecha-libre\b)/,/^(?:derecha-bloqueada\b)/,/^(?:junto-a-zumbador\b)/,/^(?:no-junto-a-zumbador\b)/,/^(?:algun-zumbador-en-la-mochila\b)/,/^(?:ningun-zumbador-en-la-mochila\b)/,/^(?:orientado-al-norte\b)/,/^(?:orientado-al-sur\b)/,/^(?:orientado-al-este\b)/,/^(?:orientado-al-oeste\b)/,/^(?:no-orientado-al-norte\b)/,/^(?:no-orientado-al-sur\b)/,/^(?:no-orientado-al-este\b)/,/^(?:no-orientado-al-oeste\b)/,/^(?:sino\b)/,/^(?:si\b)/,/^(?:no\b)/,/^(?:o\b)/,/^(?:u\b)/,/^(?:y\b)/,/^(?:\()/,/^(?:\))/,/^(?:[0-9]+)/,/^(?:[a-zA-Z][a-zA-Z0-9-]*)/,/^(?:$)/],
 conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43],"inclusive":true}}
 };
 return lexer;
