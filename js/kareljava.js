@@ -700,7 +700,7 @@ pushState:function pushState(condition) {
 stateStackSize:function stateStackSize() {
         return this.conditionStack.length;
     },
-options: {},
+options: {"case-insensitive":true},
 performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 
 var YYSTATE=YY_START;
@@ -807,7 +807,7 @@ case 49: return 12;
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:\/\/[^\n]*)/,/^(?:\/(\*([^*]|\*[^/])*\*)\/)/,/^(?:class\b)/,/^(?:program\b)/,/^(?:define\b)/,/^(?:void\b)/,/^(?:turnoff\b)/,/^(?:turnleft\b)/,/^(?:move\b)/,/^(?:pickbeeper\b)/,/^(?:putbeeper\b)/,/^(?:while\b)/,/^(?:iterate\b)/,/^(?:pred\b)/,/^(?:succ\b)/,/^(?:iszero\b)/,/^(?:frontIsClear\b)/,/^(?:frontIsBlocked\b)/,/^(?:leftIsClear\b)/,/^(?:leftIsBlocked\b)/,/^(?:rightIsClear\b)/,/^(?:rightIsBlocked\b)/,/^(?:nextToABeeper\b)/,/^(?:notNextToABeeper\b)/,/^(?:anyBeepersInBeeperBag\b)/,/^(?:noBeepersInBeeperBag\b)/,/^(?:facingNorth\b)/,/^(?:facingSouth\b)/,/^(?:facingEast\b)/,/^(?:facingWest\b)/,/^(?:notFacingNorth\b)/,/^(?:notFacingSouth\b)/,/^(?:notFacingEast\b)/,/^(?:notFacingWest\b)/,/^(?:else\b)/,/^(?:if\b)/,/^(?:!)/,/^(?:¬)/,/^(?:\|\|)/,/^(?:&&)/,/^(?:&)/,/^(?:\()/,/^(?:\))/,/^(?:\{)/,/^(?:\})/,/^(?:;)/,/^(?:[0-9]+)/,/^(?:[a-zA-Z][a-zA-Z0-9_]*)/,/^(?:$)/],
+rules: [/^(?:\s+)/i,/^(?:\/\/[^\n]*)/i,/^(?:\/(\*([^*]|\*[^/])*\*)\/)/i,/^(?:class\b)/i,/^(?:program\b)/i,/^(?:define\b)/i,/^(?:void\b)/i,/^(?:turnoff\b)/i,/^(?:turnleft\b)/i,/^(?:move\b)/i,/^(?:pickbeeper\b)/i,/^(?:putbeeper\b)/i,/^(?:while\b)/i,/^(?:iterate\b)/i,/^(?:pred\b)/i,/^(?:succ\b)/i,/^(?:iszero\b)/i,/^(?:frontIsClear\b)/i,/^(?:frontIsBlocked\b)/i,/^(?:leftIsClear\b)/i,/^(?:leftIsBlocked\b)/i,/^(?:rightIsClear\b)/i,/^(?:rightIsBlocked\b)/i,/^(?:nextToABeeper\b)/i,/^(?:notNextToABeeper\b)/i,/^(?:anyBeepersInBeeperBag\b)/i,/^(?:noBeepersInBeeperBag\b)/i,/^(?:facingNorth\b)/i,/^(?:facingSouth\b)/i,/^(?:facingEast\b)/i,/^(?:facingWest\b)/i,/^(?:notFacingNorth\b)/i,/^(?:notFacingSouth\b)/i,/^(?:notFacingEast\b)/i,/^(?:notFacingWest\b)/i,/^(?:else\b)/i,/^(?:if\b)/i,/^(?:!)/i,/^(?:¬)/i,/^(?:\|\|)/i,/^(?:&&)/i,/^(?:&)/i,/^(?:\()/i,/^(?:\))/i,/^(?:\{)/i,/^(?:\})/i,/^(?:;)/i,/^(?:[0-9]+)/i,/^(?:[a-zA-Z][a-zA-Z0-9_]*)/i,/^(?:$)/i],
 conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49],"inclusive":true}}
 };
 return lexer;

@@ -1,6 +1,7 @@
 /* Karel-pascal */
 
 %lex
+%options case-insensitive
 %%
 
 \s+                             {/* ignore */}
