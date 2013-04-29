@@ -5,6 +5,7 @@ $(document).ready(function(){
       /^\/\/[^\n]*/,
       /^#[^\n]*/,
       /^(?:\/\*(?:[^*]|\*[^)])*\*\/)/,
+      /^{[^}]*}/,
       /^\(\*([^*]|\*[^)])*\*\)/,
       /^[^a-zA-Z0-9_-]+/,
       /^[a-zA-Z0-9_-]+/
@@ -19,7 +20,7 @@ $(document).ready(function(){
             // el primer token de verdad.
             if (m[0] == 'class') {
               return {parser: new kareljava.Parser(), name: 'java'};
-            } else if (m[0] == 'iniciar-programa') {
+            } else if (m[0].toLowerCase() == 'iniciar-programa') {
               return {parser: new karelpascal.Parser(), name: 'pascal'};
             } else {
               return {parser: new karelruby.Parser(), name: 'ruby'};
