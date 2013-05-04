@@ -58,8 +58,8 @@ $(document).ready(function(){
 
   //Preparación del editor
   var editor = ace.edit("editor");
-  editor.setTheme("ace/theme/github");
-  editor.getSession().setMode("ace/mode/text");
+  editor.setTheme("ace/theme/chrome");
+  editor.getSession().setMode("ace/mode/karelpascal");
 
   var world = $("#world")[0];
   var context = world.getContext('2d');
