@@ -153,13 +153,13 @@ $(document).ready(function(){
   $("#ejecutar").bind('lock', function(evt){
     //Bloquea los controles de ejecución y edición
     mundo_editable = false; //Previene ediciones del mundo
-    $("#ejecutar").attr('disabled', 'disabled');
     $("#futuro").attr('disabled', 'disabled');
     $("#quitar_zumbadores").attr('disabled', 'disabled');
     $("#mochila").attr('disabled', 'disabled');
     $("#inf_zumbadores").attr('disabled', 'disabled');
     $("#paso").attr('disabled', 'disabled');
     $("#worldclean").attr('disabled', 'disabled');
+    $("#ejecutar i").removeClass('icon-play').addClass('icon-pause');
   });
   $("#ejecutar").bind('unlock', function(evt){
     //Desbloquea los controles de ejecución
@@ -171,28 +171,34 @@ $(document).ready(function(){
     $("#inf_zumbadores").removeAttr('disabled');
     $("#paso").removeAttr('disabled');
     $("#worldclean").removeAttr('disabled');
+    $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
   });
   $("#ejecutar").click(function(event){
-    var d = new Date();
-    var syntax = getSyntax(editor.getValue());
-    $("#pila").html('');
-    try {
-      var compiled = syntax.parser.parse(editor.getValue());
-      $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
-      $('#ejecutar').trigger('lock');
+    if($("#ejecutar i").hasClass('icon-play')) {
+      var d = new Date();
+      var syntax = getSyntax(editor.getValue());
+      $("#pila").html('');
+      try {
+        var compiled = syntax.parser.parse(editor.getValue());
+        $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
+        $('#ejecutar').trigger('lock');
 
-      mundo.reset();
-      mundo.runtime.load(compiled);
-      mundo.runtime.addEventListener('call', function(evt){
-        $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+evt.line+'</span></div>');
-      });
-      mundo.runtime.addEventListener('return', function(evt){
-        var arreglo = $("#pila > div:first-child").remove();
-      });
-      interval = setInterval(step, $("#retraso_txt").val());
-    } catch(e) {
-      $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
-      editor.focus();
+        mundo.reset();
+        mundo.runtime.load(compiled);
+        mundo.runtime.addEventListener('call', function(evt){
+          $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+evt.line+'</span></div>');
+        });
+        mundo.runtime.addEventListener('return', function(evt){
+          var arreglo = $("#pila > div:first-child").remove();
+        });
+        interval = setInterval(step, $("#retraso_txt").val());
+      } catch(e) {
+        $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
+        editor.focus();
+      }
+    } else {
+      clearInterval(interval);
+      $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
     }
   });
   $("#rubysyntax").click(function(event){
