@@ -69,6 +69,7 @@ $(document).ready(function(){
   var fila_evento;
   var columna_evento;
   var mundo = new World(100, 100);
+  var mundo_editable = true;
   mundo.load(parseWorld($('script#xmlMundo').html()));
   $("#world").attr('width', $("#world").width());
   wRender.paint(mundo, world.width, world.height);
@@ -91,6 +92,7 @@ $(document).ready(function(){
         alert(ERROR_CODES[mundo.runtime.state.error]);
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
+        $('#ejecutar').trigger('unlock');
         alert('Ejecución terminada!');
       }
     }
@@ -148,6 +150,28 @@ $(document).ready(function(){
       editor.focus();
     }
   });
+  $("#ejecutar").bind('lock', function(evt){
+    //Bloquea los controles de ejecución y edición
+    mundo_editable = false; //Previene ediciones del mundo
+    $("#ejecutar").attr('disabled', 'disabled');
+    $("#futuro").attr('disabled', 'disabled');
+    $("#quitar_zumbadores").attr('disabled', 'disabled');
+    $("#mochila").attr('disabled', 'disabled');
+    $("#inf_zumbadores").attr('disabled', 'disabled');
+    $("#paso").attr('disabled', 'disabled');
+    $("#worldclean").attr('disabled', 'disabled');
+  });
+  $("#ejecutar").bind('unlock', function(evt){
+    //Desbloquea los controles de ejecución
+    mundo_editable = true; //Previene ediciones del mundo
+    $("#ejecutar").removeAttr('disabled');
+    $("#futuro").removeAttr('disabled');
+    $("#quitar_zumbadores").removeAttr('disabled');
+    $("#mochila").removeAttr('disabled');
+    $("#inf_zumbadores").removeAttr('disabled');
+    $("#paso").removeAttr('disabled');
+    $("#worldclean").removeAttr('disabled');
+  });
   $("#ejecutar").click(function(event){
     var d = new Date();
     var syntax = getSyntax(editor.getValue());
@@ -155,6 +179,7 @@ $(document).ready(function(){
     try {
       var compiled = syntax.parser.parse(editor.getValue());
       $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
+      $('#ejecutar').trigger('lock');
 
       mundo.reset();
       mundo.runtime.load(compiled);
@@ -243,36 +268,38 @@ $(document).ready(function(){
         if (wRender.primera_columna > 1)
             wRender.primera_columna -= 1
     } else { //Pasan otras cosas
-        columna = Math.floor(x/30) + wRender.primera_columna-1
-        fila = Math.floor((world.height-y)/30) + wRender.primera_fila-1
+        if(mundo_editable) {
+            columna = Math.floor(x/30) + wRender.primera_columna-1
+            fila = Math.floor((world.height-y)/30) + wRender.primera_fila-1
 
-        excedente_horizontal = x/30 - Math.floor(x/30)
-        excedente_vertical = (world.height-y)/30 - Math.floor((world.height-y)/30)
+            excedente_horizontal = x/30 - Math.floor(x/30)
+            excedente_vertical = (world.height-y)/30 - Math.floor((world.height-y)/30)
 
-        if (0<fila && fila<101 && 0<columna && columna<101) {
-            if (.25<excedente_horizontal && excedente_horizontal<.75 && .25<excedente_vertical && excedente_horizontal<.75) {
-                if (borrar_zumbadores) {
-                    mundo.setBuzzers(fila, columna, 0);
+            if (0<fila && fila<101 && 0<columna && columna<101) {
+                if (.25<excedente_horizontal && excedente_horizontal<.75 && .25<excedente_vertical && excedente_horizontal<.75) {
+                    if (borrar_zumbadores) {
+                        mundo.setBuzzers(fila, columna, 0);
+                    } else {
+                        zumbadores = mundo.buzzers(fila, columna);
+                        if (zumbadores >= 0 && !event.ctrlKey)
+                            mundo.setBuzzers(fila, columna, zumbadores+1);
+                        else if (zumbadores > 0 && event.ctrlKey)
+                            mundo.setBuzzers(fila, columna, zumbadores-1);
+                    }
+                } else if (excedente_horizontal > excedente_vertical) {
+                    if (excedente_horizontal > (1 - excedente_vertical))
+                        mundo.toggleWall(fila, columna, 2)
+                    else
+                        mundo.toggleWall(fila, columna, 3) //sur
                 } else {
-                    zumbadores = mundo.buzzers(fila, columna);
-                    if (zumbadores >= 0 && !event.ctrlKey)
-                        mundo.setBuzzers(fila, columna, zumbadores+1);
-                    else if (zumbadores > 0 && event.ctrlKey)
-                        mundo.setBuzzers(fila, columna, zumbadores-1);
+                    if (excedente_horizontal > (1 - excedente_vertical))
+                        mundo.toggleWall(fila, columna, 1) //norte
+                    else
+                        mundo.toggleWall(fila, columna, 0)
                 }
-            } else if (excedente_horizontal > excedente_vertical) {
-                if (excedente_horizontal > (1 - excedente_vertical))
-                    mundo.toggleWall(fila, columna, 2)
-                else
-                    mundo.toggleWall(fila, columna, 3) //sur
-            } else {
-                if (excedente_horizontal > (1 - excedente_vertical))
-                    mundo.toggleWall(fila, columna, 1) //norte
-                else
-                    mundo.toggleWall(fila, columna, 0)
             }
+            $("#xmlMundo").html(mundo.save());
         }
-        $("#xmlMundo").html(mundo.save());
     }
     //Volvemos a pintar el canvas
     wRender.paint(mundo, world.width, world.height);
@@ -313,16 +340,18 @@ $(document).ready(function(){
   });
   $("#world").bind("contextmenu", function(e){
     //Maneja el click derecho sobre el mundo
-    var x = event.pageX;
-    var y = event.pageY;
+    if(mundo_editable) {
+      var x = event.pageX;
+      var y = event.pageY;
 
-    columna_evento = Math.floor(event.offsetX/30) + wRender.primera_columna-1;
-    fila_evento = Math.floor((world.height-event.offsetY)/30) + wRender.primera_fila-1;
+      columna_evento = Math.floor(event.offsetX/30) + wRender.primera_columna-1;
+      fila_evento = Math.floor((world.height-event.offsetY)/30) + wRender.primera_fila-1;
 
-    $("#wcontext_menu").css("top", y+"px");
-    $("#wcontext_menu").css("left", x+"px");
-    $("#wcontext_menu").css("display", "block");
-    return false;
+      $("#wcontext_menu").css("top", y+"px");
+      $("#wcontext_menu").css("left", x+"px");
+      $("#wcontext_menu").css("display", "block");
+      return false;
+    }
   });
   $("#world")[0].onmousewheel = function(event){
 
