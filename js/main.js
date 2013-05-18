@@ -424,17 +424,19 @@ $(document).ready(function(){
   });
   $('#world').hammer().on("drag", function(event) {
     console.log(event.gesture);
-    event.stopPropagation();
 
-    if(event.gesture.deltaX < 0 && (wRender.primera_columna + wRender.num_columnas)<102) {
+    var x = event.gesture.deltaX%2;
+    var y = event.gesture.deltaY%2;
+
+    if(event.gesture.deltaX < 0 && (wRender.primera_columna + wRender.num_columnas)<102 && x==0) {
       wRender.primera_columna += 1;
-    } else if(event.gesture.deltaX > 0 && wRender.primera_columna > 1) {
+    } else if(event.gesture.deltaX > 0 && wRender.primera_columna > 1 && x==0) {
       wRender.primera_columna -= 1;
     }
 
-    if(event.gesture.deltaY > 0 && (wRender.primera_fila + wRender.num_filas)<102) {
+    if(event.gesture.deltaY > 0 && (wRender.primera_fila + wRender.num_filas)<102 && y==0) {
       wRender.primera_fila += 1;
-    } else if(event.gesture.deltaY < 0 && wRender.primera_fila > 1) {
+    } else if(event.gesture.deltaY < 0 && wRender.primera_fila > 1 && y==0) {
       wRender.primera_fila -= 1;
     }
 
