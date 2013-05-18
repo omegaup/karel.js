@@ -422,4 +422,23 @@ $(document).ready(function(){
     wRender.paint(mundo, world.width, world.height);
     $("#xmlMundo").html(mundo.save());
   });
+  $('#world').hammer().on("drag", function(event) {
+    console.log(event.gesture);
+    event.stopPropagation();
+
+    if(event.gesture.deltaX < 0 && (wRender.primera_columna + wRender.num_columnas)<102) {
+      wRender.primera_columna += 1;
+    } else if(event.gesture.deltaX > 0 && wRender.primera_columna > 1) {
+      wRender.primera_columna -= 1;
+    }
+
+    if(event.gesture.deltaY > 0 && (wRender.primera_fila + wRender.num_filas)<102) {
+      wRender.primera_fila += 1;
+    } else if(event.gesture.deltaY < 0 && wRender.primera_fila > 1) {
+      wRender.primera_fila -= 1;
+    }
+
+    wRender.paint(mundo, world.width, world.height);
+    return false;
+  });
 });
