@@ -423,8 +423,6 @@ $(document).ready(function(){
     $("#xmlMundo").html(mundo.save());
   });
   $('#world').hammer().on("drag", function(event) {
-    console.log(event.gesture);
-
     var x = event.gesture.deltaX%2;
     var y = event.gesture.deltaY%2;
 
