@@ -96,10 +96,8 @@ var WorldRender = function(context){
         //Dibujar las cosas que pertenecen al mundo por cada casilla
         num_fila = 1 //Posicion relativa a la pantalla
         num_columna = 1 //Posicion relativa a la pantalla
-        //for fila in xrange(primera_fila, primera_fila+num_filas):
         for(var fila=this.primera_fila;fila<(this.primera_fila+this.num_filas);fila++){
             num_columna = 1
-            //for columna in xrange(primera_columna, primera_columna+num_columnas):
             for(var columna=this.primera_columna;columna<this.primera_columna+this.num_columnas;columna++){
                 //Dibujar a karel
 
