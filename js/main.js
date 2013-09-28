@@ -91,11 +91,9 @@ $(document).ready(function(){
       interval = null;
       if(mundo.runtime.state.error) {
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
-        alert(ERROR_CODES[mundo.runtime.state.error]);
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
         $('#ejecutar').trigger('unlock');
-        alert('Ejecución terminada!');
       }
     }
   }
@@ -150,10 +148,8 @@ $(document).ready(function(){
       wRender.paint(mundo, world.width, world.height, true);
       if(mundo.runtime.state.error) {
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
-        alert(ERROR_CODES[mundo.runtime.state.error]);
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
-        alert('Ejecución terminada!');
       }
       editor.focus();
     }
