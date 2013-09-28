@@ -73,6 +73,7 @@ $(document).ready(function(){
   var columna_evento;
   var mundo = new World(100, 100);
   var mundo_editable = true;
+  var linea_actual = null;
   mundo.load(parseWorld($('script#xmlMundo').html()));
   $("#world").attr('width', $("#world").width());
   wRender.paint(mundo, world.width, world.height);
@@ -83,10 +84,14 @@ $(document).ready(function(){
     //Avanza un paso en la ejecución del código
     while (!mundo.dirty && mundo.runtime.step());
 
-    editor.session.addMarker(
-        new Range(mundo.runtime.state.line - 1, 0, mundo.runtime.state.line, 0),
-        "ace_active_line",
-        "background");
+    if (linea_actual != null) {
+      editor.session.removeGutterDecoration(linea_actual, "karel-current-line");
+    }
+
+    if (mundo.runtime.state.line >= 1) {
+      linea_actual = mundo.runtime.state.line - 1;
+      editor.session.addGutterDecoration(linea_actual, "karel-current-line");
+    }
 
     mundo.dirty = false;
 
@@ -253,12 +258,20 @@ $(document).ready(function(){
       $("#xmlMundo").html(mundo.save());
   });
   $("#worldclean").click(function(event){
+    if (linea_actual != null) {
+      editor.session.removeGutterDecoration(linea_actual, "karel-current-line");
+    }
+
     $('#ejecutar').trigger('unlock');
     $("#pila").html('');
     mundo.load(parseWorld($('script#xmlMundo').html()));
     wRender.paint(mundo, world.width, world.height, true);
   });
   $("#newworld").click(function(event){
+    if (linea_actual != null) {
+      editor.session.removeGutterDecoration(linea_actual, "karel-current-line");
+    }
+
     $('#ejecutar').trigger('unlock');
     mundo = new World(100, 100);
     wRender.paint(mundo, world.width, world.height, true);
