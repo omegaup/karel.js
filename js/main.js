@@ -19,8 +19,10 @@ $(document).ready(function(){
           if (j == rules.length - 1) {
             // el primer token de verdad.
             if (m[0] == 'class') {
+              editor.getSession().setMode("ace/mode/kareljava");
               return {parser: new kareljava.Parser(), name: 'java'};
             } else if (m[0].toLowerCase() == 'iniciar-programa') {
+              editor.getSession().setMode("ace/mode/karelpascal");
               return {parser: new karelpascal.Parser(), name: 'pascal'};
             } else {
               return {parser: new karelruby.Parser(), name: 'ruby'};

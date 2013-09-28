@@ -104,6 +104,8 @@ def_list
     { $$ = $def_list.concat($def); }
   | def
     { $$ = $def; }
+  |
+    { $$ = []; }
   ;
 
 def
