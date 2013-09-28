@@ -1,6 +1,12 @@
 module.exports = function(grunt) {
 
 	grunt.initConfig({
+		jison: {
+			files: {
+				'js/karelpascal.js': 'gramaticas/karelpascal.jison',
+				'js/kareljava.js': 'gramaticas/kareljava.jison'
+			}
+		},
 		jshint: {
 			files: ['js/karel.js', 'js/karelide.js'],
 		},
@@ -29,6 +35,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-jison');
 
 	grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
 };

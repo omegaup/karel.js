@@ -90,7 +90,7 @@ program
     	
     	return program;
     %}
-  | CLASS PROG '{' PROG '(' ')' block '}' EOF
+  | CLASS PROG BEGIN PROG '(' ')' block END EOF
     { return $block.concat([['HALT']]); }
   ;
 
@@ -104,8 +104,6 @@ def_list
     { $$ = $def_list.concat($def); }
   | def
     { $$ = $def; }
-  |
-    { $$ = []; }
   ;
 
 def
