@@ -100,6 +100,27 @@ $(document).ready(function(){
     }
   }
 
+  function compile() {
+    var syntax = getSyntax(editor.getValue());
+    $("#pila").html('');
+    try {
+      var compiled = syntax.parser.parse(editor.getValue());
+      editor.getSession().clearAnnotations();
+      $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
+      return compiled;
+    } catch(e) {
+      editor.getSession().setAnnotations([{
+        row: e.line - 1,
+        column: 0,
+        text: e.message,
+        type: "error"
+      }]);
+      $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
+      editor.focus();
+      return null;
+    }
+  }
+
   $(window).resize(function(event) {
     $("#world").attr('width', $("#world").width());
     wRender.paint(mundo, world.width, world.height);
@@ -117,24 +138,12 @@ $(document).ready(function(){
     $('#mensajes').prepend('<p class="text-success"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
   });
   $("#compilar").click(function(event){
-    var syntax = getSyntax(editor.getValue());
-    $("#pila").html('');
-    try {
-      var compiled = syntax.parser.parse(editor.getValue());
-      $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
-      editor.focus();
-    } catch(e) {
-      $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
-      editor.focus();
-    }
+    compile();
+    editor.focus();
   });
   $("#futuro").click(function(event){
-    var syntax = getSyntax(editor.getValue());
-    $("#pila").html('');
-    try {
-      var compiled = syntax.parser.parse(editor.getValue());
-      $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
-
+    var compiled = compile();
+    if (compiled != null) {
       mundo.reset();
       mundo.runtime.load(compiled);
       while (mundo.runtime.step());
@@ -146,9 +155,6 @@ $(document).ready(function(){
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
         alert('Ejecución terminada!');
       }
-      editor.focus();
-    } catch(e) {
-      $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
       editor.focus();
     }
   });
@@ -178,11 +184,8 @@ $(document).ready(function(){
   $("#ejecutar").click(function(event){
     if($("#ejecutar i").hasClass('icon-play')) {
       var d = new Date();
-      var syntax = getSyntax(editor.getValue());
-      $("#pila").html('');
-      try {
-        var compiled = syntax.parser.parse(editor.getValue());
-        $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
+      var compiled = compile();
+      if (compiled != null) {
         $('#ejecutar').trigger('lock');
 
         mundo.reset();
@@ -194,9 +197,6 @@ $(document).ready(function(){
           var arreglo = $("#pila > div:first-child").remove();
         });
         interval = setInterval(step, $("#retraso_txt").val());
-      } catch(e) {
-        $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
-        editor.focus();
       }
     } else {
       clearInterval(interval);
