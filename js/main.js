@@ -208,11 +208,13 @@ $(document).ready(function(){
     editor.focus();
   });
   $("#pascalsyntax").click(function(event){
-    editor.setValue("iniciar-programa\n    inicia-ejecucion\n        {TODO poner codigo aqui}\n        apagate;\n    termina-ejecucion\nfinalizar-programa", 1);
+    editor.getSession().setMode("ace/mode/karelpascal");
+    editor.setValue("iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aqui }\n        apagate;\n    termina-ejecucion\nfinalizar-programa", 1);
     editor.focus();
   });
   $("#javasyntax").click(function(event){
-    editor.setValue("class program {\n    program() {\n        //TODO poner codigo aqui\n        turnoff();\n    }\n}", 1);
+    editor.getSession().setMode("ace/mode/kareljava");
+    editor.setValue("class program {\n    program () {\n        // TODO poner codigo aqui\n        turnoff();\n    }\n}", 1);
     editor.focus();
   });
   $("#retraso_minus").click(function(){
