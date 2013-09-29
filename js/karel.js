@@ -516,13 +516,9 @@ World.prototype.toggleDump = function(i, j) {
 	}
 
 	if (dumpPos < self.dumpCells.length) {
-		console.log("ToggleDump ", dumpPos, i, j, self.dumpCells);
 		self.dumpCells.splice(dumpPos, 1);
-		console.log("ToggleDump ", dumpPos, i, j, self.dumpCells);
 	} else {
-		console.log("ToggleDump ", dumpPos, i, j, self.dumpCells);
 		self.dumpCells.push([i, j]);
-		console.log("ToggleDump ", dumpPos, i, j, self.dumpCells);
 	}
 };
 
