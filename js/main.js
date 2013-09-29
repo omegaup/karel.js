@@ -278,6 +278,36 @@ $(document).ready(function(){
       mundo.setBagBuzzers($('#mochila').val());
       $("#xmlMundo").html(mundo.save());
   });
+  $("#worldload").click(function(event){
+      var file = document.createElement('input');
+      file.type = 'file';
+      file.addEventListener('change', function(evt) {
+        var files = evt.target.files; // FileList object
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+
+          // Only process text files.
+          if (!f.type.match('text.*')) {
+            continue;
+          }
+
+          var reader = new FileReader();
+
+          // Closure to capture the file information.
+          reader.onload = (function(theFile) {
+            return function(e) {
+              $('script#xmlMundo').html(reader.result);
+              $('#worldclean').click();
+            };
+          })(f);
+
+          // Read in the file as a data URL.
+          reader.readAsText(f);
+        }
+      });
+      file.click();
+  });
   $("#worldsave").click(function(event){
       var a = document.createElement('a');
       var blob = new Blob([$('script#xmlMundo').html()], {'type':'text/xml'});
@@ -483,6 +513,7 @@ $(document).ready(function(){
     $("#xmlMundo").html(mundo.save());
   });
   $('#world').hammer().on("drag", function(event) {
+    event.gesture.preventDefault();
     var x = event.gesture.deltaX%2;
     var y = event.gesture.deltaY%2;
 
