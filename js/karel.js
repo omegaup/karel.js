@@ -486,6 +486,59 @@ World.prototype.leaveBuzzer = function(i, j) {
 	self.dirty = true;
 };
 
+World.prototype.setDump = function(i, j, dumpState) {
+	var self = this;
+	var dumpPos = -1;
+
+	for (dumpPos = 0; dumpPos < self.dumpCells.length; dumpPos++) {
+		if (self.dumpCells[dumpPos][0] == i && self.dumpCells[dumpPos][1] == j) {
+			break;
+		}
+	}
+
+	if (dumpPos < self.dumpCells.length) {
+		if (dumpState) return;
+		self.dumpCells.splice(dumpPos, 0);
+	} else {
+		if (!dumpState) return;
+		self.dumpCells.push([i, j]);
+	}
+};
+
+World.prototype.toggleDump = function(i, j) {
+	var self = this;
+	var dumpPos = 0;
+
+	for ( ; dumpPos < self.dumpCells.length; dumpPos++) {
+		if (self.dumpCells[dumpPos][0] == i && self.dumpCells[dumpPos][1] == j) {
+			break;
+		}
+	}
+
+	if (dumpPos < self.dumpCells.length) {
+		console.log("ToggleDump ", dumpPos, i, j, self.dumpCells);
+		self.dumpCells.splice(dumpPos, 1);
+		console.log("ToggleDump ", dumpPos, i, j, self.dumpCells);
+	} else {
+		console.log("ToggleDump ", dumpPos, i, j, self.dumpCells);
+		self.dumpCells.push([i, j]);
+		console.log("ToggleDump ", dumpPos, i, j, self.dumpCells);
+	}
+};
+
+World.prototype.getDump = function(i, j) {
+	var self = this;
+	var dumpPos = -1;
+
+	for (dumpPos = 0; dumpPos < self.dumpCells.length; dumpPos++) {
+		if (self.dumpCells[dumpPos][0] == i && self.dumpCells[dumpPos][1] == j) {
+			return true;
+		}
+	}
+
+	return false;
+};
+
 World.prototype.load = function(doc) {
 	var self = this;
 
@@ -549,7 +602,7 @@ World.prototype.load = function(doc) {
 		},
 
 		posicionDump: function(dump) {
-			self.dumpCells.push([dump.getAttribute('y'), dump.getAttribute('x')]);
+			self.dumpCells.push([parseInt(dump.getAttribute('y')), parseInt(dump.getAttribute('x'))]);
 		},
 
 		programa: function(programa) {

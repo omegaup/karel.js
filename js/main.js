@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  function getSyntax(str) {
+  function detectParser(str) {
     var rules = [
       /^\s+/,
       /^\/\/[^\n]*/,
@@ -37,6 +37,27 @@ $(document).ready(function(){
     }
 
     return {parser: new karelruby.Parser(), name: 'ruby'};
+  }
+
+  function parseError(str, hash) {
+    if (hash.recoverable) {
+        this.trace(str);
+    } else {
+        var e = new Error(str);
+        for (var n in hash) {
+          if (hash.hasOwnProperty(n)) {
+            e[n] = hash[n];
+          }
+        }
+        console.log(e.message);
+        throw e;
+    }
+  }
+
+  function getSyntax(str) {
+    var parser = detectParser(str);
+    parser.parser.yy.parseError = parseError;
+    return parser;
   }
 
   function getErrorLocation(parser) {
@@ -257,6 +278,13 @@ $(document).ready(function(){
       mundo.setBagBuzzers($('#mochila').val());
       $("#xmlMundo").html(mundo.save());
   });
+  $("#worldsave").click(function(event){
+      var a = document.createElement('a');
+      var blob = new Blob([$('script#xmlMundo').html()], {'type':'text/xml'});
+      a.href = window.URL.createObjectURL(blob);
+      a.download = 'mundo.xml';
+      a.click();
+  });
   $("#worldclean").click(function(event){
     if (linea_actual != null) {
       editor.session.removeGutterDecoration(linea_actual, "karel-current-line");
@@ -315,6 +343,8 @@ $(document).ready(function(){
                 if (.25<excedente_horizontal && excedente_horizontal<.75 && .25<excedente_vertical && excedente_horizontal<.75) {
                     if (borrar_zumbadores) {
                         mundo.setBuzzers(fila, columna, 0);
+                    } if (event.shiftKey) {
+                        mundo.toggleDump(fila, columna);
                     } else {
                         zumbadores = mundo.buzzers(fila, columna);
                         if (zumbadores >= 0 && !event.ctrlKey)

@@ -243,14 +243,7 @@ parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
     } else {
-        var e = new Error(str);
-        for (var n in hash) {
-          if (hash.hasOwnProperty(n)) {
-            e[n] = hash[n];
-          }
-        }
-        e.message = str;
-        throw e;
+        throw new Error(str);
     }
 },
 parse: function parse(input) {

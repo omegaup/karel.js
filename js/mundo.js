@@ -99,8 +99,14 @@ var WorldRender = function(context){
         for(var fila=this.primera_fila;fila<(this.primera_fila+this.num_filas);fila++){
             num_columna = 1
             for(var columna=this.primera_columna;columna<this.primera_columna+this.num_columnas;columna++){
-                //Dibujar a karel
+                //Si esa casilla se debe imprimir
+                context.fillStyle = '#eee';
+                if (world.getDump(fila, columna)) {
+                  context.fillRect(origen.x+(num_columna-1)*30+4, origen.y-(num_fila-1)*30+2,
+                                   24, 24);
+                }
 
+                //Dibujar a karel
                 if (world.i === fila && world.j === columna) {
                     var referencia = {x: origen.x+(num_columna-1)*30, y: origen.y-(num_fila-1)*30};
 
