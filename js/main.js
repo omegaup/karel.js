@@ -215,7 +215,6 @@ $(document).ready(function(){
   $("#ejecutar").click(function(event){
     if($("#ejecutar i").hasClass('icon-play')) {
       if (mundo_editable) {
-        var d = new Date();
         var compiled = compile();
         if (compiled != null) {
           $('#ejecutar').trigger('lock');
@@ -238,6 +237,32 @@ $(document).ready(function(){
       clearInterval(interval);
       $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
       $('#worldclean').removeAttr('disabled');
+      $('#paso').removeAttr('disabled');
+      $('#futuro').removeAttr('disabled');
+    }
+  });
+  $('#paso').click(function(event){
+    if (mundo_editable) {
+      var compiled = compile();
+      if (compiled != null) {
+        $('#ejecutar').trigger('lock');
+
+        mundo.reset();
+        mundo.runtime.load(compiled);
+        mundo.runtime.addEventListener('call', function(evt){
+          $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+evt.line+'</span></div>');
+        });
+        mundo.runtime.addEventListener('return', function(evt){
+          var arreglo = $("#pila > div:first-child").remove();
+        });
+        step();
+        $('#paso').removeAttr('disabled');
+        $('#worldclean').removeAttr('disabled');
+        $('#futuro').removeAttr('disabled');
+        $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
+      }
+    } else {
+      step();
     }
   });
   $("#rubysyntax").click(function(event){
