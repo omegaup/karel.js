@@ -217,6 +217,9 @@ $(document).ready(function(){
     $("#paso").attr('disabled', 'disabled');
     $("#worldclean").attr('disabled', 'disabled');
     $("#ejecutar i").removeClass('icon-play').addClass('icon-pause');
+    $("#posicion_karel").attr('disabled', 'disabled');
+    $("#orientacion_karel").attr('disabled', 'disabled');
+    editor.setReadOnly(true);
   });
   $("#ejecutar").bind('unlock', function(evt){
     //Desbloquea los controles de ejecución
@@ -230,6 +233,9 @@ $(document).ready(function(){
     $("#worldclean").removeAttr('disabled');
     $("#ejecutar").removeAttr('disabled');
     $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
+    $("#posicion_karel").removeAttr('disabled');
+    $("#orientacion_karel").removeAttr('disabled');
+    editor.setReadOnly(false);
   });
   $("#ejecutar").click(function(event){
     if($("#ejecutar i").hasClass('icon-play')) {
@@ -319,45 +325,45 @@ $(document).ready(function(){
     }
   });
   $("#mochila").blur(function(event){
-      mundo.setBagBuzzers($('#mochila').val());
-      $("#xmlMundo").html(mundo.save());
+    mundo.setBagBuzzers($('#mochila').val());
+    $("#xmlMundo").html(mundo.save());
   });
   $("#worldload").click(function(event){
-      var file = document.createElement('input');
-      file.type = 'file';
-      file.addEventListener('change', function(evt) {
-        var files = evt.target.files; // FileList object
+    var file = document.createElement('input');
+    file.type = 'file';
+    file.addEventListener('change', function(evt) {
+      var files = evt.target.files; // FileList object
 
-        // Loop through the FileList and render image files as thumbnails.
-        for (var i = 0, f; f = files[i]; i++) {
+      // Loop through the FileList and render image files as thumbnails.
+      for (var i = 0, f; f = files[i]; i++) {
 
-          // Only process text files.
-          if (!f.type.match('text.*')) {
-            continue;
-          }
-
-          var reader = new FileReader();
-
-          // Closure to capture the file information.
-          reader.onload = (function(theFile) {
-            return function(e) {
-              $('script#xmlMundo').html(reader.result);
-              $('#worldclean').click();
-            };
-          })(f);
-
-          // Read in the file as a data URL.
-          reader.readAsText(f);
+        // Only process text files.
+        if (!f.type.match('text.*')) {
+          continue;
         }
-      });
-      file.click();
+
+        var reader = new FileReader();
+
+        // Closure to capture the file information.
+        reader.onload = (function(theFile) {
+          return function(e) {
+            $('script#xmlMundo').html(reader.result);
+            $('#worldclean').click();
+          };
+        })(f);
+
+        // Read in the file as a data URL.
+        reader.readAsText(f);
+      }
+    });
+    file.click();
   });
   $("#worldsave").click(function(event){
-      var a = document.createElement('a');
-      var blob = new Blob([$('script#xmlMundo').html()], {'type':'text/xml'});
-      a.href = window.URL.createObjectURL(blob);
-      a.download = 'mundo.xml';
-      a.click();
+    var a = document.createElement('a');
+    var blob = new Blob([$('script#xmlMundo').html()], {'type':'text/xml'});
+    a.href = window.URL.createObjectURL(blob);
+    a.download = 'mundo.xml';
+    a.click();
   });
   $("#worldclean").click(function(event){
     if (linea_actual != null) {
@@ -368,6 +374,12 @@ $(document).ready(function(){
     $("#pila").html('');
     mundo.load(parseWorld($('script#xmlMundo').html()));
     wRender.paint(mundo, world.width, world.height, true);
+    if ($('#posicion_karel').hasClass('active') != mundo.getDumps(World.DUMP_POSITION)) {
+      $('#posicion_karel').button('toggle');
+    }
+    if ($('#orientacion_karel').hasClass('active') != mundo.getDumps(World.DUMP_ORIENTATION)) {
+      $('#orientacion_karel').button('toggle');
+    }
   });
   $("#newworld").click(function(event){
     if (linea_actual != null) {
@@ -378,6 +390,12 @@ $(document).ready(function(){
     mundo = new World(100, 100);
     wRender.paint(mundo, world.width, world.height, true);
     $("#xmlMundo").html(mundo.save());
+    if ($('#posicion_karel').hasClass('active')) {
+      $('#posicion_karel').button('toggle');
+    }
+    if ($('#orientacion_karel').hasClass('active')) {
+      $('#orientacion_karel').button('toggle');
+    }
   });
   $("body").keyup(function(event){
     if(event.keyCode == 27) {
@@ -418,7 +436,7 @@ $(document).ready(function(){
                     if (borrar_zumbadores) {
                         mundo.setBuzzers(fila, columna, 0);
                     } if (event.shiftKey) {
-                        mundo.toggleDump(fila, columna);
+                        mundo.toggleDumpCell(fila, columna);
                     } else {
                         zumbadores = mundo.buzzers(fila, columna);
                         if (zumbadores >= 0 && !event.ctrlKey)
@@ -510,6 +528,14 @@ $(document).ready(function(){
     wRender.paint(mundo, world.width, world.height);
     return false;
   };
+  $("#posicion_karel").click(function(event){
+    mundo.toggleDumps(World.DUMP_POSITION);
+    $("#xmlMundo").html(mundo.save());
+  });
+  $("#orientacion_karel").click(function(event){
+    mundo.toggleDumps(World.DUMP_ORIENTATION);
+    $("#xmlMundo").html(mundo.save());
+  });
   $("#ctx_norte").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('NORTE');

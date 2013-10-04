@@ -396,6 +396,10 @@ var World = function(w, h) {
 	self.dirty = true;
 };
 
+World.DUMP_POSITION = 'posicion';
+World.DUMP_ORIENTATION = 'orientacion';
+World.DUMP_INSTRUCTIONS = 'instrucciones';
+
 World.prototype.walls = function(i, j) {
 	var self = this;
 
@@ -486,7 +490,7 @@ World.prototype.leaveBuzzer = function(i, j) {
 	self.dirty = true;
 };
 
-World.prototype.setDump = function(i, j, dumpState) {
+World.prototype.setDumpCell = function(i, j, dumpState) {
 	var self = this;
 	var dumpPos = -1;
 
@@ -505,7 +509,7 @@ World.prototype.setDump = function(i, j, dumpState) {
 	}
 };
 
-World.prototype.toggleDump = function(i, j) {
+World.prototype.toggleDumpCell = function(i, j) {
 	var self = this;
 	var dumpPos = 0;
 
@@ -522,7 +526,7 @@ World.prototype.toggleDump = function(i, j) {
 	}
 };
 
-World.prototype.getDump = function(i, j) {
+World.prototype.getDumpCell = function(i, j) {
 	var self = this;
 	var dumpPos = -1;
 
@@ -533,6 +537,22 @@ World.prototype.getDump = function(i, j) {
 	}
 
 	return false;
+};
+
+World.prototype.getDumps = function(d) {
+	var self = this;
+	return self.dumps.hasOwnProperty(d.toLowerCase()) && self.dumps[d];
+}
+
+World.prototype.setDumps = function(d, v) {
+	var self = this;
+	self.dumps[d] = v;
+};
+
+World.prototype.toggleDumps = function(d) {
+	var self = this;
+
+	self.setDumps(d, !self.getDumps(d));
 };
 
 World.prototype.load = function(doc) {
@@ -747,7 +767,7 @@ World.prototype.save = function() {
 	}
 
 	for (var p in self.dumps) {
-		if (!self.dumps.hasOwnProperty(p)) continue;
+		if (!self.dumps.hasOwnProperty(p) || !self.dumps[p]) continue;
 		result.programas.programa.despliega.push({'#attributes': {tipo: p.toUpperCase()}});
 	}
 
