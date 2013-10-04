@@ -101,18 +101,22 @@ $(document).ready(function(){
 
   var interval = null;
 
-  function step() {
-    //Avanza un paso en la ejecución del código
-    while (!mundo.dirty && mundo.runtime.step());
-
+  function highlightCurrentLine() {
     if (linea_actual != null) {
       editor.session.removeGutterDecoration(linea_actual, "karel-current-line");
     }
 
     if (mundo.runtime.state.line >= 1) {
-      linea_actual = mundo.runtime.state.line - 1;
+      linea_actual = mundo.runtime.state.line;
       editor.session.addGutterDecoration(linea_actual, "karel-current-line");
     }
+  }
+
+  function step() {
+    //Avanza un paso en la ejecución del código
+    while (!mundo.dirty && mundo.runtime.step());
+
+    highlightCurrentLine();
 
     mundo.dirty = false;
 
@@ -126,6 +130,7 @@ $(document).ready(function(){
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
       }
+      highlightCurrentLine();
       // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
       $("#ejecutar").attr('disabled', 'disabled');
       $("#worldclean").removeAttr('disabled');
@@ -176,16 +181,30 @@ $(document).ready(function(){
   $("#futuro").click(function(event){
     var compiled = compile();
     if (compiled != null) {
+      $('#ejecutar').trigger('lock');
       mundo.reset();
       mundo.runtime.load(compiled);
-      while (mundo.runtime.step());
+      var finished = false;
+      for (var i = 0; i < 1000000; i++) {
+        if (!mundo.runtime.step()) {
+          finished = true;
+          break;
+        }
+      }
+      if (!finished) {
+        mundo.runtime.state.error = 'INSTRUCTION LIMIT';
+      }
       wRender.paint(mundo, world.width, world.height, true);
       if(mundo.runtime.state.error) {
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
       }
+      highlightCurrentLine();
+      // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
       editor.focus();
+      $("#ejecutar").attr('disabled', 'disabled');
+      $("#worldclean").removeAttr('disabled');
     }
   });
   $("#ejecutar").bind('lock', function(evt){
