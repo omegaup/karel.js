@@ -582,6 +582,12 @@ $(document).ready(function(){
     wRender.paint(mundo, world.width, world.height);
     $("#xmlMundo").html(mundo.save());
   });
+  $("#toggle_dump_cell").click(function(event) {
+    mundo.toggleDumpCell(fila_evento, columna_evento);
+    $("#wcontext_menu").css("display", "none");
+    wRender.paint(mundo, world.width, world.height);
+    $("#xmlMundo").html(mundo.save());
+  });
   $('#world').hammer().on("drag", function(event) {
     event.gesture.preventDefault();
     var x = event.gesture.deltaX%2;
