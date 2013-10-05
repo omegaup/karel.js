@@ -101,7 +101,7 @@ var WorldRender = function(context){
             num_columna = 1
             for(var columna=this.primera_columna;columna<this.primera_columna+this.num_columnas;columna++){
                 //Si esa casilla se debe imprimir
-                if (!options.editable) {
+                if (options.editable) {
                     context.fillStyle = '#eee';
                     if (world.getDumpCell(fila, columna)) {
                         context.fillRect(origen.x+(num_columna-1)*30+4,

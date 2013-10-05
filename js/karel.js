@@ -402,6 +402,7 @@ World.prototype.init = function(w, h) {
 	self.dirty = true;
 };
 
+World.DUMP_WORLD = 'mundo';
 World.DUMP_POSITION = 'posicion';
 World.DUMP_ORIENTATION = 'orientacion';
 World.DUMP_INSTRUCTIONS = 'instrucciones';
@@ -514,6 +515,8 @@ World.prototype.setDumpCell = function(i, j, dumpState) {
 		if (!dumpState) return;
 		self.dumpCells.push([i, j]);
 	}
+
+	self.dumps[World.DUMP_WORLD] = self.dumpCells.length != 0;
 };
 
 World.prototype.toggleDumpCell = function(i, j) {
@@ -531,6 +534,8 @@ World.prototype.toggleDumpCell = function(i, j) {
 	} else {
 		self.dumpCells.push([i, j]);
 	}
+
+	self.dumps[World.DUMP_WORLD] = self.dumpCells.length != 0;
 };
 
 World.prototype.getDumpCell = function(i, j) {
@@ -786,7 +791,7 @@ World.prototype.output = function() {
 
 	var result = {};
 
-	if (self.dumps.mundo) {
+	if (self.dumps[World.DUMP_WORLD]) {
 		result.mundos = {mundo: {'#attributes': {nombre: 'mundo_0'}, linea: []}};
 
 		var dumpCells = {};
@@ -798,7 +803,7 @@ World.prototype.output = function() {
 		}
 
 		for (var i = 1; i <= self.h; i++) {
-			var lastNonZero = 0;
+			var lastNonZero = -1;
 			var line = '';
 
 			for (var j = 1; j <= self.w; j++) {
@@ -823,6 +828,15 @@ World.prototype.output = function() {
 
 	result.programas.programa['#attributes'].resultadoEjecucion = self.runtime.state.error ? self.runtime.state.error : 'FIN PROGRAMA';
 
+	if (self.dumps[World.DUMP_POSITION]) {
+		result.programas.programa.karel = {'#attributes': {x: self.j, y: self.i}};
+	}
+
+	if (self.dumps[World.DUMP_ORIENTATION]) {
+		result.programas.programa.karel = result.programas.programa.karel || {'#attributes':{}};
+		result.programas.programa.karel['#attributes'].direccion = ['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation];
+	}
+
 	return self.serialize(result, 'resultados', 0);
 };
 
@@ -845,7 +859,7 @@ World.prototype.rotate = function(orientation) {
 World.prototype.setBagBuzzers = function(buzzers) {
 	var self = this;
 
-	self.bagBuzzers = self.startBagBuzzers = buzzers;
+	self.bagBuzzers = self.startBagBuzzers = buzzers == 0xffff ? -1 : buzzers;
 	self.dirty = true;
 };
 

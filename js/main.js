@@ -207,6 +207,40 @@ $(document).ready(function(){
       $("#worldclean").removeAttr('disabled');
     }
   });
+  $("#save_out").click(function(event){
+    var compiled = compile();
+    if (compiled != null) {
+      $('#ejecutar').trigger('lock');
+      mundo.reset();
+      mundo.runtime.load(compiled);
+      var finished = false;
+      for (var i = 0; i < 1000000; i++) {
+        if (!mundo.runtime.step()) {
+          finished = true;
+          break;
+        }
+      }
+      if (!finished) {
+        mundo.runtime.state.error = 'INSTRUCTION LIMIT';
+      }
+      wRender.paint(mundo, world.width, world.height, { track_karel: true });
+      if(mundo.runtime.state.error) {
+        $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
+      } else {
+        $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
+      }
+      highlightCurrentLine();
+      // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
+      editor.focus();
+      $("#ejecutar").attr('disabled', 'disabled');
+      $("#worldclean").removeAttr('disabled');
+      var a = document.createElement('a');
+      var blob = new Blob([mundo.output()], {'type':'text/xml'});
+      a.href = window.URL.createObjectURL(blob);
+      a.download = 'salida.xml';
+      a.click();
+    }
+  });
   $("#ejecutar").bind('lock', function(evt){
     //Bloquea los controles de ejecución y edición
     mundo_editable = false; //Previene ediciones del mundo
