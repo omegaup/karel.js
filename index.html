@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="utf-8">
-    <title>Karelécatl</title>
+    <title>Karel.js</title>
     <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/jquery.hammer.js" type="text/javascript" charset="utf-8"></script>
@@ -49,6 +49,7 @@
           <a class="brand" href="#">Karel</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
+              <!-- Ocultando hasta que haya implementación
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Código <b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -69,11 +70,14 @@
                   <li><a><i class="icon-wrench"></i> Preferencias</a></li>
                 </ul>
               </li>
+              -->
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mundo <b class="caret"></b></a>
                 <ul class="dropdown-menu">
+                  <!--
                   <li><a><i class="icon-star"></i> Nuevo</a></li>
                   <li><a><i class="icon-folder-open"></i> Abrir</a></li>
+                  -->
                   <li><a href="#importar_modal" data-toggle="modal"><i class="icon-folder-open"></i> Importar MDO/KEC</a></li>
                   <li><a href="#guardar_modal" data-toggle="modal" id="save_out"><i class="icon-download-alt"></i> Guardar .out</a></li>
                 </ul>
@@ -81,7 +85,7 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ayuda <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a><i class="icon-book"></i> Manual y trucos</a></li>
+                  <li><a href="ayuda.html" target="_blank"><i class="icon-book"></i> Manual y trucos</a></li>
                   <li class="divider"></li>
                   <li><a href="#acerca_de_modal" data-toggle="modal"><i class="icon-question-sign"></i> Acerca de</a></li>
                 </ul>

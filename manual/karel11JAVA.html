@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> La sentencia   define-nueva-instruccion/como  </title>
+</head>
+
+<body style="background-image: url(./workbook.gif);">
+<center>
+  <h2>La sentencia void</h2>
+</center>
+Hasta ahora, le hemos dicho a Karel exactamente lo que tenía que hacer  tal como necesitábamos que lo hiciese. Esto funciona bien, pero te pudiste haber dado cuenta de que siempre se utilizan secuencias de sentencias similares. Un ejemplo es cuando Karel tiene que girar a la derecha, y nosotros le decimos " turnleft(); turnleft(); turnleft(); ". ¿No sería más fácil si le pudiéramos decir simplemente "turnright()" ?.
+<p>
+En otras palabras, diciendo &quot;turnright(); " Karel giraría tres veces hacia la izquierda para alcanzar nuestro objetivo. Es posible. ¿Estás suficientemente  motivado  para aprender una nueva sentencia?</p>
+<p>
+Una de las razones de crear nuevas instrucciones, es por evitar escribir tanto. Otra es para documentar mejor cual es nuestro objetivo, cuando nosotros mismos u otra persona lee el programa. Como te estar&aacute;s dando cuenta, programar es una tarea extremadamente compleja, y ¡necesitamos toda la ayuda necesaria para hacer las cosas correctamente !</p>
+<p> 
+Las sentencia<strong> void </strong> (que tambi&eacute;n se puede escribir como <strong>define</strong>) está situada en un sitio especial dentro de un programa de Karel, justo después de la sentencia &quot;class program {&quot;. El siguiente es  un  programa válido para Karel:    </p>
+<p>
+    
+   <center><img src="image023b.jpg" border="1" alt="" />
+ </center></p>
+<p>
+Puedes definir cualquier número de instrucciones nuevas, y después usarlas en el programa donde las necesites. Las instrucciones nuevas pueden contener sentencias de control, si es necesario. Date cuenta de que la nueva instrucción puede también usar una instrucción definida previamente. El ejercicio 5 podría haberse escrito: </p>
+<p>
+             <center><img src="image024b.jpg"  border="1" alt="" />
+     </center></p>
+<p>
+Date cuenta de como la instrucción iterate acaba moviendo a Karel una esquina hacia adelante, sin tener en cuenta en nº de zumbadores. Si haces esto 14 veces, ¡estar&aacute;s en casa ! </p>
+<p>
+
+<b>Ejercicio 7:</b> Re-escribe el programa para el ejercicio 4, pero esta vez puede no haber un zumbador en cada esquina. Guarda tu programa con el nombre “diagonal2.txt”.    La nueva  instrucción debería coger un zumbador en la posición actual, si es que lo hay. Deber&iacute;as usar esta instrucción para coger todos los zumbadores mientras Karel va a su casa en diagonal. Asegurate de que tienes el mundo “diagonal.mdo” cargado para probar tu programa. Karel debería finalizar en la esquina de la 1ª Calle con la 1ª Avenida, con todos los zumbadores que ha ido cogiendo por el camino, y apagarse.</p>
+<p> <b>Ejercicio 8: </b>Escribe un programa que ayude a Karel a escapar de un laberinto que no contiene islas (cuadrados aislados). La salida del laberinto est&aacute; marcada ubicando un zumbador en la primera esquina que est&aacute; fuera del laberinto, al lado del muro de la derecha. Una forma de resolver este problema es hacer que Karel avance a lo largo del laberinto siguiendo el muro de su derecha ( imagina que est&aacute; tocando el muro y que nunca puede despegar su mano de &eacute;l). En la siguiente imagen hay un ejemplo de un laberinto del cual deber&iacute;a ser capaz de salir (no olvides que tu programa deber&iacute;a funcionar en todos los laberintos, no solo en el de la imagen). Guarda tu programa con el nombre “laberinto.txt”. Esto parece muy, muy complicado. &iquest;Puedes darnos un mundo de ejemplo?</p>
+<p> Aqu&iacute; tienes un mundo inicial de ejemplo. La l&iacute;nea roja muestra el camino que deber&iacute;a seguir Karel para este mundo. Recuerda que no sabes de antemano donde estar&aacute;n los muros.&nbsp;</p>
+<p> &nbsp;
+    <center>
+      <img src="image026.jpg" border="1" alt="" />
+    </center>
+</p>
+<p> Podr&iacute;a hacerse m&aacute;s f&aacute;cil si definieras unas pocas nuevas instrucciones que hicieran parte del trabajo. Aqu&iacute; ten&eacute;is un ejemplo: </p>
+<p>... </p>
+<p>void sigueMuroDereha() { </p>
+<p> &nbsp;&nbsp; /*pon tu c&oacute;digo aqu&iacute;*/</p>
+<p> }</p>
+<p> ...</p>
+<p>Esta instrucci&oacute;n hace que Karel avance correctamente hacia el siguiente segmento de muro. Los diagramas de abajo muestran las 4 situaciones, Karel podr&iacute;a estar en cualquier punto del laberinto. Si <b>sigueMuroDerecha()</b> resuelve correctamente los 4 casos, entonces has solucionado la parte principal del problema. Tambi&eacute;n deber&iacute;as definir <b>turnright()</b>.</p>
+<p> Para probar tu programa crea un mundo como el del ejemplo y gu&aacute;rdalo con el nombre “laberinto.mdo”. Una vez te funcione el programa para este mundo, prueba a modificarlo a&ntilde;adi&eacute;ndo o quitando muros. &iquest;Realiza Karel la tarea bien <strong>en todos los casos</strong>? </p>
+<p> </p>
+<center>
+  <table border="2">
+    <tr>
+      <td><img src="image028.jpg" width="198" height="199" border="0" alt="" /></td>
+      <td><img src="image032.jpg" width="199" height="199" border="0" alt="" /></td>
+    </tr>
+    <tr>
+      <td><center>
+          Situaciones iniciales
+      </center></td>
+      <td><center>
+          Movimientos respectivos
+      </center></td>
+    </tr>
+  </table>
+</center>
+<p></p>
+<CENTER>
+  <H2>La sentencia   void</H2>
+  <H2 align="left"><a href="KarelJAVA.html">Regresar</a> </H2>
+</CENTER>
+</body>
+</html>

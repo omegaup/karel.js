@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> La sentencia   define-nueva-instruccion/como  </title>
+</head>
+
+<body style="background-image: url(./workbook.gif);">
+<center>
+  <h2>Las funciones succ y pred</h2>
+</center>
+<p>Ahora ya sabemos como mandarle un n&uacute;mero a un procedimiento, y probablemente ya habr&aacute;s intentado poner operaciones como suma, resta o multiplicaci&oacute;n, sin embargo lamanto decirte que ninguna de estas operaciones est&aacute;n soportadas en Karel. </p>
+<p>Por otro lado, existen dos funciones que nos permiten sumarle 1 a un n&uacute;mero y restarle 1. </p>
+<p>Pero... &iquest;qu&eacute; es una funci&oacute;n? Una funci&oacute;n es una instrucci&oacute;n que devuelve un valor, es decir, reciben un  par&aacute;metro (o m&aacute;s) que luego procesa, para al final regresar un valor; por ejemplo, la funci&oacute;n booleana junto-a-zumbador devuelve verdadero si Karel est&aacute; parado junto a un zumbador y falso si no lo est&aacute;. En Karel no se pueden declarar funciones nuevas, pero se pueden usar las que ya existen. </p>
+<p>Las funciones succ y pred son dos instrucciones que reciben un par&aacute;metro, posteriormente, devuelven un n&uacute;mero m&aacute;s y un n&uacute;mero menos (respectivamente) que el que le enviamos.</p>
+<p>La funci&oacute;n succ se escribe as&iacute;:</p>
+<p>...</p>
+<p>succ(xxx);</p>
+<p>...</p>
+<p>donde xxx es un n&uacute;mero o un par&aacute;metro, y la funci&oacute;n pred se escribe as&iacute;:</p>
+<p>...</p>
+<p>pred(xxx);</p>
+<p>...</p>
+<p>donde xxx es un n&uacute;mero o un par&aacute;metro.</p>
+<p>Debido a que devuelven un n&uacute;mero, solo nos pueden servir poniendolas en alguna instrucci&oacute;n o sentencia que reciba un n&uacute;mero, como iterate, otro succ o pred o una instrucci&oacute;n personal que reciba un par&aacute;metro. </p>
+<p>Por ejemplo, el siguiente trozo de c&oacute;digo pone n + 1 zumbadores en donde Karel se encuentra:</p>
+<p>...</p>
+<p>iterate( succ(n) ) { </p>
+<p>&nbsp;&nbsp;&nbsp;putbeeper();</p>
+<p>}</p>
+<p>...</p>
+<p>nota que n se &quot;incrementa&quot; (se le suma uno). Si en vez de succ, pusieramos pred, Karel dejar&iacute;a n - 1 zumbadores, porque la n se &quot;decrementa&quot; (se le quita uno) cuando se pone dentro de una funci&oacute;n pred. </p>
+<p><strong>Ejercicio 10</strong>: Escribe una nueva instrucci&oacute;n que reciba un n&uacute;mero n y mueva a Karel n + 2 veces (validando el choque contra paredes), y posteriormente, coloque n - 2 zumbadores en la posici&oacute;n en donde est&aacute;. PISTA: Usa un iterate para mover a Karel y otro para colocar los zumbadores. NO se vale colocar instrucciones fuera de los ciclos iterate.</p>
+<CENTER>
+  <H2>Las funciones succ y pred</H2>
+  <H2 align="left"><a href="KarelJAVA.html">Regresar</a> </H2>
+</CENTER>
+</body>
+</html>
