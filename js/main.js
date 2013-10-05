@@ -71,6 +71,10 @@ $(document).ready(function(){
     return new DOMParser().parseFromString(xml, 'text/xml');
   }
 
+  function htmlEscape(s) {
+    return s.replace(/</g, '&lt;').replace(/</g, '&gt;');
+  }
+
   var ERROR_CODES = {
     'WALL': 'Karel ha chocado con un muro!',
     'WORLDUNDERFLOW': 'Karel intentó tomar zumbadores en una posición donde no había!',
@@ -234,11 +238,11 @@ $(document).ready(function(){
       editor.focus();
       $("#ejecutar").attr('disabled', 'disabled');
       $("#worldclean").removeAttr('disabled');
-      var a = document.createElement('a');
+      $('#guardar_salida').html(htmlEscape(mundo.output()));
       var blob = new Blob([mundo.output()], {'type':'text/xml'});
-      a.href = window.URL.createObjectURL(blob);
-      a.download = 'salida.xml';
-      a.click();
+      $('#guardar_descargar')
+        .attr('href', window.URL.createObjectURL(blob))
+        .attr('download', 'mundo.out');
     }
   });
   $("#ejecutar").bind('lock', function(evt){
@@ -393,11 +397,12 @@ $(document).ready(function(){
     file.click();
   });
   $("#worldsave").click(function(event){
-    var a = document.createElement('a');
+    $('#guardar_modal').modal('show');
+    $('#guardar_salida').html(htmlEscape($('script#xmlMundo').html()));
     var blob = new Blob([$('script#xmlMundo').html()], {'type':'text/xml'});
-    a.href = window.URL.createObjectURL(blob);
-    a.download = 'mundo.xml';
-    a.click();
+    $('#guardar_descargar')
+      .attr('href', window.URL.createObjectURL(blob))
+      .attr('download', 'mundo.in');
   });
   $("#worldclean").click(function(event){
     if (linea_actual != null) {

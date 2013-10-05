@@ -75,7 +75,7 @@
                   <li><a><i class="icon-star"></i> Nuevo</a></li>
                   <li><a><i class="icon-folder-open"></i> Abrir</a></li>
                   <li><a href="#importar_modal" data-toggle="modal"><i class="icon-folder-open"></i> Importar MDO/KEC</a></li>
-                  <li><a id="save_out"><i class="icon-download-alt"></i> Guardar .out</a></li>
+                  <li><a href="#guardar_modal" data-toggle="modal" id="save_out"><i class="icon-download-alt"></i> Guardar .out</a></li>
                 </ul>
               </li>
               <li class="dropdown">
@@ -291,6 +291,19 @@ finalizar-programa</div>
           <li><a href="https://twitter.com/categulario" target="_blank">Categulario</a></li>
         </ul>
         </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+      </div>
+    </div>
+    <div id="guardar_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="guardarLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="guardarLabel">Guardar archivo</h3>
+      </div>
+      <div class="modal-body">
+        <pre id="guardar_salida"></pre>
+        <a href="#" id="guardar_descargar">Descargar archivo</a>
       </div>
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
