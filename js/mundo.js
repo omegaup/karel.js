@@ -10,7 +10,8 @@ var WorldRender = function(context){
     this.num_filas = 1
     this.num_columnas = 1
 
-    this.paint = function(world, mundo_ancho, mundo_alto, track_karel) {
+    this.paint = function(world, mundo_ancho, mundo_alto, options) {
+        options = options || {};
 
         function dibuja_karel(context, world, origen){ //Dibujar a Karel
 
@@ -57,11 +58,11 @@ var WorldRender = function(context){
         context.fillStyle="#959595";
         context.fillRect(0, 0, mundo_ancho, mundo_alto);
 
-        var tamanio_lienzo = {x:(mundo_ancho-30), y:(mundo_alto-30)}
-        var tamanio_mundo = {x:mundo_ancho, y:mundo_alto}
+        var tamanio_lienzo = {x:(mundo_ancho-30), y:(mundo_alto-30)};
+        var tamanio_mundo = {x:mundo_ancho, y:mundo_alto};
 
-        context.fillStyle="#FFFFFF"
-        context.fillRect(30, 0, tamanio_lienzo.x, tamanio_lienzo.y)
+        context.fillStyle = options.editable ? "#FFFFFF" : "#FAFAFA";
+        context.fillRect(30, 0, tamanio_lienzo.x, tamanio_lienzo.y);
 
         //IMPORTANTE
         var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
@@ -69,7 +70,7 @@ var WorldRender = function(context){
         this.num_columnas = (tamanio_lienzo.x/30 + Math.ceil((tamanio_lienzo.x%30)/30.))*1
         this.num_filas = (tamanio_lienzo.y/30 + Math.ceil((tamanio_lienzo.y%30)/30.))*1
 
-        if(track_karel) {
+        if(options.track_karel) {
           //Rastrea la ubicación de karel y lo forza a aparecer
           if(world.i < this.primera_fila) {
             this.primera_fila = Math.floor(world.i)
@@ -100,10 +101,14 @@ var WorldRender = function(context){
             num_columna = 1
             for(var columna=this.primera_columna;columna<this.primera_columna+this.num_columnas;columna++){
                 //Si esa casilla se debe imprimir
-                context.fillStyle = '#eee';
-                if (world.getDumpCell(fila, columna)) {
-                  context.fillRect(origen.x+(num_columna-1)*30+4, origen.y-(num_fila-1)*30+2,
-                                   24, 24);
+                if (!options.editable) {
+                    context.fillStyle = '#eee';
+                    if (world.getDumpCell(fila, columna)) {
+                        context.fillRect(origen.x+(num_columna-1)*30+4,
+                                         origen.y-(num_fila-1)*30+2,
+                                         24,
+                                         24);
+                    }
                 }
 
                 //Dibujar a karel
@@ -132,22 +137,20 @@ var WorldRender = function(context){
                 //Zumbadores
                 var zumbadores = world.buzzers(fila, columna);
                 if (zumbadores == -1 || zumbadores > 0) {
+                    context.fillStyle = options.editable ? '#00FF00' : '#E0E0E0';
                     if (zumbadores == -1) {
-                        context.fillStyle = '#00FF00';
                         context.fillRect(origen.x+(num_columna-1)*30+8, origen.y-(num_fila-1)*30+8, 16, 12);
 
                         context.font = '25px monospace';
                         context.fillStyle = '#000000';
                         context.fillText('∞', origen.x+(num_columna-1)*30+9, origen.y-(num_fila-1)*30+23);
                     } else if (zumbadores < 10) {
-                        context.fillStyle = '#00FF00';
                         context.fillRect(origen.x+(num_columna-1)*30+9, origen.y-(num_fila-1)*30+8, 12, 14);
 
                         context.font = '12px monospace';
                         context.fillStyle = '#000000';
                         context.fillText(String(zumbadores), origen.x+(num_columna-1)*30+11, origen.y-(num_fila-1)*30+20);
                     } else {
-                        context.fillStyle = '#00FF00';
                         context.fillRect(origen.x+(num_columna-1)*30+7, origen.y-(num_fila-1)*30+8, 16, 14);
 
                         context.font = '12px monospace';

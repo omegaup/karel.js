@@ -97,7 +97,7 @@ $(document).ready(function(){
   var linea_actual = null;
   mundo.load(parseWorld($('script#xmlMundo').html()));
   $("#world").attr('width', $("#world").width());
-  wRender.paint(mundo, world.width, world.height);
+  wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
 
   var interval = null;
 
@@ -120,7 +120,7 @@ $(document).ready(function(){
 
     mundo.dirty = false;
 
-    wRender.paint(mundo, world.width, world.height, true);
+    wRender.paint(mundo, world.width, world.height, { track_karel: true });
 
     if (!mundo.runtime.state.running) {
       clearInterval(interval);
@@ -160,7 +160,7 @@ $(document).ready(function(){
 
   $(window).resize(function(event) {
     $("#world").attr('width', $("#world").width());
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
   });
   $("#mensajes").bind('error', function(event, data){
     var d = new Date();
@@ -194,7 +194,7 @@ $(document).ready(function(){
       if (!finished) {
         mundo.runtime.state.error = 'INSTRUCTION LIMIT';
       }
-      wRender.paint(mundo, world.width, world.height, true);
+      wRender.paint(mundo, world.width, world.height, { track_karel: true });
       if(mundo.runtime.state.error) {
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
       } else {
@@ -373,7 +373,7 @@ $(document).ready(function(){
     $('#ejecutar').trigger('unlock');
     $("#pila").html('');
     mundo.load(parseWorld($('script#xmlMundo').html()));
-    wRender.paint(mundo, world.width, world.height, true);
+    wRender.paint(mundo, world.width, world.height, { editable: true, track_karel: true });
     if ($('#posicion_karel').hasClass('active') != mundo.getDumps(World.DUMP_POSITION)) {
       $('#posicion_karel').button('toggle');
     }
@@ -388,7 +388,7 @@ $(document).ready(function(){
 
     $('#ejecutar').trigger('unlock');
     mundo = new World(100, 100);
-    wRender.paint(mundo, world.width, world.height, true);
+    wRender.paint(mundo, world.width, world.height, { editable: true, track_karel: true });
     $("#xmlMundo").html(mundo.save());
     if ($('#posicion_karel').hasClass('active')) {
       $('#posicion_karel').button('toggle');
@@ -460,7 +460,7 @@ $(document).ready(function(){
         }
     }
     //Volvemos a pintar el canvas
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
   });
   $("#inf_zumbadores").click(function(event){
     if($(this).hasClass('active')) { //ya hay infinitos
@@ -489,12 +489,12 @@ $(document).ready(function(){
   $("#go_home").click(function(event){
     wRender.primera_fila = 1;
     wRender.primera_columna = 1;
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
   });
   $("#follow_karel").click(function(event){
     wRender.primera_fila = mundo.i;
     wRender.primera_columna = mundo.j;
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
   });
   $("#world").bind("contextmenu", function(e){
     //Maneja el click derecho sobre el mundo
@@ -525,7 +525,7 @@ $(document).ready(function(){
       wRender.primera_fila -= 1;
     }
 
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     return false;
   };
   $("#posicion_karel").click(function(event){
@@ -540,52 +540,52 @@ $(document).ready(function(){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('NORTE');
     $("#wcontext_menu").css("display", "none");
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     $("#xmlMundo").html(mundo.save());
   });
   $("#ctx_sur").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('SUR');
     $("#wcontext_menu").css("display", "none");
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     $("#xmlMundo").html(mundo.save());
   });
   $("#ctx_este").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('ESTE');
     $("#wcontext_menu").css("display", "none");
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     $("#xmlMundo").html(mundo.save());
   });
   $("#ctx_oeste").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('OESTE');
     $("#wcontext_menu").css("display", "none");
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     $("#xmlMundo").html(mundo.save());
   });
   $("#n_zumbadores").click(function(event){
     mundo.setBuzzers(fila_evento, columna_evento, prompt("¿Cuántos zumbadores?", '0'));
     $("#wcontext_menu").css("display", "none");
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     $("#xmlMundo").html(mundo.save());
   });
   $("#inf_zumbadores_ctx").click(function(event){
     mundo.setBuzzers(fila_evento, columna_evento, -1);
     $("#wcontext_menu").css("display", "none");
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     $("#xmlMundo").html(mundo.save());
   });
   $("#cero_zumbadores").click(function(event) {
     mundo.setBuzzers(fila_evento, columna_evento, 0);
     $("#wcontext_menu").css("display", "none");
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     $("#xmlMundo").html(mundo.save());
   });
   $("#toggle_dump_cell").click(function(event) {
     mundo.toggleDumpCell(fila_evento, columna_evento);
     $("#wcontext_menu").css("display", "none");
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     $("#xmlMundo").html(mundo.save());
   });
   $('#world').hammer().on("drag", function(event) {
@@ -605,7 +605,7 @@ $(document).ready(function(){
       wRender.primera_fila -= 1;
     }
 
-    wRender.paint(mundo, world.width, world.height);
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     return false;
   });
   $('#importar').submit(function(event) {
@@ -619,7 +619,7 @@ $(document).ready(function(){
           return function(e) {
             mundo.import(new Uint16Array(mdo, 0, mdo.length),
                          new Uint16Array(kecReader.result, 0, kecReader.result.length));
-            wRender.paint(mundo, world.width, world.height);
+            wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
             $("#xmlMundo").html(mundo.save());
             $('#importar_modal').modal('hide');
           };
