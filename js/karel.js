@@ -354,6 +354,12 @@ Runtime.prototype.next = function() {
 var World = function(w, h) {
 	var self = this;
 
+  self.init(w, h);
+};
+
+World.prototype.init = function(w, h) {
+	var self = this;
+
 	self.w = w + 1;
 	self.h = h + 1;
 	self.runtime = new Runtime(self);
@@ -453,7 +459,8 @@ World.prototype.setBuzzers = function(i, j, count) {
 	var self = this;
 
 	if (0 > i || i >= self.h || 0 > j || j >= self.w) return;
-	self.map[self.w * i + j] = self.currentMap[self.w * i + j] = count;
+	self.map[self.w * i + j] = self.currentMap[self.w * i + j] =
+		(count == 0xffff) ? -1 : count;
 	self.dirty = true;
 };
 
@@ -594,7 +601,7 @@ World.prototype.load = function(doc) {
 			var i = parseInt(pared.getAttribute('y1'), 10) + 1;
 			var j = parseInt(pared.getAttribute('x1'), 10) + 1;
 
-			if (pared.attr('x2')) {
+			if (pared.getAttribute('x2')) {
 				var j2 = parseInt(pared.getAttribute('x2'), 10) + 1;
 
 				if (j2 > j) {
@@ -602,7 +609,7 @@ World.prototype.load = function(doc) {
 				} else {
 					self.addWall(i, j2, 3);
 				}
-			} else if(pared.attr('y2')) {
+			} else if(pared.getAttribute('y2')) {
 				var i2 = parseInt(pared.getAttribute('y2'), 10) + 1;
 
 				if (i2 > i) {
@@ -856,6 +863,73 @@ World.prototype.reset = function() {
 	self.runtime.reset();
 
 	self.dirty = true;
+};
+
+World.prototype.import = function(mdo, kec) {
+	var self = this;
+
+	if (mdo.length <= 20 || kec.length <= 30) {
+		throw new Exception('Invalid file format');
+	}
+
+	if (mdo[0] != 0x414b ||
+	    mdo[1] != 0x4552 ||
+	    mdo[2] != 0x204c ||
+	    mdo[3] != 0x4d4f ||
+	    mdo[4] != 0x2e49) {
+		throw new Exception('Invalid magic number');
+	}
+
+	var x1 = mdo[5];
+	var width = mdo[6];
+	var height = mdo[7];
+	self.init(width - 1, height - 1);
+	self.setBagBuzzers(mdo[8]);
+	self.move(mdo[10], mdo[9]);
+	self.orientation = mdo[11] % 4;
+	var wallcount = mdo[12];
+	var heapcount = mdo[13];
+	var x10 = mdo[14];
+
+	/*
+	maxlines = kec[0][1] if kec[0][0] else 10000000
+	maxmove = kec[1][1] if kec[1][0] else False
+	maxturnleft = kec[2][1] if kec[2][0] else False
+	maxpickbeeper = kec[3][1] if kec[3][0] else False
+	maxputbeeper = kec[4][1] if kec[4][0] else False
+	maxkarelbeepers = kec[5][1] if kec[5][0] else False
+	maxbeepers = kec[6][1] if kec[6][0] else False
+	*/
+	if (kec[21]) {
+		self.setDumps(World.DUMP_POSITION);
+	}
+	if (kec[24]) {
+		self.setDumps(World.DUMP_ORIENTATION);
+	}
+	var dumpcount = kec[27] ? kec[28] : 0;
+	if (dumpcount) {
+		self.setDumps(World.DUMP_WORLD);
+	}
+
+	function decodeWalls(tx, ty, tmask) {
+		for (var i = 0; i < 4; i++) {
+			if (tmask & (1 << i)) {
+				self.addWall(ty, tx, (i + 1) % 4);
+			}
+		}
+	}
+
+	for (var i = 15; i < 15 + 3 * wallcount; i += 3) {
+		decodeWalls(mdo[i], mdo[i + 1], mdo[i + 2]);
+	}
+
+	for (var i = 15 + 3 * wallcount; i < 15 + 3 * (wallcount + heapcount); i += 3) {
+		self.setBuzzers(mdo[i + 1], mdo[i], mdo[i + 2]);
+	}
+
+	for (var i = 30; i < 30 + 3 * dumpcount; i += 3) {
+		self.setDumpCell(kec[i + 1], kec[i], true);
+	}
 };
 
 if (typeof require !== 'undefined' && typeof exports !== 'undefined') {

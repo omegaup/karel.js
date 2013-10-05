@@ -608,4 +608,26 @@ $(document).ready(function(){
     wRender.paint(mundo, world.width, world.height);
     return false;
   });
+  $('#importar').submit(function(event) {
+    var mdo = $('#importar_mdo')[0].files[0];
+    var mdoReader = new FileReader();
+    mdoReader.onload = (function(mdoReader) {
+      return function(e) {
+        var kec = $('#importar_kec')[0].files[0];
+        var kecReader = new FileReader();
+        kecReader.onload = (function(kecReader, mdo) {
+          return function(e) {
+            mundo.import(new Uint16Array(mdo, 0, mdo.length),
+                         new Uint16Array(kecReader.result, 0, kecReader.result.length));
+            wRender.paint(mundo, world.width, world.height);
+            $("#xmlMundo").html(mundo.save());
+            $('#importar_modal').modal('hide');
+          };
+        })(kecReader, mdoReader.result);
+        kecReader.readAsArrayBuffer(kec);
+      };
+    })(mdoReader);
+    mdoReader.readAsArrayBuffer(mdo);
+    return false;
+  });
 });
