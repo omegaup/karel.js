@@ -37,26 +37,29 @@ EventTarget.prototype.dispatchEvent = function(evt) {
 EventTarget.prototype.fireEvent = function(type, properties) {
 	var self = this;
 	
-	var event = null;
+	var evt = null;
 	
-	// IE does not support the construction of custom events through
+	// IE<11 does not support the construction of custom events through
 	// standard means. ugh.
-	if (document && document.createEventObject) {
-		event = document.createEventObject();
-		event.type = type;
+	if (document && document.createEvent) {
+		evt = document.createEvent("Event");
+		evt.type = type;
+	} else if (document && document.createEventObject) {
+		evt = document.createEventObject();
+		evt.type = type;
 	} else {
-		event = new Event(type);
+		evt = new Event(type);
 	}
 	
 	if (properties) {
 		for (var p in properties) {
 			if (properties.hasOwnProperty(p)) {
-				event[p] = properties[p];
+				evt[p] = properties[p];
 			}
 		}
 	}
 	
-	self.dispatchEvent(event);
+	self.dispatchEvent(evt);
 };
 
 if (typeof Event === 'undefined') {
