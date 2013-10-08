@@ -137,24 +137,24 @@ case 3: this.$ = $$[$0-2].concat($$[$0-1]);
 break;
 case 4: this.$ = $$[$0-1]; 
 break;
-case 5: this.$ = [[$$[$0], null, 1]]; 
+case 5: this.$ = [[$$[$0].toLowerCase(), null, 1]]; 
 break;
-case 6: this.$ = [[$$[$0-3], null, 2]]; 
+case 6: this.$ = [[$$[$0-3].toLowerCase(), null, 2]]; 
 break;
-case 7: this.$ = [[$$[$0-2], $$[$0-3].concat($$[$0]).concat([['RET']]), 1]]; 
+case 7: this.$ = [[$$[$0-2].toLowerCase(), $$[$0-3].concat($$[$0]).concat([['RET']]), 1]]; 
 break;
 case 8:
     	var result = $$[$0-6].concat($$[$0]).concat([['RET']]);
     	for (var i = 0; i < result.length; i++) {
     		if (result[i][0] == 'PARAM') {
-    			if (result[i][1] == $$[$0-3]) {
+    			if (result[i][1] == $$[$0-3].toLowerCase()) {
     				result[i][1] = 0;
     			} else {
 				throw "Unknown variable: " + $$[$0-3];
     			}
     		}
     	}
-    	this.$ = [[$$[$0-5], result, 2]];
+    	this.$ = [[$$[$0-5].toLowerCase(), result, 2]];
     
 break;
 case 9: this.$ = $$[$0-2].concat($$[$0-1]); 
@@ -183,9 +183,9 @@ case 20: this.$ = $$[$0];
 break;
 case 21: this.$ = $$[$0-1]; 
 break;
-case 22: this.$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $$[$0]], ['LINE', yylineno]]; 
+case 22: this.$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $$[$0].toLowerCase()], ['LINE', yylineno]]; 
 break;
-case 23: this.$ = [['LINE', yylineno]].concat($$[$0-1]).concat([['CALL', $$[$0-3]], ['LINE', yylineno]]); 
+case 23: this.$ = [['LINE', yylineno]].concat($$[$0-1]).concat([['CALL', $$[$0-3].toLowerCase()], ['LINE', yylineno]]); 
 break;
 case 24: this.$ = $$[$0-2].concat($$[$0-3]).concat([['JZ', $$[$0].length]]).concat($$[$0]); 
 break;
@@ -249,7 +249,7 @@ case 53: this.$ = [['ORIENTATION'], ['LOAD', 2], ['EQ'], ['NOT']];
 break;
 case 54: this.$ = [['ORIENTATION'], ['LOAD', 3], ['EQ'], ['NOT']]; 
 break;
-case 55: this.$ = [['PARAM', $$[$0]]]; 
+case 55: this.$ = [['PARAM', $$[$0].toLowerCase()]]; 
 break;
 case 56: this.$ = [['LOAD', parseInt(yytext)]]; 
 break;

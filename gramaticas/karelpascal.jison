@@ -129,24 +129,24 @@ def_list
 
 def
   : PROTO line var
-    { $$ = [[$var, null, 1]]; }
+    { $$ = [[$var.toLowerCase(), null, 1]]; }
   | PROTO line var '(' var ')'
-    { $$ = [[$var, null, 2]]; }
+    { $$ = [[$var.toLowerCase(), null, 2]]; }
   | DEF line var AS expr
-    { $$ = [[$var, $line.concat($expr).concat([['RET']]), 1]]; }
+    { $$ = [[$var.toLowerCase(), $line.concat($expr).concat([['RET']]), 1]]; }
   | DEF line var '(' var ')' AS expr
     %{
     	var result = $line.concat($expr).concat([['RET']]);
     	for (var i = 0; i < result.length; i++) {
     		if (result[i][0] == 'PARAM') {
-    			if (result[i][1] == $5) {
+    			if (result[i][1] == $5.toLowerCase()) {
     				result[i][1] = 0;
     			} else {
 				throw "Unknown variable: " + $5;
     			}
     		}
     	}
-    	$$ = [[$var, result, 2]];
+    	$$ = [[$var.toLowerCase(), result, 2]];
     %}
   ;
 
@@ -185,9 +185,9 @@ expr
 
 call
   : var
-    { $$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $var], ['LINE', yylineno]]; }
+    { $$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $var.toLowerCase()], ['LINE', yylineno]]; }
   | var '(' integer ')'
-    { $$ = [['LINE', yylineno]].concat($integer).concat([['CALL', $var], ['LINE', yylineno]]); }
+    { $$ = [['LINE', yylineno]].concat($integer).concat([['CALL', $var.toLowerCase()], ['LINE', yylineno]]); }
   ;
   
 cond
@@ -278,7 +278,7 @@ bool_fun
 
 integer
   : var
-    { $$ = [['PARAM', $var]]; }
+    { $$ = [['PARAM', $var.toLowerCase()]]; }
   | NUM
     { $$ = [['LOAD', parseInt(yytext)]]; }
   | INC '(' integer ')'
