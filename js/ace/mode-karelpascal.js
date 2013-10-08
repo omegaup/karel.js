@@ -51,11 +51,11 @@ ace.define(
 				},{
 					caseInsensitive:!0,
 					token:["keyword.control","text","entity.name.function","text","variable.parameter","text"],
-					regex:"\\b(define-nueva-instruccion)(\\s+)([a-zA-Z][a-zA-Z0-9-]*)(\\s*\\(\\s*)([a-zA-Z][a-zA-Z0-9-]*)(\\s*\\)\\s*)"
+					regex:"\\b(define-(?:nueva|prototipo)-instruccion)(\\s+)([a-zA-Z][a-zA-Z0-9-]*)(\\s*\\(\\s*)([a-zA-Z][a-zA-Z0-9-]*)(\\s*\\)\\s*)"
 				},{
 					caseInsensitive:!0,
 					token:["keyword.control","text","entity.name.function"],
-					regex:"\\b(define-nueva-instruccion)(\\s+)([a-zA-Z][a-zA-Z0-9-]*)"
+					regex:"\\b(define-(?:nueva|prototipo)-instruccion)(\\s+)([a-zA-Z][a-zA-Z0-9-]*)"
 				},{
 					token:"constant.numeric",
 					regex:"\\b[0-9]+\\b"
