@@ -822,7 +822,7 @@ World.prototype.output = function() {
 			}
 
 			if (line != '') {
-				result.mundos.mundo.linea.push({'#attributes': {linea: i, compresionDeCeros: 'true'}, '#text': line});
+				result.mundos.mundo.linea.push({'#attributes': {fila: i, compresionDeCeros: 'true'}, '#text': line});
 			}
 		}
 	}
