@@ -366,6 +366,43 @@ $(document).ready(function(){
     mundo.setBagBuzzers($('#mochila').val());
     $("#xmlMundo").html(mundo.save());
   });
+  $("#codeload").click(function(event){
+    var file = document.createElement('input');
+    file.type = 'file';
+    file.addEventListener('change', function(evt) {
+      var files = evt.target.files; // FileList object
+
+      // Loop through the FileList and render image files as thumbnails.
+      for (var i = 0, f; f = files[i]; i++) {
+
+        // Only process text files.
+        if (!f.type.match('text.*')) {
+          continue;
+        }
+
+        var reader = new FileReader();
+
+        // Closure to capture the file information.
+        reader.onload = (function(theFile) {
+          return function(e) {
+            editor.setValue(reader.result);
+          };
+        })(f);
+
+        // Read in the file as a data URL.
+        reader.readAsText(f);
+      }
+    });
+    file.click();
+  });
+  $("#codesave").click(function(event){
+    $('#guardar_modal').modal('show');
+    $('#guardar_salida').html(htmlEscape(editor.getValue()));
+    var blob = new Blob([editor.getValue()], {'type':'text/xml'});
+    $('#guardar_descargar')
+      .attr('href', window.URL.createObjectURL(blob))
+      .attr('download', 'karel.txt');
+  });
   $("#worldload").click(function(event){
     var file = document.createElement('input');
     file.type = 'file';
