@@ -2,10 +2,33 @@ module.exports = function(grunt) {
 
 	grunt.initConfig({
 		jison: {
-			files: {
-				'js/karelpascal.js': 'gramaticas/karelpascal.jison',
-				'js/kareljava.js': 'gramaticas/kareljava.jison'
-			}
+			karelPascal: {
+				options: {
+					moduleType: 'js',
+					moduleName: 'karelpascal',
+				},
+				files: {
+					'js/karelpascal.js': 'gramaticas/karelpascal.jison',
+				}
+			},
+			karelJava: {
+				options: {
+					moduleType: 'js',
+					moduleName: 'kareljava',
+				},
+				files: {
+					'js/kareljava.js': 'gramaticas/kareljava.jison',
+				}
+			},
+			karelRuby: {
+				options: {
+					moduleType: 'js',
+					moduleName: 'karelruby',
+				},
+				files: {
+					'js/karelruby.js': 'gramaticas/karelruby.jison',
+				}
+			},
 		},
 		jshint: {
 			files: ['js/karel.js', 'js/karelide.js'],
@@ -37,5 +60,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-jison');
 
-	grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+	grunt.registerTask('default', ['jison', 'jshint', 'concat', 'uglify']);
 };

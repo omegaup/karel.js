@@ -41,7 +41,6 @@
 "else"                          { return 'ELSE'; }
 "if"                            { return 'IF'; }
 "!"                             { return 'NOT'; }
-"¬"				{ return 'NOT'; }
 "||"                            { return 'OR'; }
 "&&"                            { return 'AND'; }
 "&"				{ return 'AND'; }

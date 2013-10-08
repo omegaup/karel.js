@@ -12,6 +12,7 @@
 "termina-ejecucion"             { return 'ENDEXEC'; }
 "finalizar-programa"            { return 'ENDPROG'; }
 "define-nueva-instruccion"      { return 'DEF'; }
+"define-prototipo-instruccion"  { return 'PROTO'; }
 "como"                          { return 'AS'; }
 "apagate"                       { return 'HALT'; }
 "gira-izquierda"                { return 'LEFT'; }
@@ -68,9 +69,14 @@ program
   : BEGINPROG def_list BEGINEXEC expr_list ENDEXEC ENDPROG EOF
     %{
     	var program = $expr_list.concat([['LINE', yylineno], ['HALT']]);
+	var prototypes = {};
     	var functions = {};
-    	
+
     	for (var i = 0; i < $def_list.length; i++) {
+		if ($def_list[i][1] == null) {
+			continue;
+		}
+
     		if (functions[$def_list[i][0]]) {
     			throw "Function redefinition: " + $def_list[i][0];
     		}
@@ -106,7 +112,11 @@ def_list
   ;
 
 def
-  : DEF line var AS expr
+  : PROTO line var ';'
+    { $$ = [[$var, null, null]]; }
+  | PROTO line var '(' var ')' ';'
+    { $$ = [[$var, null, $4]]; }
+  | DEF line var AS expr
     { $$ = [[$var, $line.concat($expr).concat([['RET']])]]; }
   | DEF line var '(' var ')' AS expr
     %{
