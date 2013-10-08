@@ -69,20 +69,36 @@ program
   : BEGINPROG def_list BEGINEXEC expr_list ENDEXEC ENDPROG EOF
     %{
     	var program = $expr_list.concat([['LINE', yylineno], ['HALT']]);
-	var prototypes = {};
+    	var prototypes = {};
     	var functions = {};
 
     	for (var i = 0; i < $def_list.length; i++) {
-		if ($def_list[i][1] == null) {
-			continue;
-		}
+    		if ($def_list[i][1] == null) {
+    			if (prototypes[$def_list[i][0]] || functions[$def_list[i][0]]) {
+    				throw "Prototype redefinition: " + $def_list[i][0];
+    			}
+    			prototypes[$def_list[i][0]] = $def_list[i][2];
+    		} else {
+    	    		if (functions[$def_list[i][0]]) {
+    				throw "Function redefinition: " + $def_list[i][0];
+    			} else if (prototypes[$def_list[i][0]]) {
+    				if (prototypes[$def_list[i][0] != $def_list[i][2]) {
+    					throw "Prototype parameter mismatch";
+    				}
+    			}
 
-    		if (functions[$def_list[i][0]]) {
-    			throw "Function redefinition: " + $def_list[i][0];
+    			functions[$def_list[i][0]] = program.length;
+
+    			for (var j = 0; j < $def_list[i][1].length; j++) {
+    				if ($def_list[i][1][j][0] == 'CALL' &&
+    				    !functions[$def_list[i][1][j][1]] &&
+    				    !prototypes[$def_list[i][1][j][1]]) {
+    					throw "Unknown function: " + $def_list[i][1][j][1];
+    				}
+    			}
+    
+    			program = program.concat($def_list[i][1]);
     		}
-    		
-    		functions[$def_list[i][0]] = program.length;
-    		program = program.concat($def_list[i][1]);
     	}
     	
     	for (var i = 0; i < program.length; i++) {
@@ -90,7 +106,6 @@ program
     			if (!functions[program[i][1]]) {
     				throw "Unknown function: " + program[i][1];
     			}
-    			
     			program[i].push(program[i][1]);
     			program[i][1] = functions[program[i][2]];
     		} else if (program[i][0] == 'PARAM' && program[i][1] != 0) {
@@ -113,11 +128,11 @@ def_list
 
 def
   : PROTO line var
-    { $$ = [[$var, null, null]]; }
+    { $$ = [[$var, null, 1]]; }
   | PROTO line var '(' var ')'
-    { $$ = [[$var, null, $5]]; }
+    { $$ = [[$var, null, 2]]; }
   | DEF line var AS expr
-    { $$ = [[$var, $line.concat($expr).concat([['RET']])]]; }
+    { $$ = [[$var, $line.concat($expr).concat([['RET']]), 1]]; }
   | DEF line var '(' var ')' AS expr
     %{
     	var result = $line.concat($expr).concat([['RET']]);
@@ -130,7 +145,7 @@ def
     			}
     		}
     	}
-    	$$ = [[$var, result]];
+    	$$ = [[$var, result, 2]];
     %}
   ;
 

@@ -84,20 +84,36 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
     	var program = $$[$0-3].concat([['LINE', yylineno], ['HALT']]);
-	var prototypes = {};
+    	var prototypes = {};
     	var functions = {};
 
     	for (var i = 0; i < $$[$0-5].length; i++) {
-		if ($$[$0-5][i][1] == null) {
-			continue;
-		}
+    		if ($$[$0-5][i][1] == null) {
+    			if (prototypes[$$[$0-5][i][0]] || functions[$$[$0-5][i][0]]) {
+    				throw "Prototype redefinition: " + $$[$0-5][i][0];
+    			}
+    			prototypes[$$[$0-5][i][0]] = $$[$0-5][i][2];
+    		} else {
+    	    		if (functions[$$[$0-5][i][0]]) {
+    				throw "Function redefinition: " + $$[$0-5][i][0];
+    			} else if (prototypes[$$[$0-5][i][0]]) {
+    				if (prototypes[$$[$0-5][i][0] != $$[$0-5][i][2]) {
+    					throw "Prototype parameter mismatch";
+    				}
+    			}
 
-    		if (functions[$$[$0-5][i][0]]) {
-    			throw "Function redefinition: " + $$[$0-5][i][0];
+    			functions[$$[$0-5][i][0]] = program.length;
+
+    			for (var j = 0; j < $$[$0-5][i][1].length; j++) {
+    				if ($$[$0-5][i][1][j][0] == 'CALL' &&
+    				    !functions[$$[$0-5][i][1][j][1]] &&
+    				    !prototypes[$$[$0-5][i][1][j][1]]) {
+    					throw "Unknown function: " + $$[$0-5][i][1][j][1];
+    				}
+    			}
+    
+    			program = program.concat($$[$0-5][i][1]);
     		}
-    		
-    		functions[$$[$0-5][i][0]] = program.length;
-    		program = program.concat($$[$0-5][i][1]);
     	}
     	
     	for (var i = 0; i < program.length; i++) {
@@ -105,7 +121,6 @@ case 1:
     			if (!functions[program[i][1]]) {
     				throw "Unknown function: " + program[i][1];
     			}
-    			
     			program[i].push(program[i][1]);
     			program[i][1] = functions[program[i][2]];
     		} else if (program[i][0] == 'PARAM' && program[i][1] != 0) {
@@ -122,11 +137,11 @@ case 3: this.$ = $$[$0-2].concat($$[$0-1]);
 break;
 case 4: this.$ = $$[$0-1]; 
 break;
-case 5: this.$ = [[$$[$0], null, null]]; 
+case 5: this.$ = [[$$[$0], null, 1]]; 
 break;
-case 6: this.$ = [[$$[$0-3], null, $$[$0-1]]]; 
+case 6: this.$ = [[$$[$0-3], null, 2]]; 
 break;
-case 7: this.$ = [[$$[$0-2], $$[$0-3].concat($$[$0]).concat([['RET']])]]; 
+case 7: this.$ = [[$$[$0-2], $$[$0-3].concat($$[$0]).concat([['RET']]), 1]]; 
 break;
 case 8:
     	var result = $$[$0-6].concat($$[$0]).concat([['RET']]);
@@ -139,7 +154,7 @@ case 8:
     			}
     		}
     	}
-    	this.$ = [[$$[$0-5], result]];
+    	this.$ = [[$$[$0-5], result, 2]];
     
 break;
 case 9: this.$ = $$[$0-2].concat($$[$0-1]); 
