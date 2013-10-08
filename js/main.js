@@ -480,8 +480,13 @@ $(document).ready(function(){
   });
   $("#world").click(function(event){
     $("#wcontext_menu").css("display", "none");
-    var x = event.offsetX;
-    var y = event.offsetY;
+    // Firefox no reconoce offsetX. UGH.
+    var x = event.offsetX ||
+            (event.clientX + document.body.scrollLeft +
+             document.documentElement.scrollLeft - $('#world').offset().left);
+    var y = event.offsetY ||
+            (event.clientY + document.body.scrollTop +
+             document.documentElement.scrollTop - $('#world').offset().top);
     //Maneja los clicks en el mundo
     if ((world.width-50)<=x && x <=(world.width-20) && 10<=y && y<=40) {
         //NORTE
