@@ -82,7 +82,7 @@ program
     	    		if (functions[$def_list[i][0]]) {
     				throw "Function redefinition: " + $def_list[i][0];
     			} else if (prototypes[$def_list[i][0]]) {
-    				if (prototypes[$def_list[i][0] != $def_list[i][2]) {
+    				if (prototypes[$def_list[i][0]] != $def_list[i][2]) {
     					throw "Prototype parameter mismatch";
     				}
     			}

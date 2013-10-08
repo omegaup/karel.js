@@ -97,7 +97,7 @@ case 1:
     	    		if (functions[$$[$0-5][i][0]]) {
     				throw "Function redefinition: " + $$[$0-5][i][0];
     			} else if (prototypes[$$[$0-5][i][0]]) {
-    				if (prototypes[$$[$0-5][i][0] != $$[$0-5][i][2]) {
+    				if (prototypes[$$[$0-5][i][0]] != $$[$0-5][i][2]) {
     					throw "Prototype parameter mismatch";
     				}
     			}
