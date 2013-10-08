@@ -13,6 +13,7 @@
 "finalizar-programa"            { return 'ENDPROG'; }
 "define-nueva-instruccion"      { return 'DEF'; }
 "define-prototipo-instruccion"  { return 'PROTO'; }
+"sal-de-instruccion"		{ return 'RET'; }
 "como"                          { return 'AS'; }
 "apagate"                       { return 'HALT'; }
 "gira-izquierda"                { return 'LEFT'; }
@@ -168,6 +169,8 @@ expr
     { $$ = [['LINE', yylineno], ['BAGBUZZERS'], ['EZ', 'BAGUNDERFLOW'], ['LEAVEBUZZER']]; }
   | HALT
     { $$ = [['LINE', yylineno], ['HALT']]; }
+  | RET
+    { $$ = [['LINE', yylineno], ['RET']]; }
   | call
     { $$ = $call; }
   | cond
