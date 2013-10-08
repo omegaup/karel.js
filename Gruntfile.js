@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 		jison: {
 			karelPascal: {
 				options: {
-					moduleType: 'js',
+					moduleType: 'commonjs',
 					moduleName: 'karelpascal',
 				},
 				files: {
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 			},
 			karelJava: {
 				options: {
-					moduleType: 'js',
+					moduleType: 'commonjs',
 					moduleName: 'kareljava',
 				},
 				files: {
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
 			},
 			karelRuby: {
 				options: {
-					moduleType: 'js',
+					moduleType: 'commonjs',
 					moduleName: 'karelruby',
 				},
 				files: {

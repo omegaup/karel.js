@@ -813,3 +813,21 @@ function Parser () {
 Parser.prototype = parser;parser.Parser = Parser;
 return new Parser;
 })();
+
+
+if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
+exports.parser = karelruby;
+exports.Parser = karelruby.Parser;
+exports.parse = function () { return karelruby.parse.apply(karelruby, arguments); };
+exports.main = function commonjsMain(args) {
+    if (!args[1]) {
+        console.log('Usage: '+args[0]+' FILE');
+        process.exit(1);
+    }
+    var source = require('fs').readFileSync(require('path').normalize(args[1]), "utf8");
+    return exports.parser.parse(source);
+};
+if (typeof module !== 'undefined' && require.main === module) {
+  exports.main(process.argv.slice(1));
+}
+}
