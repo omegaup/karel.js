@@ -112,9 +112,9 @@ def_list
   ;
 
 def
-  : PROTO line var ';'
+  : PROTO line var
     { $$ = [[$var, null, null]]; }
-  | PROTO line var '(' var ')' ';'
+  | PROTO line var '(' var ')'
     { $$ = [[$var, null, $4]]; }
   | DEF line var AS expr
     { $$ = [[$var, $line.concat($expr).concat([['RET']])]]; }
