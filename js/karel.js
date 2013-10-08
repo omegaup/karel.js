@@ -41,10 +41,10 @@ EventTarget.prototype.fireEvent = function(type, properties) {
 	
 	// IE<11 does not support the construction of custom events through
 	// standard means. ugh.
-	if (document && document.createEvent) {
+	if (typeof document != 'undefined' && document.createEvent) {
 		evt = document.createEvent("Event");
 		evt.type = type;
-	} else if (document && document.createEventObject) {
+	} else if (typeof document != 'undefined' && document.createEventObject) {
 		evt = document.createEventObject();
 		evt.type = type;
 	} else {
