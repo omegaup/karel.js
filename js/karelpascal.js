@@ -124,7 +124,7 @@ case 4: this.$ = $$[$0-1];
 break;
 case 5: this.$ = [[$$[$0], null, null]]; 
 break;
-case 6: this.$ = [[$$[$0-3], null, $$[$0-2]]]; 
+case 6: this.$ = [[$$[$0-3], null, $$[$0-1]]]; 
 break;
 case 7: this.$ = [[$$[$0-2], $$[$0-3].concat($$[$0]).concat([['RET']])]]; 
 break;
@@ -132,10 +132,10 @@ case 8:
     	var result = $$[$0-6].concat($$[$0]).concat([['RET']]);
     	for (var i = 0; i < result.length; i++) {
     		if (result[i][0] == 'PARAM') {
-    			if (result[i][1] == $$[$0-4]) {
+    			if (result[i][1] == $$[$0-3]) {
     				result[i][1] = 0;
     			} else {
-				throw "Unknown variable: " + $$[$0-4];
+				throw "Unknown variable: " + $$[$0-3];
     			}
     		}
     	}

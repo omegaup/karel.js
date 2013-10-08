@@ -115,7 +115,7 @@ def
   : PROTO line var
     { $$ = [[$var, null, null]]; }
   | PROTO line var '(' var ')'
-    { $$ = [[$var, null, $4]]; }
+    { $$ = [[$var, null, $5]]; }
   | DEF line var AS expr
     { $$ = [[$var, $line.concat($expr).concat([['RET']])]]; }
   | DEF line var '(' var ')' AS expr
@@ -123,10 +123,10 @@ def
     	var result = $line.concat($expr).concat([['RET']]);
     	for (var i = 0; i < result.length; i++) {
     		if (result[i][0] == 'PARAM') {
-    			if (result[i][1] == $4) {
+    			if (result[i][1] == $5) {
     				result[i][1] = 0;
     			} else {
-				throw "Unknown variable: " + $4;
+				throw "Unknown variable: " + $5;
     			}
     		}
     	}
