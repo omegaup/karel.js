@@ -348,6 +348,10 @@ $(document).ready(function(){
     if(valor > 50){
       valor -= 50;
       $("#retraso_txt").val(valor);
+      if (interval) {
+        clearInterval(interval);
+        interval = setInterval(step, $("#retraso_txt").val());
+      }
     }
   });
   $("#retraso_plus").click(function(){
@@ -355,12 +359,20 @@ $(document).ready(function(){
     if(valor < 1000){
       valor += 50;
       $("#retraso_txt").val(valor);
+      if (interval) {
+        clearInterval(interval);
+        interval = setInterval(step, $("#retraso_txt").val());
+      }
     }
   });
   $("#retraso_txt").blur(function(event){
     var valor = $("#retraso_txt").val()*1;
     if(valor < 50 || valor > 1000) {
       $("#retraso_txt").val(500);
+      if (interval) {
+        clearInterval(interval);
+        interval = setInterval(step, $("#retraso_txt").val());
+      }
     }
   });
   $("#mochila").blur(function(event){
