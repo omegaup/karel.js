@@ -40,6 +40,10 @@ ace.define(
 					regex:"\\b(?:(front|left|right)Is(Clear|Blocked)|(notN|n)extToABeeper|(notF|f)acing(North|South|East|West)|(any|no)BeepersInBeeperBag)\\b"
 				},{
 					caseInsensitive:!0,
+					token:"variable.language",
+					regex:"\\b(?:(turnoff|turnleft|move|pickbeeper|putbeeper))\\b"
+				},{
+					caseInsensitive:!0,
 					token:"keyword.operator",
 					regex:"(?:(!|\\|\\||\\&\\&|¬))"
 				},{

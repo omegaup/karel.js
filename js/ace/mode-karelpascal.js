@@ -41,6 +41,10 @@ ace.define(
 					regex:"\\b(?:(frente-libre|frente-bloqueado|izquierda-libre|izquierda-bloqueada|derecha-libre|derecha-bloqueada|junto-a-zumbador|no-junto-a-zumbador|algun-zumbador-en-la-mochila|ningun-zumbador-en-la-mochila|orientado-al-norte|orientado-al-sur|orientado-al-este|orientado-al-oeste|no-orientado-al-norte|no-orientado-al-sur|no-orientado-al-este|no-orientado-al-oeste))\\b"
 				},{
 					caseInsensitive:!0,
+					token:"variable.language",
+					regex:"\\b(?:(apagate|gira-izquierda|avanza|coge-zumbador|deja-zumbador))\\b"
+				},{
+					caseInsensitive:!0,
 					token:"keyword.operator",
 					regex:"\\b(?:(y|o|no|si-es-cero|precede|sucede))(?=$|[^a-z0-9-])"
 				},{
