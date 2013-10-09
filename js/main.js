@@ -114,7 +114,6 @@ $(document).ready(function(){
   var columna_evento;
   var mundo = new World(100, 100);
   mundo.runtime.addEventListener('call', function(evt){
-    console.log('call', evt);
     $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+(evt.line+1)+'</span></div>');
   });
   mundo.runtime.addEventListener('return', function(evt){
@@ -122,6 +121,15 @@ $(document).ready(function(){
   });
   var mundo_editable = true;
   var linea_actual = null;
+  var tab_actual = 'mensajes';
+  var mensajes_no_leidos = 0;
+  $('a[data-toggle="tab"]').on('shown', function(e) {
+    tab_actual = e.target.firstChild.nodeValue.toLowerCase().trim();
+    if (tab_actual == 'mensajes') {
+      mensajes_no_leidos = 0;
+      $('#mensajes_cuenta').html('');
+    }
+  });
   mundo.load(parseWorld($('script#xmlMundo').html()));
   $("#world").attr('width', $("#world").width());
   wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
@@ -204,14 +212,26 @@ $(document).ready(function(){
   $("#mensajes").bind('error', function(event, data){
     var d = new Date();
     $('#mensajes').prepend('<p class="text-error"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
+    if (tab_actual != 'mensajes') {
+      mensajes_no_leidos++;
+      $('#mensajes_cuenta').html('<span class="badge badge-info">'+mensajes_no_leidos+'</span>');
+    }
   });
   $("#mensajes").bind('info', function(event, data){
     var d = new Date();
     $('#mensajes').prepend('<p class="text-info"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
+    if (tab_actual != 'mensajes') {
+      mensajes_no_leidos++;
+      $('#mensajes_cuenta').html('<span class="badge badge-info">'+mensajes_no_leidos+'</span>');
+    }
   });
   $("#mensajes").bind('success', function(event, data){
     var d = new Date();
     $('#mensajes').prepend('<p class="text-success"><strong>['+d.toLocaleString()+']</strong> '+data['mensaje']+'</p>');
+    if (tab_actual != 'mensajes') {
+      mensajes_no_leidos++;
+      $('#mensajes_cuenta').html('<span class="badge badge-info">'+mensajes_no_leidos+'</span>');
+    }
   });
   $("#compilar").click(function(event){
     compile();
@@ -500,7 +520,6 @@ $(document).ready(function(){
     $('#ejecutar').trigger('unlock');
     mundo = new World(100, 100);
     mundo.runtime.addEventListener('call', function(evt){
-      console.log('call', evt);
       $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+(evt.line+1)+'</span></div>');
     });
     mundo.runtime.addEventListener('return', function(evt){
