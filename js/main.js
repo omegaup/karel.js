@@ -113,6 +113,7 @@ $(document).ready(function(){
     if (mundo.runtime.state.line >= 1) {
       linea_actual = mundo.runtime.state.line;
       editor.session.addGutterDecoration(linea_actual, "karel-current-line");
+      editor.gotoLine(linea_actual + 1);
     }
   }
 
