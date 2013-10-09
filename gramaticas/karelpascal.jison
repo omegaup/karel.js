@@ -152,10 +152,17 @@ def
 
   
 expr_list
-  : expr_list expr ';'
-    { $$ = $expr_list.concat($expr); }
-  | expr ';'
+  : expr_list ';' genexpr
+    { $$ = $expr_list.concat($genexpr); }
+  | genexpr
+    { $$ = $genexpr; }
+  ;
+
+genexpr
+  : expr
     { $$ = $expr; }
+  |
+    { $$ = []; }
   ;
 
 expr
