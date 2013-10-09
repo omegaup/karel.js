@@ -119,13 +119,14 @@ $(document).ready(function(){
 
   function step() {
     //Avanza un paso en la ejecución del código
-    while (!mundo.dirty && mundo.runtime.step());
+    mundo.runtime.step();
 
     highlightCurrentLine();
 
-    mundo.dirty = false;
-
-    wRender.paint(mundo, world.width, world.height, { track_karel: true });
+    if (mundo.dirty) {
+      mundo.dirty = false;
+      wRender.paint(mundo, world.width, world.height, { track_karel: true });
+    }
 
     if (!mundo.runtime.state.running) {
       clearInterval(interval);
