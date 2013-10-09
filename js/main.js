@@ -85,8 +85,24 @@ $(document).ready(function(){
 
   //Preparación del editor
   var editor = ace.edit("editor");
+  var breakpoints = {};
   editor.setTheme("ace/theme/chrome");
   editor.getSession().setMode("ace/mode/karelpascal");
+  editor.on("guttermousedown", function(e){ 
+      var target = e.domEvent.target; 
+      if (target.className.indexOf("ace_gutter-cell") == -1) 
+          return; 
+
+      var row = e.getDocumentPosition().row;
+      if (!breakpoints[row]) {
+        e.editor.session.setBreakpoint(row);
+        breakpoints[row] = true;
+      } else {
+        e.editor.session.clearBreakpoint(row);
+        delete breakpoints[row];
+      }
+      e.stop();
+  });
   var Range = ace.require("./range").Range;
 
   var world = $("#world")[0];
@@ -129,6 +145,16 @@ $(document).ready(function(){
     mundo.runtime.step();
 
     highlightCurrentLine();
+
+    if (breakpoints[linea_actual] && interval) {
+      $('#mensajes').trigger('info', {'mensaje': 'Breakpoint en la línea '+(linea_actual + 1)});
+      clearInterval(interval);
+      interval = null;
+      $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
+      $('#worldclean').removeAttr('disabled');
+      $('#paso').removeAttr('disabled');
+      $('#futuro').removeAttr('disabled');
+    }
 
     if (mundo.dirty) {
       mundo.dirty = false;
