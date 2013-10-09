@@ -18,18 +18,18 @@ EventTarget.prototype.addEventListener = function(type, listener, useCapture) {
 EventTarget.prototype.removeEventListener = function(type, listener, useCapture) {
 	var self = this;
 	if (self.listeners.hasOwnProperty(type)) {
-		var index = self.listeners.indexOf(listener);
+		var index = self.listeners[type].indexOf(listener);
 		if (index > -1) {
-			self.listeners.splice(index, 1);
+			self.listeners[type].splice(index, 1);
 		}
 	}
 };
 
 EventTarget.prototype.dispatchEvent = function(evt) {
 	var self = this;
-	if (self.listeners.hasOwnProperty(evt.type)) {
-		for (var i = 0; i < self.listeners[evt.type].length; i++) {
-			self.listeners[evt.type][i](evt);
+	if (self.listeners.hasOwnProperty(evt._type)) {
+		for (var i = 0; i < self.listeners[evt._type].length; i++) {
+			self.listeners[evt._type][i](evt);
 		}
 	}
 };
@@ -43,10 +43,8 @@ EventTarget.prototype.fireEvent = function(type, properties) {
 	// standard means. ugh.
 	if (typeof document != 'undefined' && document.createEvent) {
 		evt = document.createEvent("Event");
-		evt.type = type;
 	} else if (typeof document != 'undefined' && document.createEventObject) {
 		evt = document.createEventObject();
-		evt.type = type;
 	} else {
 		evt = new Event(type);
 	}
@@ -58,6 +56,8 @@ EventTarget.prototype.fireEvent = function(type, properties) {
 			}
 		}
 	}
+
+	evt._type = type;
 	
 	self.dispatchEvent(evt);
 };

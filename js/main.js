@@ -97,6 +97,13 @@ $(document).ready(function(){
   var fila_evento;
   var columna_evento;
   var mundo = new World(100, 100);
+  mundo.runtime.addEventListener('call', function(evt){
+    console.log('call', evt);
+    $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+(evt.line+1)+'</span></div>');
+  });
+  mundo.runtime.addEventListener('return', function(evt){
+    var arreglo = $("#pila > div:first-child").remove();
+  });
   var mundo_editable = true;
   var linea_actual = null;
   mundo.load(parseWorld($('script#xmlMundo').html()));
@@ -286,12 +293,6 @@ $(document).ready(function(){
 
           mundo.reset();
           mundo.runtime.load(compiled);
-          mundo.runtime.addEventListener('call', function(evt){
-            $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+evt.line+'</span></div>');
-          });
-          mundo.runtime.addEventListener('return', function(evt){
-            var arreglo = $("#pila > div:first-child").remove();
-          });
           interval = setInterval(step, $("#retraso_txt").val());
         }
       } else {
@@ -314,12 +315,6 @@ $(document).ready(function(){
 
         mundo.reset();
         mundo.runtime.load(compiled);
-        mundo.runtime.addEventListener('call', function(evt){
-          $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+evt.line+'</span></div>');
-        });
-        mundo.runtime.addEventListener('return', function(evt){
-          var arreglo = $("#pila > div:first-child").remove();
-        });
         step();
         $('#paso').removeAttr('disabled');
         $('#worldclean').removeAttr('disabled');
@@ -478,6 +473,13 @@ $(document).ready(function(){
 
     $('#ejecutar').trigger('unlock');
     mundo = new World(100, 100);
+    mundo.runtime.addEventListener('call', function(evt){
+      console.log('call', evt);
+      $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+(evt.line+1)+'</span></div>');
+    });
+    mundo.runtime.addEventListener('return', function(evt){
+      var arreglo = $("#pila > div:first-child").remove();
+    });
     wRender.paint(mundo, world.width, world.height, { editable: true, track_karel: true });
     $("#xmlMundo").html(mundo.save());
     if ($('#posicion_karel').hasClass('active')) {
