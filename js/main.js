@@ -759,8 +759,7 @@ $(document).ready(function(){
         var kecReader = new FileReader();
         kecReader.onload = (function(kecReader, mdo) {
           return function(e) {
-            mundo.import(new Uint16Array(mdo, 0, mdo.length),
-                         new Uint16Array(kecReader.result, 0, kecReader.result.length));
+            mundo.import(new Uint16Array(mdo), new Uint16Array(kecReader.result));
             wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
             $("#xmlMundo").html(mundo.save());
             $('#importar_modal').modal('hide');
