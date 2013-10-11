@@ -886,7 +886,7 @@ World.prototype.import = function(mdo, kec) {
 	var self = this;
 
 	if (mdo.length <= 20 || kec.length <= 30) {
-		throw new Exception('Invalid file format');
+		throw new Error('Invalid file format');
 	}
 
 	if (mdo[0] != 0x414b ||
@@ -894,7 +894,7 @@ World.prototype.import = function(mdo, kec) {
 	    mdo[2] != 0x204c ||
 	    mdo[3] != 0x4d4f ||
 	    mdo[4] != 0x2e49) {
-		throw new Exception('Invalid magic number');
+		throw new Error('Invalid magic number');
 	}
 
 	var x1 = mdo[5];
