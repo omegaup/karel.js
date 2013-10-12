@@ -595,8 +595,8 @@ World.prototype.load = function(doc) {
 
 	var rules = {
 		condiciones: function(condiciones) {
-			self.maxInstructions = parseInt(condiciones.getAttribute('instruccionesMaximasAEjecutar'));
-			self.stackSize = parseInt(condiciones.getAttribute('longitudStack'));
+			self.maxInstructions = parseInt(condiciones.getAttribute('instruccionesMaximasAEjecutar')) || 10000000;
+			self.stackSize = parseInt(condiciones.getAttribute('longitudStack')) || 65000;
 		},
 
 		monton: function(monton) {
