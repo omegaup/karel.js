@@ -805,7 +805,7 @@ World.prototype.output = function() {
 			dumpCells[self.dumpCells[i][0]][self.dumpCells[i][1]] = true;
 		}
 
-		for (var i = 1; i <= self.h; i++) {
+		for (var i = self.h; i >= 0; i--) {
 			var lastNonZero = -1;
 			var line = '';
 
