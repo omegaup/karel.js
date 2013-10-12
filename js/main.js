@@ -468,7 +468,7 @@ $(document).ready(function(){
       for (var i = 0, f; f = files[i]; i++) {
 
         // Only process text files.
-        if (!f.type.match('text.*')) {
+        if (f.type && !f.type.match('text.*')) {
           continue;
         }
 
