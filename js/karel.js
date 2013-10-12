@@ -806,18 +806,18 @@ World.prototype.output = function() {
 		}
 
 		for (var i = self.h; i >= 0; i--) {
-			var lastNonZero = -1;
+			var printCoordinate = true;
 			var line = '';
 
 			for (var j = 1; j <= self.w; j++) {
 				if (dumpCells[i] && dumpCells[i][j]) {
 					if (self.buzzers(i, j) != 0) {
-						if (lastNonZero < j - 1) {
-							line += '(' + (j - 1 - lastNonZero) + ') ';
+						if (printCoordinate) {
+							line += '(' + j + ') ';
 						}
 						line += self.buzzers(i, j) + ' ';
-						lastNonZero = j;
 					}
+					printCoordinate = self.buzzers(i, j) == 0;
 				}
 			}
 
