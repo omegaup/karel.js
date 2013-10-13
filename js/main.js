@@ -763,6 +763,12 @@ $(document).ready(function(){
             wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
             $("#xmlMundo").html(mundo.save());
             $('#importar_modal').modal('hide');
+            if ($('#posicion_karel').hasClass('active') != mundo.getDumps(World.DUMP_POSITION)) {
+              $('#posicion_karel').button('toggle');
+            }
+            if ($('#orientacion_karel').hasClass('active') != mundo.getDumps(World.DUMP_ORIENTATION)) {
+              $('#orientacion_karel').button('toggle');
+            }
           };
         })(kecReader, mdoReader.result);
         kecReader.readAsArrayBuffer(kec);
