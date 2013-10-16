@@ -1,3 +1,9 @@
+if (typeof Event === 'undefined') {
+	var Event = function(type) {
+		this.type = type;
+	};
+}
+
 /**
  * A class that implements the W3C DOM's EventTarget interface.
  * http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget
@@ -7,7 +13,7 @@ var EventTarget = function() {
 	self.listeners = {};
 };
 
-EventTarget.prototype.addEventListener = function(type, listener, useCapture) {
+EventTarget.prototype.addEventListener = function(type, listener) {
 	var self = this;
 	if (!self.listeners.hasOwnProperty(type)) {
 		self.listeners[type] = [];
@@ -15,7 +21,7 @@ EventTarget.prototype.addEventListener = function(type, listener, useCapture) {
 	self.listeners[type].push(listener);
 };
 
-EventTarget.prototype.removeEventListener = function(type, listener, useCapture) {
+EventTarget.prototype.removeEventListener = function(type, listener) {
 	var self = this;
 	if (self.listeners.hasOwnProperty(type)) {
 		var index = self.listeners[type].indexOf(listener);
@@ -36,19 +42,19 @@ EventTarget.prototype.dispatchEvent = function(evt) {
 
 EventTarget.prototype.fireEvent = function(type, properties) {
 	var self = this;
-	
+
 	var evt = null;
-	
+
 	// IE<11 does not support the construction of custom events through
 	// standard means. ugh.
 	if (typeof document != 'undefined' && document.createEvent) {
-		evt = document.createEvent("Event");
+		evt = document.createEvent('Event');
 	} else if (typeof document != 'undefined' && document.createEventObject) {
 		evt = document.createEventObject();
 	} else {
 		evt = new Event(type);
 	}
-	
+
 	if (properties) {
 		for (var p in properties) {
 			if (properties.hasOwnProperty(p)) {
@@ -58,15 +64,9 @@ EventTarget.prototype.fireEvent = function(type, properties) {
 	}
 
 	evt._type = type;
-	
+
 	self.dispatchEvent(evt);
 };
-
-if (typeof Event === 'undefined') {
-	var Event = function(type) {
-		this.type = type;
-	};
-}
 
 /**
  * A class that holds the state of computation and executes opcodes.
@@ -148,7 +148,7 @@ Runtime.prototype.next = function() {
 	}
 
 	var opcodes = {
-		'HALT': function(state, params) {
+		'HALT': function(state) {
 			state.running = false;
 		},
 
@@ -156,7 +156,7 @@ Runtime.prototype.next = function() {
 			state.line = params[0];
 		},
 
-		'LEFT': function(state, params) {
+		'LEFT': function() {
 			world.orientation--;
 			if (world.orientation < 0) {
 				world.orientation = 3;
@@ -164,15 +164,15 @@ Runtime.prototype.next = function() {
 			world.dirty = true;
 		},
 
-		'WORLDWALLS': function(state, params) {
+		'WORLDWALLS': function(state) {
 			state.stack.push(world.walls(world.i, world.j));
 		},
 
-		'ORIENTATION': function(state, params) {
+		'ORIENTATION': function(state) {
 			state.stack.push(world.orientation);
 		},
 
-		'ROTL': function(state, params) {
+		'ROTL': function(state) {
 			var rot = state.stack.pop() - 1;
 			if (rot < 0) {
 				rot = 3;
@@ -180,7 +180,7 @@ Runtime.prototype.next = function() {
 			state.stack.push(rot);
 		},
 
-		'ROTR': function(state, params) {
+		'ROTR': function(state) {
 			var rot = state.stack.pop() + 1;
 			if (rot > 3) {
 				rot = 0;
@@ -188,23 +188,23 @@ Runtime.prototype.next = function() {
 			state.stack.push(rot);
 		},
 
-		'MASK': function(state, params) {
+		'MASK': function(state) {
 			state.stack.push(1 << state.stack.pop());
 		},
 
-		'NOT': function(state, params) {
+		'NOT': function(state) {
 			state.stack.push((state.stack.pop() === 0) ? 1 : 0);
 		},
 
-		'AND': function(state, params) {
+		'AND': function(state) {
 			state.stack.push((state.stack.pop() & state.stack.pop()) ? 1 : 0);
 		},
 
-		'OR': function(state, params) {
+		'OR': function(state) {
 			state.stack.push((state.stack.pop() | state.stack.pop()) ? 1 : 0);
 		},
 
-		'EQ': function(state, params) {
+		'EQ': function(state) {
 			state.stack.push((state.stack.pop() == state.stack.pop()) ? 1 : 0);
 		},
 
@@ -237,7 +237,7 @@ Runtime.prototype.next = function() {
 			state.pc += params[0];
 		},
 
-		'FORWARD': function(state, params) {
+		'FORWARD': function() {
 			var di = [0, 1, 0, -1];
 			var dj = [-1, 0, 1, 0];
 
@@ -246,19 +246,19 @@ Runtime.prototype.next = function() {
 			world.dirty = true;
 		},
 
-		'WORLDBUZZERS': function(state, params) {
+		'WORLDBUZZERS': function(state) {
 			state.stack.push(world.buzzers(world.i, world.j));
 		},
 
-		'BAGBUZZERS': function(state, params) {
+		'BAGBUZZERS': function(state) {
 			state.stack.push(world.bagBuzzers);
 		},
 
-		'PICKBUZZER': function(state, params) {
+		'PICKBUZZER': function() {
 			world.pickBuzzer(world.i, world.j);
 		},
 
-		'LEAVEBUZZER': function(state, params) {
+		'LEAVEBUZZER': function() {
 			world.leaveBuzzer(world.i, world.j);
 		},
 
@@ -266,19 +266,19 @@ Runtime.prototype.next = function() {
 			state.stack.push(params[0]);
 		},
 
-		'POP': function(state, params) {
+		'POP': function(state) {
 			state.stack.pop();
 		},
 
-		'DUP': function(state, params) {
+		'DUP': function(state) {
 			state.stack.push(state.stack[state.stack.length - 1]);
 		},
 
-		'DEC': function(state, params) {
+		'DEC': function(state) {
 			state.stack.push(state.stack.pop() - 1);
 		},
 
-		'INC': function(state, params) {
+		'INC': function(state) {
 			state.stack.push(state.stack.pop() + 1);
 		},
 
@@ -304,7 +304,7 @@ Runtime.prototype.next = function() {
 			}
 		},
 
-		'RET': function(state, params) {
+		'RET': function(state) {
 			var oldSP = state.sp;
 			state.pc = state.stack[state.sp + 1];
 			state.sp = state.stack[state.sp];
@@ -326,7 +326,10 @@ Runtime.prototype.next = function() {
 		if (!opcodes[opcode[0]]) {
 			self.state.running = false;
 			if (self.debug) {
-				self.fireEvent('debug', {target: self, message: 'Missing opcode ' + opcode[0], debugType: 'opcode'});
+				self.fireEvent('debug', {
+					target: self,
+					message: 'Missing opcode ' + opcode[0],
+					debugType: 'opcode'});
 			}
 			self.state.error = 'INVALIDOPCODE';
 			return false;
@@ -341,8 +344,15 @@ Runtime.prototype.next = function() {
 		}
 
 		if (self.debug) {
-			self.fireEvent('debug', {target: self, message: JSON.stringify(opcode), debugType: 'opcode'});
-			self.fireEvent('debug', {target: self, message: JSON.stringify(self.state)});
+			self.fireEvent('debug', {
+				target: self,
+				message: JSON.stringify(opcode),
+				debugType: 'opcode'
+			});
+			self.fireEvent('debug', {
+				target: self,
+				message: JSON.stringify(self.state)
+			});
 		}
 	} catch (e) {
 		self.state.running = false;
@@ -420,10 +430,10 @@ World.prototype.walls = function(i, j) {
 World.prototype.toggleWall = function(i, j, orientation) {
 	var self = this;
 
-	if (j == 1 && orientation == 0
-	    || i == 1 && orientation == 3
-	    || i == self.h - 1 && orientation == 1
-	    || j == self.w - 1 && orientation == 2) {
+	if (j == 1 && orientation === 0 ||
+			i == 1 && orientation == 3 ||
+			i == self.h - 1 && orientation == 1 ||
+			j == self.w - 1 && orientation == 2) {
 		return;
 	}
 
@@ -519,7 +529,7 @@ World.prototype.setDumpCell = function(i, j, dumpState) {
 		self.dumpCells.push([i, j]);
 	}
 
-	self.dumps[World.DUMP_WORLD] = self.dumpCells.length != 0;
+	self.dumps[World.DUMP_WORLD] = self.dumpCells.length !== 0;
 };
 
 World.prototype.toggleDumpCell = function(i, j) {
@@ -538,7 +548,7 @@ World.prototype.toggleDumpCell = function(i, j) {
 		self.dumpCells.push([i, j]);
 	}
 
-	self.dumps[World.DUMP_WORLD] = self.dumpCells.length != 0;
+	self.dumps[World.DUMP_WORLD] = self.dumpCells.length !== 0;
 };
 
 World.prototype.getDumpCell = function(i, j) {
@@ -557,7 +567,7 @@ World.prototype.getDumpCell = function(i, j) {
 World.prototype.getDumps = function(d) {
 	var self = this;
 	return self.dumps.hasOwnProperty(d.toLowerCase()) && self.dumps[d];
-}
+};
 
 World.prototype.setDumps = function(d, v) {
 	var self = this;
@@ -595,8 +605,9 @@ World.prototype.load = function(doc) {
 
 	var rules = {
 		condiciones: function(condiciones) {
-			self.maxInstructions = parseInt(condiciones.getAttribute('instruccionesMaximasAEjecutar')) || 10000000;
-			self.stackSize = parseInt(condiciones.getAttribute('longitudStack')) || 65000;
+			self.maxInstructions =
+				parseInt(condiciones.getAttribute('instruccionesMaximasAEjecutar'), 10) || 10000000;
+			self.stackSize = parseInt(condiciones.getAttribute('longitudStack'), 10) || 65000;
 		},
 
 		monton: function(monton) {
@@ -633,21 +644,25 @@ World.prototype.load = function(doc) {
 		},
 
 		posicionDump: function(dump) {
-			self.dumpCells.push([parseInt(dump.getAttribute('y')), parseInt(dump.getAttribute('x'))]);
+			self.dumpCells.push([
+				parseInt(dump.getAttribute('y'), 10),
+				parseInt(dump.getAttribute('x'), 10)]);
 		},
 
 		programa: function(programa) {
 			self.di = self.h / 2 - parseInt(programa.getAttribute('yKarel'), 10);
 			self.dj = self.w / 2 - parseInt(programa.getAttribute('xKarel'), 10);
 			self.rotate(programa.getAttribute('direccionKarel'));
-			self.move(parseInt(programa.getAttribute('yKarel'), 10), parseInt(programa.getAttribute('xKarel'), 10));
+			self.move(
+				parseInt(programa.getAttribute('yKarel'), 10),
+				parseInt(programa.getAttribute('xKarel'), 10));
 		}
 	};
 
 	function traverse(node) {
 		var type = node.nodeName;
-		if (rules.hasOwnProperty(node.nodeName)) {
-			rules[node.nodeName](node);
+		if (rules.hasOwnProperty(type)) {
+			rules[type](node);
 		}
 
 		for (var i = 0; i < node.childNodes.length; i++) {
@@ -665,9 +680,9 @@ World.prototype.load = function(doc) {
 World.prototype.serialize = function(node, name, indentation) {
 	var self = this;
 
-	var result = "";
+	var result = '';
 	for (var i = 0; i < indentation; i++) {
-		result += "\t";
+		result += '\t';
 	}
 
 	if (typeof node === 'string' || typeof node === 'number') {
@@ -675,43 +690,45 @@ World.prototype.serialize = function(node, name, indentation) {
 	}
 
 	if (Array.isArray(node)) {
-		result = "";
+		result = '';
 
 		for (var i = 0; i < node.length; i++) {
 			result += self.serialize(node[i], name, indentation);
 		}
 	} else {
-		var childResult = "";
+		var childResult = '';
 
 		for (var p in node) {
-			if (!node.hasOwnProperty(p)) continue;
-			if (p[0] == '#') {
-				continue;
-			} else {
-				childResult += self.serialize(node[p], p, indentation + 1);
+			if (node.hasOwnProperty(p)) {
+				if (p[0] == '#') {
+					continue;
+				} else {
+					childResult += self.serialize(node[p], p, indentation + 1);
+				}
 			}
 		}
 
-		result += "<" + name;
+		result += '<' + name;
 
 		if (node.hasOwnProperty('#attributes')) {
 			for (var p in node['#attributes']) {
-				if (!node['#attributes'].hasOwnProperty(p)) continue;
-				result += ' ' + p + '="' + node['#attributes'][p] + '"';
+				if (node['#attributes'].hasOwnProperty(p)) {
+					result += ' ' + p + '="' + node['#attributes'][p] + '"';
+				}
 			}
 		}
 
 		if (node.hasOwnProperty('#text')) {
-			result += ">" + node['#text'] + '</' + name + '>\n';
-		} else if (childResult === "") {
-			result += "/>\n";
+			result += '>' + node['#text'] + '</' + name + '>\n';
+		} else if (childResult === '') {
+			result += '/>\n';
 		} else {
-			result += ">\n";
+			result += '>\n';
 			result += childResult;
 			for (var i = 0; i < indentation; i++) {
-				result += "\t";
+				result += '\t';
 			}
-			result += "</" + name + ">\n";
+			result += '</' + name + '>\n';
 		}
 	}
 
@@ -723,23 +740,34 @@ World.prototype.save = function() {
 
 	var result = {
 		condiciones: {
-			'#attributes': {instruccionesMaximasAEjecutar: self.maxInstructions, longitudStack: self.stackSize}
+			'#attributes': {
+				instruccionesMaximasAEjecutar: self.maxInstructions,
+				longitudStack: self.stackSize
+			}
 		},
 		mundos: {
 			mundo: {
-				'#attributes': {nombre: 'mundo_0', ancho: self.w, alto: self.h},
+				'#attributes': {
+					nombre: 'mundo_0',
+					ancho: self.w,
+					alto: self.h
+				},
 				monton: [],
 				pared: [],
 				posicionDump: []
 			}
 		},
 		programas: {
-			'#attributes': {tipoEjecucion: 'CONTINUA', intruccionesCambioContexto: 1, milisegundosParaPasoAutomatico: 0},
+			'#attributes': {
+				tipoEjecucion: 'CONTINUA',
+				intruccionesCambioContexto: 1,
+				milisegundosParaPasoAutomatico: 0
+			},
 			programa: {
 				'#attributes': {
-					nombre: "p1",
-					ruta: "{$2$}",
-					mundoDeEjecucion: "mundo_0",
+					nombre: 'p1',
+					ruta: '{$2$}',
+					mundoDeEjecucion: 'mundo_0',
 					xKarel: self.j,
 					yKarel: self.i,
 					direccionKarel: ['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation],
@@ -753,8 +781,12 @@ World.prototype.save = function() {
 	for (var i = 0; i < self.h; i++) {
 		for (var j = 0; j < self.w; j++) {
 			var buzzers = self.buzzers(i, j);
-			if(buzzers != 0) {
-				result.mundos.mundo.monton.push({'#attributes': {x: j, y: i, zumbadores: buzzers == -1 ? 'INFINITO' : buzzers}});
+			if(buzzers !== 0) {
+				result.mundos.mundo.monton.push({
+					'#attributes': {
+						x: j,
+						y: i,
+						zumbadores: buzzers == -1 ? 'INFINITO' : buzzers}});
 			}
 		}
 	}
@@ -768,9 +800,11 @@ World.prototype.save = function() {
 
 				if ((walls & k) == k) {
 					if (k == 2) {
-						result.mundos.mundo.pared.push({'#attributes': {x1: j - 1, y1: i, x2: j}});
+						result.mundos.mundo.pared.push(
+							{'#attributes': {x1: j - 1, y1: i, x2: j}});
 					} else if (k == 4) {
-						result.mundos.mundo.pared.push({'#attributes': {x1: j, y1: i - 1, y2: i}});
+						result.mundos.mundo.pared.push(
+							{'#attributes': {x1: j, y1: i - 1, y2: i}});
 					}
 				}
 			}
@@ -778,12 +812,14 @@ World.prototype.save = function() {
 	}
 
 	for (var i = 0; i < self.dumpCells.length; i++) {
-		result.mundos.mundo.posicionDump.push({'#attributes': {x: self.dumpCells[i][1], y: self.dumpCells[i][0]}});
+		result.mundos.mundo.posicionDump.push(
+			{'#attributes': {x: self.dumpCells[i][1], y: self.dumpCells[i][0]}});
 	}
 
 	for (var p in self.dumps) {
-		if (!self.dumps.hasOwnProperty(p) || !self.dumps[p]) continue;
-		result.programas.programa.despliega.push({'#attributes': {tipo: p.toUpperCase()}});
+		if (self.dumps.hasOwnProperty(p) && self.dumps[p]) {
+			result.programas.programa.despliega.push({'#attributes': {tipo: p.toUpperCase()}});
+		}
 	}
 
 	return self.serialize(result, 'ejecucion', 0);
@@ -811,7 +847,7 @@ World.prototype.output = function() {
 
 			for (var j = 1; j <= self.w; j++) {
 				if (dumpCells[i] && dumpCells[i][j]) {
-					if (self.buzzers(i, j) != 0) {
+					if (self.buzzers(i, j) !== 0) {
 						if (printCoordinate) {
 							line += '(' + j + ') ';
 						}
@@ -821,23 +857,32 @@ World.prototype.output = function() {
 				}
 			}
 
-			if (line != '') {
-				result.mundos.mundo.linea.push({'#attributes': {fila: i, compresionDeCeros: 'true'}, '#text': line});
+			if (line !== '') {
+				result.mundos.mundo.linea.push({
+					'#attributes': {
+						fila: i,
+						compresionDeCeros: 'true'
+					},
+					'#text': line
+				});
 			}
 		}
 	}
 
 	result.programas = {programa: {'#attributes': {nombre: 'p1'}}};
 
-	result.programas.programa['#attributes'].resultadoEjecucion = self.runtime.state.error ? self.runtime.state.error : 'FIN PROGRAMA';
+	result.programas.programa['#attributes'].resultadoEjecucion =
+		self.runtime.state.error ? self.runtime.state.error : 'FIN PROGRAMA';
 
 	if (self.dumps[World.DUMP_POSITION]) {
 		result.programas.programa.karel = {'#attributes': {x: self.j, y: self.i}};
 	}
 
 	if (self.dumps[World.DUMP_ORIENTATION]) {
-		result.programas.programa.karel = result.programas.programa.karel || {'#attributes':{}};
-		result.programas.programa.karel['#attributes'].direccion = ['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation];
+		result.programas.programa.karel =
+			result.programas.programa.karel || {'#attributes':{}};
+		result.programas.programa.karel['#attributes'].direccion =
+			['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation];
 	}
 
 	return self.serialize(result, 'resultados', 0);
@@ -890,14 +935,14 @@ World.prototype.import = function(mdo, kec) {
 	}
 
 	if (mdo[0] != 0x414b ||
-	    mdo[1] != 0x4552 ||
-	    mdo[2] != 0x204c ||
-	    mdo[3] != 0x4d4f ||
-	    mdo[4] != 0x2e49) {
+			mdo[1] != 0x4552 ||
+			mdo[2] != 0x204c ||
+			mdo[3] != 0x4d4f ||
+			mdo[4] != 0x2e49) {
 		throw new Error('Invalid magic number');
 	}
 
-	var x1 = mdo[5];
+	//var x1 = mdo[5];
 	var width = mdo[6];
 	var height = mdo[7];
 	self.init(width - 1, height - 1);
@@ -906,7 +951,7 @@ World.prototype.import = function(mdo, kec) {
 	self.orientation = mdo[11] % 4;
 	var wallcount = mdo[12];
 	var heapcount = mdo[13];
-	var x10 = mdo[14];
+	//var x10 = mdo[14];
 
 	/*
 	maxlines = kec[0][1] if kec[0][0] else 10000000

@@ -32,6 +32,20 @@ module.exports = function(grunt) {
 		},
 		jshint: {
 			files: ['js/karel.js', 'js/karelide.js'],
+			options: {
+				undef: true,
+				unused: true,
+				trailing: true,
+				maxlen: 100,
+				quotmark: "single",
+				noarg: true,
+				latedef: "nofunc",
+				inmed: true,
+				forin: true,
+				browser: true,
+				devel: true,
+				node: true,
+			},
 		},
 		concat: {
 			dist: {
