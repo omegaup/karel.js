@@ -16,22 +16,34 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css">
     <style type="text/css" media="screen">
+      body {
+        overflow: hidden;
+      }
+      #splitterContainer {
+        position: absolute;
+        top: 100px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        z-index: 1;
+      }
       #editor {
-        height: 400px;
-        float:left;
+        margin: 0px;
+        width: 100%;
+        height: 100%;
       }
-      #world {
-        height: 400px;
-      }
-      .row{
-        margin-top:10px;
+      .input-prepend {
+        margin-top: 10px;
       }
       #mensajes {
-        max-height: 100px;
+        overflow-y: scroll;
+        padding: 0 10px 10px 10pX;
       }
       #pila {
-        max-height: 100px;
+        overflow-y: scroll;
+        padding: 0 10px 10px 10pX;
       }
+      
       .karel-current-line {
         background: rgba(255, 255, 0, 0.8);
       }
@@ -53,37 +65,26 @@
           <a class="brand" href="#">Karel.js</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <!-- Ocultando hasta que haya implementación
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Código <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a><i class="icon-star"></i> Nuevo</a></li>
-                  <li><a><i class="icon-folder-open"></i> Abrir</a></li>
-                  <li class="divider"></li>
-                  <li><a><i class="icon-download-alt"></i> Guardar</a></li>
-                  <li><a><i class="icon-briefcase"></i> Guardar como...</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Edición <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a><i class="icon-fire"></i> Cortar</a></li>
-                  <li><a><i class="icon-leaf"></i> Copiar</a></li>
-                  <li><a><i class="icon-tint"></i> Pegar</a></li>
-                  <li class="divider"></li>
-                  <li><a><i class="icon-wrench"></i> Preferencias</a></li>
-                </ul>
-              </li>
-              -->
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mundo <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <!--
-                  <li><a><i class="icon-star"></i> Nuevo</a></li>
-                  <li><a><i class="icon-folder-open"></i> Abrir</a></li>
-                  -->
+                  <li><a id="newworld"><i class="icon-star"></i> Nuevo</a></li>
+                  <li><a id="worldload"><i class="icon-folder-open"></i> Abrir .in</a></li>
                   <li><a href="#importar_modal" data-toggle="modal"><i class="icon-folder-open"></i> Importar MDO/KEC</a></li>
+                  <li class="divider"></li>
+                  <li><a id="worldsave"><i class="icon-download-alt"></i> Guardar .in</a></li>
                   <li><a href="#guardar_modal" data-toggle="modal" id="save_out"><i class="icon-download-alt"></i> Guardar .out</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Código <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a id="pascalsyntax"><i class="icon-star"></i> Nuevo (Pascal)</a></li>
+                  <li><a id="javasyntax"><i class="icon-star"></i> Nuevo (Java)</a></li>
+                  <li><a id="rubysyntax"><i class="icon-star"></i> Nuevo (Ruby)</a></li>
+                  <li><a id="codeload"><i class="icon-folder-open"></i> Abrir</a></li>
+                  <li class="divider"></li>
+                  <li><a id="codesave"><i class="icon-download-alt"></i> Guardar</a></li>
                 </ul>
               </li>
               <li class="dropdown">
@@ -103,25 +104,6 @@
       <div class="row">
         <div class="span12">
           <div class="btn-group">
-            <button class="btn dropdown-toggle" data-toggle="dropdown" title="Nuevo"><i class="icon-star"></i> Nuevo código <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a id="rubysyntax">Ruby</a></li>
-              <li><a id="pascalsyntax">Pascal</a></li>
-              <li><a id="javasyntax">Java</a></li>
-            </ul>
-          </div>
-          <div class="btn-group">
-            <button class="btn" data-toggle="tooltip" title="Abrir código" id="codeload"><i class="icon-folder-open"></i></button>
-            <button class="btn" data-toggle="tooltip" title="Guardar código" id="codesave"><i class="icon-download-alt"></i></button>
-          </div>
-          <div class="btn-group">
-            <button class="btn" id="newworld"><i class="icon-star"></i> Nuevo mundo</button>
-          </div>
-          <div class="btn-group">
-            <button class="btn" data-toggle="tooltip" title="Abrir" id="worldload"><i class="icon-folder-open"></i></button>
-            <button class="btn" data-toggle="tooltip" title="Guardar" id="worldsave"><i class="icon-download-alt"></i></button>
-          </div>
-          <div class="btn-group">
             <button class="btn" data-toggle="tooltip" title="Regresar el mundo a su estado original" id="worldclean"><i class="icon-repeat"></i></button>
           </div>
           <div class="btn-group">
@@ -139,12 +121,28 @@
             <button class="btn button-primary" data-toggle="tooltip" title="La solución depende de la posición final de Karel" id="posicion_karel">Posición final</button>
             <button class="btn button-primary" data-toggle="tooltip" title="La solución depende de la orientación final de Karel" id="orientacion_karel">Orientación final</button>
           </div>
+          <div class="btn-group">
+            <div class="input-prepend input-append">
+              <span class="add-on">Mochila</span>
+              <input class="span1" value="0" type="text" id="mochila">
+              <button class="btn" id="inf_zumbadores">INF</button>
+            </div>
+          </div>
+          <div class="btn-group">
+            <div class="input-prepend input-append">
+              <span class="add-on">Retraso</span>
+              <input class="span1" value="500" type="text" id="retraso_txt">
+              <button class="btn" id="retraso_minus"><i class="icon-minus-sign"></i></button>
+              <button class="btn" id="retraso_plus"><i class="icon-plus-sign"></i></button>
+            </div>
+           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="span6">
-          <div class="row">
-            <div id="editor" class="span6">iniciar-programa
+    </div>
+    <div id="splitterContainer">
+      <div id="leftSplitterContainer">
+        <div id="leftTopPane">
+          <div id="editor" class="span6">iniciar-programa
     define-nueva-instruccion gira-derecha como inicio
         repetir 3 veces gira-izquierda;
     fin;
@@ -220,49 +218,27 @@
         cuadro;
     termina-ejecucion
 finalizar-programa</div>
-          </div>
-          <div class="row">
-            <div class="span6">
-              <div class="tabbable"> <!-- Only required for left/right tabs -->
-                <ul class="nav nav-tabs">
-                  <li><a href="#pila" data-toggle="tab">Pila</a></li>
-                  <li class="active"><a href="#mensajes" data-toggle="tab">Mensajes <span id="mensajes_cuenta"></span></a></li>
-                </ul>
-                <div class="tab-content">
-                  <div class="tab-pane" id="pila">
-                    <table class="table table-striped table-hover">
-                    </table>
-                  </div>
-                  <div class="tab-pane active" id="mensajes">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-        <div class="span6">
-          <div class="row">
-            <canvas class="span6" id="world" width="574" height="400"></canvas>
-          </div>
-          <div class="row">
-            <div class="span6">
-              <div class="input-prepend input-append">
-                <span class="add-on">Mochila</span>
-                <input class="span1" value="0" type="text" id="mochila">
-                <button class="btn" id="inf_zumbadores">INF</button>
+        <div id="leftBottomPane">
+          <div class="tabbable"> <!-- Only required for left/right tabs -->
+            <ul class="nav nav-tabs">
+              <li><a href="#pila" data-toggle="tab">Pila</a></li>
+              <li class="active"><a href="#mensajes" data-toggle="tab">Mensajes <span id="mensajes_cuenta"></span></a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane" id="pila">
+                <table class="table table-striped table-hover">
+                </table>
               </div>
-              <div class="input-prepend input-append">
-                <span class="add-on">Retraso</span>
-                <input class="span1" value="500" type="text" id="retraso_txt">
-                <button class="btn" id="retraso_minus"><i class="icon-minus-sign"></i></button>
-                <button class="btn" id="retraso_plus"><i class="icon-plus-sign"></i></button>
+              <div class="tab-pane active" id="mensajes">
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div>
+      <div id="rightPane">
+        <canvas id="world" width="574" height="400"></canvas>
+      </div>
     </div>
     <div class="dropdown clearfix" style="position:absolute; top:150px; left:700px; display:none;" id="wcontext_menu">
       <ul class="dropdown-menu" style="display: block; position: static; margin-bottom: 5px;">

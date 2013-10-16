@@ -67,8 +67,8 @@ var WorldRender = function(context){
         //IMPORTANTE
         var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
 
-        this.num_columnas = (tamanio_lienzo.x/30 + Math.ceil((tamanio_lienzo.x%30)/30.))*1
-        this.num_filas = (tamanio_lienzo.y/30 + Math.ceil((tamanio_lienzo.y%30)/30.))*1
+        this.num_columnas = (tamanio_lienzo.x/30 + Math.ceil((tamanio_lienzo.x%30)/30.))*1;
+        this.num_filas = (tamanio_lienzo.y/30 + Math.ceil((tamanio_lienzo.y%30)/30.))*1;
 
         if(options.track_karel) {
           //Rastrea la ubicación de karel y lo forza a aparecer
@@ -85,10 +85,10 @@ var WorldRender = function(context){
         }
 
         //Cuadrados de las esquinas
-        for(var i=0;i<this.num_columnas;i++){
-            for(j=0;j<this.num_columnas;j++) {
-                x = origen.x+30*i
-                y = origen.y-30*j
+        for(var i=0; i<this.num_filas;i++){
+            for(var j=0;j<this.num_columnas;j++) {
+                x = origen.x+30*j;
+                y = origen.y-30*i;
                 context.fillStyle="#656565";
                 context.fillRect(x-2, y+26, 6, 6);
             }

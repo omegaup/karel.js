@@ -777,4 +777,43 @@ $(document).ready(function(){
     mdoReader.readAsArrayBuffer(mdo);
     return false;
   });
+  var layoutExpanded = true;
+  function recalcDimensions() {
+    var x = 0;
+    var y = $('#splitterContainer').offset().top;
+    var w = $(window).width();
+    var h = $(window).height() - y;
+    $('#splitterContainer').height(h);
+    if (layoutExpanded) {
+      $('#leftSplitterContainer').css({position: 'absolute', top: 0, left: 0, width: 550, height: h, display: 'block'});
+      $('#leftTopPane').css({position: 'absolute', top: 0, left: 0, width: "100%", height: h * 0.8});
+      $('#editor').css({height: '100%', width: '100%', background: '#0f0'});
+      $('#leftBottomPane').css({position: 'absolute', top: '80%', left: 0, width: '100%', height: '20%'});
+      $('#mensajes').css({height: 135, overflowY: 'auto'});
+      $('#pila').css({height: 135, overflowY: 'auto'});
+      $('#rightPane').css({position: 'absolute', top: 0, left: 550 + 8, width: w - 550 - 8, height: h});
+      $('#world').css({width: w - 550 - 8, height: h});
+      $('#vsplitter').css({position: 'absolute', width: 8, height: h, top: 0, left: 550, cursor: 'w-resize'});
+      world.width = w - 550;
+      world.height = h;
+    } else {
+      $('#rightPane').css({position: 'absolute', top: 0, left: 8, width: w - 8, height: h});
+      $('#leftSplitterContainer').css({display: 'none'});
+      $('#world').css({width: w - 8, height: h});
+      $('#vsplitter').css({position: 'absolute', width: 8, height: h, top: 0, left: 0, cursor: 'e-resize'});
+      world.width = w - 8;
+      world.height = h;
+    }
+    editor.resize();
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+  }
+  $('#splitterContainer').append(
+      $('<div id="vsplitter"></div>')
+        .css({background: '#eee url(img/dots.png) center center no-repeat', 'z-index': 100})
+        .click(function() {
+          layoutExpanded = !layoutExpanded;
+          recalcDimensions();
+        }));
+  recalcDimensions();
+  $(window).resize(recalcDimensions);
 });
