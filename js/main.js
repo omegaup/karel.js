@@ -194,7 +194,7 @@ $(document).ready(function(){
       return compiled;
     } catch(e) {
       editor.getSession().setAnnotations([{
-        row: e.line - 1,
+        row: e.line,
         column: 0,
         text: e.message,
         type: "error"
