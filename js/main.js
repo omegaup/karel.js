@@ -565,16 +565,34 @@ $(document).ready(function(){
         //OESTE
         if (wRender.primera_columna > 1)
             wRender.primera_columna -= 1
-    } else { //Pasan otras cosas
-        if(mundo_editable) {
-            columna = Math.floor(x/30) + wRender.primera_columna-1
-            fila = Math.floor((world.height-y)/30) + wRender.primera_fila-1
+    } else if(mundo_editable) {
+        columna = Math.floor(x/wRender.tamano_celda) + wRender.primera_columna-1;
+        fila = Math.floor((world.height-y)/wRender.tamano_celda) + wRender.primera_fila-1;
 
-            excedente_horizontal = x/30 - Math.floor(x/30)
-            excedente_vertical = (world.height-y)/30 - Math.floor((world.height-y)/30)
+        excedente_horizontal = x % wRender.tamano_celda;
+        excedente_vertical = (world.height-y) % wRender.tamano_celda;
+        var margen = wRender.tamano_celda / 4;
 
-            if (0<fila && fila<101 && 0<columna && columna<101) {
-                if (.25<excedente_horizontal && excedente_horizontal<.75 && .25<excedente_vertical && excedente_horizontal<.75) {
+        if (0 <= fila && fila <= 101 && 0 <= columna && columna <= 101) {
+            if ((excedente_horizontal < margen || excedente_horizontal > (wRender.tamano_celda - margen)) &&
+                (excedente_vertical < margen || excedente_vertical > (wRender.tamano_celda - margen))) {
+                if (excedente_horizontal < margen) {
+                    columna -= 1;
+                }
+                if (excedente_vertical < margen) {
+                    fila -= 1;
+                }
+                console.log("Esquina!", fila, columna);
+            } else if (0 < fila && fila < 101 && 0 < columna && columna < 101) {
+                if (excedente_horizontal < margen) {
+                    mundo.toggleWall(fila, columna, 0); // oeste
+                } else if (excedente_horizontal > (wRender.tamano_celda - margen)) {
+                    mundo.toggleWall(fila, columna, 2); // este
+                } else if (excedente_vertical < margen) {
+                    mundo.toggleWall(fila, columna, 3); // sur
+                } else if (excedente_vertical > (wRender.tamano_celda - margen)) {
+                    mundo.toggleWall(fila, columna, 1); // norte
+                } else {
                     if (borrar_zumbadores) {
                         mundo.setBuzzers(fila, columna, 0);
                     } if (event.shiftKey) {
@@ -586,23 +604,64 @@ $(document).ready(function(){
                         else if (zumbadores > 0 && event.ctrlKey)
                             mundo.setBuzzers(fila, columna, zumbadores-1);
                     }
-                } else if (excedente_horizontal > excedente_vertical) {
-                    if (excedente_horizontal > (1 - excedente_vertical))
-                        mundo.toggleWall(fila, columna, 2)
-                    else
-                        mundo.toggleWall(fila, columna, 3) //sur
-                } else {
-                    if (excedente_horizontal > (1 - excedente_vertical))
-                        mundo.toggleWall(fila, columna, 1) //norte
-                    else
-                        mundo.toggleWall(fila, columna, 0)
                 }
             }
-            $("#xmlMundo").html(mundo.save());
         }
+        $("#xmlMundo").html(mundo.save());
     }
     //Volvemos a pintar el canvas
     wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+  });
+  $("#world").bind("contextmenu", function(e){
+    //Maneja el click derecho sobre el mundo
+    if(mundo_editable) {
+      var x = event.pageX;
+      var y = event.pageY;
+
+      columna_evento = Math.floor(event.offsetX/wRender.tamano_celda) + wRender.primera_columna-1;
+      fila_evento = Math.floor((world.height-event.offsetY)/wRender.tamano_celda) + wRender.primera_fila-1;
+
+      $("#wcontext_menu").css("top", y+"px");
+      $("#wcontext_menu").css("left", x+"px");
+      $("#wcontext_menu").css("display", "block");
+      return false;
+    }
+  });
+  $("#world")[0].onmousewheel = function(event){
+    if(event.wheelDeltaX < 0 && (wRender.primera_columna + wRender.num_columnas)<102) {
+      wRender.primera_columna += 1;
+    } else if(event.wheelDeltaX > 0 && wRender.primera_columna > 1) {
+      wRender.primera_columna -= 1;
+    }
+
+    if(event.wheelDeltaY > 0 && (wRender.primera_fila + wRender.num_filas)<102) {
+      wRender.primera_fila += 1;
+    } else if(event.wheelDeltaY < 0 && wRender.primera_fila > 1) {
+      wRender.primera_fila -= 1;
+    }
+
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+    return false;
+  };
+  $('#world').hammer().on("drag", function(event) {
+    event.gesture.preventDefault();
+    var x = event.gesture.deltaX % 2;
+    var y = event.gesture.deltaY % 2;
+
+    if(event.gesture.deltaX < 0 && (wRender.primera_columna + wRender.num_columnas)<102 && x==0) {
+      wRender.primera_columna += 1;
+    } else if(event.gesture.deltaX > 0 && wRender.primera_columna > 1 && x==0) {
+      wRender.primera_columna -= 1;
+    }
+
+    if(event.gesture.deltaY > 0 && (wRender.primera_fila + wRender.num_filas)<102 && y==0) {
+      wRender.primera_fila += 1;
+    } else if(event.gesture.deltaY < 0 && wRender.primera_fila > 1 && y==0) {
+      wRender.primera_fila -= 1;
+    }
+
+    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+    return false;
   });
   $("#inf_zumbadores").click(function(event){
     if($(this).hasClass('active')) { //ya hay infinitos
@@ -638,38 +697,6 @@ $(document).ready(function(){
     wRender.primera_columna = mundo.j;
     wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
   });
-  $("#world").bind("contextmenu", function(e){
-    //Maneja el click derecho sobre el mundo
-    if(mundo_editable) {
-      var x = event.pageX;
-      var y = event.pageY;
-
-      columna_evento = Math.floor(event.offsetX/30) + wRender.primera_columna-1;
-      fila_evento = Math.floor((world.height-event.offsetY)/30) + wRender.primera_fila-1;
-
-      $("#wcontext_menu").css("top", y+"px");
-      $("#wcontext_menu").css("left", x+"px");
-      $("#wcontext_menu").css("display", "block");
-      return false;
-    }
-  });
-  $("#world")[0].onmousewheel = function(event){
-
-    if(event.wheelDeltaX < 0 && (wRender.primera_columna + wRender.num_columnas)<102) {
-      wRender.primera_columna += 1;
-    } else if(event.wheelDeltaX > 0 && wRender.primera_columna > 1) {
-      wRender.primera_columna -= 1;
-    }
-
-    if(event.wheelDeltaY > 0 && (wRender.primera_fila + wRender.num_filas)<102) {
-      wRender.primera_fila += 1;
-    } else if(event.wheelDeltaY < 0 && wRender.primera_fila > 1) {
-      wRender.primera_fila -= 1;
-    }
-
-    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
-    return false;
-  };
   $("#posicion_karel").click(function(event){
     mundo.toggleDumps(World.DUMP_POSITION);
     $("#xmlMundo").html(mundo.save());
@@ -729,26 +756,6 @@ $(document).ready(function(){
     $("#wcontext_menu").css("display", "none");
     wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
     $("#xmlMundo").html(mundo.save());
-  });
-  $('#world').hammer().on("drag", function(event) {
-    event.gesture.preventDefault();
-    var x = event.gesture.deltaX%2;
-    var y = event.gesture.deltaY%2;
-
-    if(event.gesture.deltaX < 0 && (wRender.primera_columna + wRender.num_columnas)<102 && x==0) {
-      wRender.primera_columna += 1;
-    } else if(event.gesture.deltaX > 0 && wRender.primera_columna > 1 && x==0) {
-      wRender.primera_columna -= 1;
-    }
-
-    if(event.gesture.deltaY > 0 && (wRender.primera_fila + wRender.num_filas)<102 && y==0) {
-      wRender.primera_fila += 1;
-    } else if(event.gesture.deltaY < 0 && wRender.primera_fila > 1 && y==0) {
-      wRender.primera_fila -= 1;
-    }
-
-    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
-    return false;
   });
   $('#importar').submit(function(event) {
     var mdo = $('#importar_mdo')[0].files[0];

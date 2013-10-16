@@ -10,6 +10,8 @@ var WorldRender = function(context){
     this.num_filas = 1
     this.num_columnas = 1
 
+    this.tamano_celda = 30;
+
     this.paint = function(world, mundo_ancho, mundo_alto, options) {
         options = options || {};
 
