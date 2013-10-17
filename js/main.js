@@ -664,17 +664,15 @@ $(document).ready(function(){
     }
   });
   $("#world").bind("contextmenu", function(e){
-    //Maneja el click derecho sobre el mundo
-    if(mundo_editable) {
+    // Maneja el click derecho sobre el mundo
+    if (mundo_editable) {
       var x = event.pageX;
       var y = event.pageY;
 
       columna_evento = Math.floor(event.offsetX/wRender.tamano_celda) + wRender.primera_columna-1;
       fila_evento = Math.floor((world.height-event.offsetY)/wRender.tamano_celda) + wRender.primera_fila-1;
 
-      $("#wcontext_menu").css("top", y+"px");
-      $("#wcontext_menu").css("left", x+"px");
-      $("#wcontext_menu").css("display", "block");
+      $('#wcontext_menu').css({top: y+'px', left: x+'px', display: 'block'});
       return false;
     }
   });
