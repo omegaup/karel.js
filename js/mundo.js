@@ -12,6 +12,10 @@ var WorldRender = function(context){
 
     this.tamano_celda = 30;
 
+    this.polygon = false;
+    this.polygon_begin = undefined;
+    this.polygon_end = undefined;
+
     this.paint = function(world, mundo_ancho, mundo_alto, options) {
         options = options || {};
 
@@ -195,7 +199,6 @@ var WorldRender = function(context){
         context.closePath()
         context.fill()
 
-
         //Controles de movimiento
         context.fillStyle = '#60b151'
         context.beginPath();
@@ -225,5 +228,53 @@ var WorldRender = function(context){
         context.lineTo(mundo_ancho-25-50+30+8, 45+30)
         context.closePath()
         context.fill()
-    }
+
+        if (this.polygon) {
+            context.fillStyle = '#ff0000';
+            context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna + 1)*30-2,
+                             origen.y-(this.polygon_begin[0] - this.primera_fila)*30+26-30,
+                             6,
+                             6);
+            if (this.polygon_end) {
+                context.fillStyle = '#0000ff';
+                if (this.polygon_begin[0] == this.polygon_end[0]) {
+                    context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna + 1)*30-1,
+                                     origen.y-(this.polygon_begin[0] - this.primera_fila)*30+27-30,
+                                     30 * (this.polygon_end[1] - this.polygon_begin[1]),
+                                     4);
+                } else {
+                    context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna + 1)*30-1,
+                                     origen.y-(this.polygon_begin[0] - this.primera_fila)*30,
+                                     4,
+                                     30 * (this.polygon_begin[0] - this.polygon_end[0]));
+                }
+            }
+        }
+    };
+
+    this.polygonStart = function(fila, columna) {
+        this.polygon = true;
+        this.polygon_begin = [fila, columna];
+    };
+
+    this.polygonUpdate = function(fila, columna) {
+        if (this.polygon_begin[0] == fila || this.polygon_begin[1] == columna) {
+            this.polygon_end = [fila, columna];
+        } else {
+            this.polygon_end = undefined;
+        }
+    };
+
+    this.polygonFinish = function(fila, columna) {
+        this.polygonUpdate(fila, columna);
+        this.polygon = false;
+
+        var result = [this.polygon_begin, this.polygon_end];
+        this.polygon_begin = this.polygon_end = undefined;
+        if (result[1]) {
+            return result;
+        } else {
+            return null;
+        }
+    };
 }

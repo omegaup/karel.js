@@ -582,8 +582,29 @@ $(document).ready(function(){
                 if (excedente_vertical < margen) {
                     fila -= 1;
                 }
-                console.log("Esquina!", fila, columna);
-            } else if (0 < fila && fila < 101 && 0 < columna && columna < 101) {
+                if (0 <= fila && fila <= 101 && 0 <= columna && columna <= 101) {
+                    if (wRender.polygon) {
+                        var result = wRender.polygonFinish(fila, columna);
+                        if (result) {
+                            if (result[0][0] != result[1][0]) {
+                                for (var i = Math.min(result[0][0], result[1][0]);
+                                     i < Math.max(result[0][0], result[1][0]);
+                                     i++) {
+                                    mundo.toggleWall(i + 1, result[0][1] + 1, 0); // oeste
+                                }
+                            } else {
+                                for (var i = Math.min(result[0][1], result[1][1]);
+                                     i < Math.max(result[0][1], result[1][1]);
+                                     i++) {
+                                    mundo.toggleWall(result[0][0] + 1, i + 1, 3); // sur
+                                }
+                            }
+                        }
+                    } else {
+                        wRender.polygonStart(fila, columna);
+                    }
+                }
+            } else if (!wRender.polygon && 0 < fila && fila < 101 && 0 < columna && columna < 101) {
                 if (excedente_horizontal < margen) {
                     mundo.toggleWall(fila, columna, 0); // oeste
                 } else if (excedente_horizontal > (wRender.tamano_celda - margen)) {
@@ -611,6 +632,36 @@ $(document).ready(function(){
     }
     //Volvemos a pintar el canvas
     wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+  });
+  $('#world').mousemove(function(e) {
+    if (wRender.polygon) {
+      var x = event.offsetX ||
+              (event.clientX + document.body.scrollLeft +
+               document.documentElement.scrollLeft - $('#world').offset().left);
+      var y = event.offsetY ||
+              (event.clientY + document.body.scrollTop +
+               document.documentElement.scrollTop - $('#world').offset().top);
+      var columna = Math.floor(x/wRender.tamano_celda) + wRender.primera_columna-1;
+      var fila = Math.floor((world.height-y)/wRender.tamano_celda) + wRender.primera_fila-1;
+
+      var excedente_horizontal = x % wRender.tamano_celda;
+      var excedente_vertical = (world.height-y) % wRender.tamano_celda;
+      var margen = wRender.tamano_celda / 4;
+
+      if ((excedente_horizontal < margen || excedente_horizontal > (wRender.tamano_celda - margen)) &&
+          (excedente_vertical < margen || excedente_vertical > (wRender.tamano_celda - margen))) {
+        if (excedente_horizontal < margen) {
+          columna -= 1;
+        }
+        if (excedente_vertical < margen) {
+          fila -= 1;
+        }
+        if (0 <= fila && fila <= 101 && 0 <= columna && columna <= 101) {
+          wRender.polygonUpdate(fila, columna);
+          wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+        }
+      }
+    }
   });
   $("#world").bind("contextmenu", function(e){
     //Maneja el click derecho sobre el mundo
