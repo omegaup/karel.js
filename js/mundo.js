@@ -277,4 +277,48 @@ var WorldRender = function(context){
             return null;
         }
     };
+
+    this.hoverCorner = function(fila, columna, mundo_ancho, mundo_alto) {
+        var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
+        context.fillStyle = 'rgba(255,0,0,0.5)';
+        context.fillRect(origen.x+(columna - this.primera_columna + 1)*30 - 4,
+                         origen.y-(fila - this.primera_fila)*30 - 6,
+                         10,
+                         10);
+    };
+
+    this.hoverWall = function(fila, columna, orientacion, mundo_ancho, mundo_alto) {
+        var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
+        context.fillStyle = 'rgba(255,0,0,0.5)';
+        if (orientacion == 0) { // oeste
+            context.fillRect(origen.x+(columna - this.primera_columna)*30-2,
+                             origen.y-(fila - this.primera_fila)*30+2,
+                             6,
+                             24);
+        } else if (orientacion == 1) { // norte
+            context.fillRect(origen.x+(columna - this.primera_columna)*30+4,
+                             origen.y-(fila - this.primera_fila)*30-4,
+                             24,
+                             6);
+        } else if (orientacion == 2) { // este
+            context.fillRect(origen.x+(columna - this.primera_columna)*30-2+30,
+                             origen.y-(fila - this.primera_fila)*30+2,
+                             6,
+                             24);
+        } else if (orientacion = 3) { // sur
+            context.fillRect(origen.x+(columna - this.primera_columna)*30+4,
+                             origen.y-(fila - this.primera_fila)*30+26,
+                             24,
+                             6);
+        }
+    };
+
+    this.hoverBuzzer = function(fila, columna, mundo_ancho, mundo_alto) {
+        var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
+        context.fillStyle = 'rgba(255,0,0,0.5)';
+        context.fillRect(origen.x+(columna - this.primera_columna)*30 + 4,
+                         origen.y-(fila - this.primera_fila)*30 + 2,
+                         this.tamano_celda - 6,
+                         this.tamano_celda - 6);
+    };
 }

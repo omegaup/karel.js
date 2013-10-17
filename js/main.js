@@ -634,33 +634,60 @@ $(document).ready(function(){
     wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
   });
   $('#world').mousemove(function(e) {
+    var x = event.offsetX ||
+            (event.clientX + document.body.scrollLeft +
+             document.documentElement.scrollLeft - $('#world').offset().left);
+    var y = event.offsetY ||
+            (event.clientY + document.body.scrollTop +
+             document.documentElement.scrollTop - $('#world').offset().top);
+    var columna = Math.floor(x/wRender.tamano_celda) + wRender.primera_columna-1;
+    var fila = Math.floor((world.height-y)/wRender.tamano_celda) + wRender.primera_fila-1;
+
+    var excedente_horizontal = x % wRender.tamano_celda;
+    var excedente_vertical = (world.height-y) % wRender.tamano_celda;
+    var margen = wRender.tamano_celda / 4;
     if (wRender.polygon) {
-      var x = event.offsetX ||
-              (event.clientX + document.body.scrollLeft +
-               document.documentElement.scrollLeft - $('#world').offset().left);
-      var y = event.offsetY ||
-              (event.clientY + document.body.scrollTop +
-               document.documentElement.scrollTop - $('#world').offset().top);
-      var columna = Math.floor(x/wRender.tamano_celda) + wRender.primera_columna-1;
-      var fila = Math.floor((world.height-y)/wRender.tamano_celda) + wRender.primera_fila-1;
-
-      var excedente_horizontal = x % wRender.tamano_celda;
-      var excedente_vertical = (world.height-y) % wRender.tamano_celda;
-      var margen = wRender.tamano_celda / 4;
-
-      if ((excedente_horizontal < margen || excedente_horizontal > (wRender.tamano_celda - margen)) &&
-          (excedente_vertical < margen || excedente_vertical > (wRender.tamano_celda - margen))) {
-        if (excedente_horizontal < margen) {
-          columna -= 1;
+        if ((excedente_horizontal < margen || excedente_horizontal > (wRender.tamano_celda - margen)) &&
+            (excedente_vertical < margen || excedente_vertical > (wRender.tamano_celda - margen))) {
+            if (excedente_horizontal < margen) {
+                columna -= 1;
+            }
+            if (excedente_vertical < margen) {
+                fila -= 1;
+            }
+            if (0 <= fila && fila <= 101 && 0 <= columna && columna <= 101) {
+                wRender.polygonUpdate(fila, columna);
+                wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+            }
         }
-        if (excedente_vertical < margen) {
-          fila -= 1;
-        }
+    } else if (mundo_editable) {
+        wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
         if (0 <= fila && fila <= 101 && 0 <= columna && columna <= 101) {
-          wRender.polygonUpdate(fila, columna);
-          wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+            if ((excedente_horizontal < margen || excedente_horizontal > (wRender.tamano_celda - margen)) &&
+                (excedente_vertical < margen || excedente_vertical > (wRender.tamano_celda - margen))) {
+                if (excedente_horizontal < margen) {
+                    columna -= 1;
+                }
+                if (excedente_vertical < margen) {
+                    fila -= 1;
+                }
+                if (0 <= fila && fila <= 101 && 0 <= columna && columna <= 101) {
+                    wRender.hoverCorner(fila, columna, world.width, world.height);
+                }
+            } else if (!wRender.polygon && 0 < fila && fila < 101 && 0 < columna && columna < 101) {
+                if (excedente_horizontal < margen) {
+                    wRender.hoverWall(fila, columna, 0, world.width, world.height); // oeste
+                } else if (excedente_horizontal > (wRender.tamano_celda - margen)) {
+                    wRender.hoverWall(fila, columna, 2, world.width, world.height); // este
+                } else if (excedente_vertical < margen) {
+                    wRender.hoverWall(fila, columna, 3, world.width, world.height); // sur
+                } else if (excedente_vertical > (wRender.tamano_celda - margen)) {
+                    wRender.hoverWall(fila, columna, 1, world.width, world.height); // norte
+                } else {
+                    wRender.hoverBuzzer(fila, columna, world.width, world.height);
+                }
+            }
         }
-      }
     }
   });
   $("#world").bind("contextmenu", function(e){
