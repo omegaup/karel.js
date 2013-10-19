@@ -207,6 +207,8 @@ clause
     { $$ = $integer.concat([['NOT']]); }
   | bool_fun
     { $$ = $bool_fun; }
+  | bool_fun '(' ')'
+    { $$ = $bool_fun; }
   | '(' term ')'
     { $$ = $term; }
   ;
