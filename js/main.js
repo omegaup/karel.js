@@ -633,7 +633,7 @@ $(document).ready(function(){
     //Volvemos a pintar el canvas
     wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
   });
-  $('#world').mousemove(function(e) {
+  $('#world').mousemove(function(event) {
     var x = event.offsetX ||
             (event.clientX + document.body.scrollLeft +
              document.documentElement.scrollLeft - $('#world').offset().left);
@@ -698,6 +698,13 @@ $(document).ready(function(){
 
       columna_evento = Math.floor(event.offsetX/wRender.tamano_celda) + wRender.primera_columna-1;
       fila_evento = Math.floor((world.height-event.offsetY)/wRender.tamano_celda) + wRender.primera_fila-1;
+
+      if (y + $('#wcontext_menu').height() > $(window).height()) {
+          y -= $('#wcontext_menu').height();
+      }
+      if (x + $('#wcontext_menu').width() > $(window).width()) {
+          x -= $('#wcontext_menu').width();
+      }
 
       $('#wcontext_menu').css({top: y+'px', left: x+'px', display: 'block'});
       return false;
