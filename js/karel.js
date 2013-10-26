@@ -963,14 +963,14 @@ World.prototype.import = function(mdo, kec) {
 	maxbeepers = kec[6][1] if kec[6][0] else False
 	*/
 	if (kec[21]) {
-		self.setDumps(World.DUMP_POSITION);
+		self.setDumps(World.DUMP_POSITION, true);
 	}
 	if (kec[24]) {
-		self.setDumps(World.DUMP_ORIENTATION);
+		self.setDumps(World.DUMP_ORIENTATION, true);
 	}
 	var dumpcount = kec[27] ? kec[28] : 0;
 	if (dumpcount) {
-		self.setDumps(World.DUMP_WORLD);
+		self.setDumps(World.DUMP_WORLD, true);
 	}
 
 	function decodeWalls(tx, ty, tmask) {
