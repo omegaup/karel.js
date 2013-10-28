@@ -411,6 +411,8 @@ World.prototype.init = function(w, h) {
 	self.bagBuzzers = 0;
 	self.dumps = {};
 	self.dumpCells = [];
+	self.maxInstructions = 10000000;
+	self.stackSize = 65000;
 
 	self.dirty = true;
 };
@@ -720,7 +722,7 @@ World.prototype.serialize = function(node, name, indentation) {
 
 		if (node.hasOwnProperty('#text')) {
 			result += '>' + node['#text'] + '</' + name + '>\n';
-		} else if (childResult === '') {
+		} else if (childResult == '') {
 			result += '/>\n';
 		} else {
 			result += '>\n';
@@ -953,8 +955,12 @@ World.prototype.import = function(mdo, kec) {
 	var heapcount = mdo[13];
 	//var x10 = mdo[14];
 
+	self.maxInstructions = 10000000;
+	self.stackSize = 65000;
+	if (kec[0]) {
+		self.maxInstructions = kec[1];
+	}
 	/*
-	maxlines = kec[0][1] if kec[0][0] else 10000000
 	maxmove = kec[1][1] if kec[1][0] else False
 	maxturnleft = kec[2][1] if kec[2][0] else False
 	maxpickbeeper = kec[3][1] if kec[3][0] else False
