@@ -235,7 +235,7 @@ case 46: this.$ = [['WORLDBUZZERS'], ['NOT']];
 break;
 case 47: this.$ = [['BAGBUZZERS'], ['LOAD', 0], ['EQ'], ['NOT']]; 
 break;
-case 48: this.$ = [['BAGBUFFERS'], ['NOT']]; 
+case 48: this.$ = [['BAGBUZZERS'], ['NOT']]; 
 break;
 case 49: this.$ = [['ORIENTATION'], ['LOAD', 0], ['EQ']]; 
 break;

@@ -264,7 +264,7 @@ bool_fun
   | IFBBUZZER
     { $$ = [['BAGBUZZERS'], ['LOAD', 0], ['EQ'], ['NOT']]; }
   | IFNBBUZZER
-    { $$ = [['BAGBUFFERS'], ['NOT']]; }
+    { $$ = [['BAGBUZZERS'], ['NOT']]; }
   | IFW
     { $$ = [['ORIENTATION'], ['LOAD', 0], ['EQ']]; }
   | IFN
