@@ -421,6 +421,11 @@ World.DUMP_WORLD = 'mundo';
 World.DUMP_POSITION = 'posicion';
 World.DUMP_ORIENTATION = 'orientacion';
 World.DUMP_INSTRUCTIONS = 'instrucciones';
+World.ERROR_MAPPING = {
+	BAGUNDERFLOW: 'ZUMBADOR INVALIDO',
+	WALL: 'MOVIMIENTO INVALIDO',
+  WORLDUNDERFLOW: 'ZUMBADOR INVALIDO'
+};
 
 World.prototype.walls = function(i, j) {
 	var self = this;
@@ -658,6 +663,12 @@ World.prototype.load = function(doc) {
 			self.move(
 				parseInt(programa.getAttribute('yKarel'), 10),
 				parseInt(programa.getAttribute('xKarel'), 10));
+			var bagBuzzers = programa.getAttribute('mochilaKarel') || 0;
+			if (bagBuzzers == 'INFINITO') {
+				self.setBagBuzzers(-1);
+			} else {
+				self.setBagBuzzers(parseInt(bagBuzzers));
+			}
 		}
 	};
 
@@ -874,7 +885,7 @@ World.prototype.output = function() {
 	result.programas = {programa: {'#attributes': {nombre: 'p1'}}};
 
 	result.programas.programa['#attributes'].resultadoEjecucion =
-		self.runtime.state.error ? self.runtime.state.error : 'FIN PROGRAMA';
+		self.errorMap(self.runtime.state.error);
 
 	if (self.dumps[World.DUMP_POSITION]) {
 		result.programas.programa.karel = {'#attributes': {x: self.j, y: self.i}};
@@ -889,6 +900,15 @@ World.prototype.output = function() {
 
 	return self.serialize(result, 'resultados', 0);
 };
+
+World.prototype.errorMap = function(s) {
+	if (!s) return 'FIN PROGRAMA';
+	if (World.ERROR_MAPPING.hasOwnProperty(s)) {
+		return World.ERROR_MAPPING[s];
+	} else {
+		return s;
+	}
+}
 
 World.prototype.move = function(i, j) {
 	var self = this;

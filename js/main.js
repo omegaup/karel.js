@@ -504,6 +504,14 @@ $(document).ready(function(){
     $('#ejecutar').trigger('unlock');
     $("#pila").html('');
     mundo.load(parseWorld($('script#xmlMundo').html()));
+		if (mundo.bagBuzzers == -1 != $('#inf_zumbadores').hasClass('active')) {
+			$('#inf_zumbadores').toggleClass('active');
+		}
+		if (mundo.bagBuzzers == -1) {
+			$('#mochila').val('').attr('disabled', 'disabled');
+		} else {
+			$('#mochila').val(mundo.bagBuzzers).removeAttr('disabled');
+		}
     wRender.paint(mundo, world.width, world.height, { editable: true, track_karel: true });
     if ($('#posicion_karel').hasClass('active') != mundo.getDumps(World.DUMP_POSITION)) {
       $('#posicion_karel').button('toggle');
@@ -850,6 +858,7 @@ $(document).ready(function(){
         kecReader.onload = (function(kecReader, mdo) {
           return function(e) {
             mundo.import(new Uint16Array(mdo), new Uint16Array(kecReader.result));
+            $('#worldclean').click();
             wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
             $("#xmlMundo").html(mundo.save());
             $('#importar_modal').modal('hide');
