@@ -5,7 +5,7 @@
 
 \s+                             {/* ignore */}
 \/\/[^\n]*			{/* ignore */}
-\/(\*([^*]|\*[^/])*\*)\/	{/* ignore */}
+\/\*(?:[^*]|\*(?!\/))*\*\/	{/* ignore */}
 "class"				{ return 'CLASS'; }
 "program"		        { return 'PROG'; }
 "define"			{ return 'DEF'; }

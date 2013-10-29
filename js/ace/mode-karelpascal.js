@@ -34,7 +34,7 @@ ace.define(
 				{
 					caseInsensitive:!0,
 					token:"keyword.control",
-					regex:"\\b(?:(iniciar-programa|finalizar-programa|inicia-ejecucion|termina-ejecucion|si|sino|entonces|repetir|veces|mientras|hacer|como))\\b"
+					regex:"\\b(?:(iniciar-programa|finalizar-programa|inicia-ejecucion|termina-ejecucion|si|sino|entonces|repetir|veces|mientras|hacer|como|sal-de-instruccion))\\b"
 				},{
 					caseInsensitive:!0,
 					token:"support.constant",

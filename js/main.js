@@ -54,6 +54,16 @@ $(document).ready(function(){
     }
   }
 
+  function addEventListeners(world) {
+      world.runtime.addEventListener('call', function(evt){
+          $("#pila").prepend('<div class="well well-small">' + evt.function +
+            '(' + evt.param + ') Línea <span class="badge badge-info">'+(evt.line+1)+'</span></div>');
+      });
+      world.runtime.addEventListener('return', function(evt){
+          var arreglo = $("#pila > div:first-child").remove();
+      });
+  }
+
   function getSyntax(str) {
     var parser = detectParser(str);
     parser.parser.yy.parseError = parseError;
@@ -113,12 +123,7 @@ $(document).ready(function(){
   var fila_evento;
   var columna_evento;
   var mundo = new World(100, 100);
-  mundo.runtime.addEventListener('call', function(evt){
-    $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+(evt.line+1)+'</span></div>');
-  });
-  mundo.runtime.addEventListener('return', function(evt){
-    var arreglo = $("#pila > div:first-child").remove();
-  });
+  addEventListeners(mundo);
   var mundo_editable = true;
   var linea_actual = null;
   var tab_actual = 'mensajes';
@@ -527,12 +532,7 @@ $(document).ready(function(){
 
     $('#ejecutar').trigger('unlock');
     mundo = new World(100, 100);
-    mundo.runtime.addEventListener('call', function(evt){
-      $("#pila").prepend('<div class="well well-small">'+evt.function+'() Línea <span class="badge badge-info">'+(evt.line+1)+'</span></div>');
-    });
-    mundo.runtime.addEventListener('return', function(evt){
-      var arreglo = $("#pila > div:first-child").remove();
-    });
+    addEventListeners(mundo);
     wRender.paint(mundo, world.width, world.height, { editable: true, track_karel: true });
     $("#xmlMundo").html(mundo.save());
     if ($('#posicion_karel').hasClass('active')) {
@@ -858,6 +858,7 @@ $(document).ready(function(){
         kecReader.onload = (function(kecReader, mdo) {
           return function(e) {
             mundo.import(new Uint16Array(mdo), new Uint16Array(kecReader.result));
+            addEventListeners(mundo);
             $('#worldclean').click();
             wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
             $("#xmlMundo").html(mundo.save());

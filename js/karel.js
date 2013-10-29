@@ -300,7 +300,7 @@ Runtime.prototype.next = function() {
 				state.running = false;
 				state.error = 'STACK';
 			} else {
-				self.fireEvent('call', {'function': params[1], line: state.line, target: self});
+				self.fireEvent('call', {'function': params[1], param: param, line: state.line, target: self});
 			}
 		},
 

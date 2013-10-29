@@ -6,7 +6,7 @@
 
 \s+                             {/* ignore */}
 \{[^}]*\}			{/* ignore */}
-\(\*([^*]|\*[^)])*\*\)		{/* ignore */}
+\(\*(?:[^*]|\*(?!\)))*\*\)		{/* ignore */}
 "iniciar-programa"              { return 'BEGINPROG'; }
 "inicia-ejecucion"              { return 'BEGINEXEC'; }
 "termina-ejecucion"             { return 'ENDEXEC'; }
