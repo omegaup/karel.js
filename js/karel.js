@@ -413,6 +413,8 @@ World.prototype.init = function(w, h) {
 	self.dumpCells = [];
 	self.maxInstructions = 10000000;
 	self.stackSize = 65000;
+	self.worldName = 'mundo_0';
+	self.programName = 'p1';
 
 	self.dirty = true;
 };
@@ -661,6 +663,8 @@ World.prototype.load = function(doc) {
 			self.di = self.h / 2 - parseInt(programa.getAttribute('yKarel'), 10);
 			self.dj = self.w / 2 - parseInt(programa.getAttribute('xKarel'), 10);
 			self.rotate(programa.getAttribute('direccionKarel'));
+			self.worldName = programa.getAttribute('mundoDeEjecucion');
+			self.programName = programa.getAttribute('nombre');
 			self.move(
 				parseInt(programa.getAttribute('yKarel'), 10),
 				parseInt(programa.getAttribute('xKarel'), 10));
@@ -762,7 +766,7 @@ World.prototype.save = function() {
 		mundos: {
 			mundo: {
 				'#attributes': {
-					nombre: 'mundo_0',
+					nombre: self.worldName,
 					ancho: self.w,
 					alto: self.h
 				},
@@ -779,9 +783,9 @@ World.prototype.save = function() {
 			},
 			programa: {
 				'#attributes': {
-					nombre: 'p1',
+					nombre: self.programName,
 					ruta: '{$2$}',
-					mundoDeEjecucion: 'mundo_0',
+					mundoDeEjecucion: self.worldName,
 					xKarel: self.j,
 					yKarel: self.i,
 					direccionKarel: ['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation],
@@ -845,7 +849,7 @@ World.prototype.output = function() {
 	var result = {};
 
 	if (self.dumps[World.DUMP_WORLD]) {
-		result.mundos = {mundo: {'#attributes': {nombre: 'mundo_0'}, linea: []}};
+		result.mundos = {mundo: {'#attributes': {nombre: self.worldName}, linea: []}};
 
 		var dumpCells = {};
 		for (var i = 0; i < self.dumpCells.length; i++) {
@@ -883,7 +887,7 @@ World.prototype.output = function() {
 		}
 	}
 
-	result.programas = {programa: {'#attributes': {nombre: 'p1'}}};
+	result.programas = {programa: {'#attributes': {nombre: self.programName}}};
 
 	result.programas.programa['#attributes'].resultadoEjecucion =
 		self.errorMap(self.runtime.state.error);
