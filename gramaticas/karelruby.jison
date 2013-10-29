@@ -178,9 +178,9 @@ call
 
 repeat
   : var TIMES line newlines expr_list END
-    { $$ = [['PARAM', $var]].concat($line).concat([['DUP'], ['JLEZ', $expr_list.length + 2]]).concat($expr_list).concat([['DEC'], ['JMP', -1 -($expr_list.length + 4)], ['POP']]); }
+    { $$ = [['PARAM', $var]].concat($line).concat([['DUP'], ['LOAD', 0], ['EQ'], ['NOT'], ['JZ', $expr_list.length + 2]]).concat($expr_list).concat([['DEC'], ['JMP', -1 -($expr_list.length + 7)], ['POP']]); }
   | non_var_integer TIMES line newlines expr_list END
-    { $$ = $non_var_integer.concat($line).concat([['DUP'], ['JLEZ', $expr_list.length + 2]]).concat($expr_list).concat([['DEC'], ['JMP', -1 -($expr_list.length + 4)], ['POP']]); }
+    { $$ = $non_var_integer.concat($line).concat([['DUP'], ['LOAD', 0], ['EQ'], ['NOT'], ['JZ', $expr_list.length + 2]]).concat($expr_list).concat([['DEC'], ['JMP', -1 -($expr_list.length + 7)], ['POP']]); }
   ;
 
 term

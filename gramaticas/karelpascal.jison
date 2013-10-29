@@ -211,7 +211,7 @@ loop
 
 repeat
   : REPEAT line integer TIMES expr
-    { $$ = $integer.concat($line).concat([['DUP'], ['JLEZ', $expr.length + 2]]).concat($expr).concat([['DEC'], ['JMP', -1 -($expr.length + 4)], ['POP']]); }
+    { $$ = $integer.concat($line).concat([['DUP'], ['LOAD', 0], ['EQ'], ['NOT'], ['JZ', $expr.length + 2]]).concat($expr).concat([['DEC'], ['JMP', -1 -($expr.length + 7)], ['POP']]); }
   ;
 
 term

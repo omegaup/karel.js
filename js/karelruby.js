@@ -170,9 +170,9 @@ case 26: this.$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $$[$0]], ['LINE', y
 break;
 case 27: this.$ = [['LINE', yylineno]].concat($$[$0-1]).concat([['CALL', $$[$0-3]], ['LINE', yylineno]]); 
 break;
-case 28: this.$ = [['PARAM', $$[$0-5]]].concat($$[$0-3]).concat([['DUP'], ['JLEZ', $$[$0-1].length + 2]]).concat($$[$0-1]).concat([['DEC'], ['JMP', -1 -($$[$0-1].length + 4)], ['POP']]); 
+case 28: this.$ = [['PARAM', $$[$0-5]]].concat($$[$0-3]).concat([['DUP'], ['LOAD', 0], ['EQ'], ['NOT'], ['JZ', $$[$0-1].length + 2]]).concat($$[$0-1]).concat([['DEC'], ['JMP', -1 -($$[$0-1].length + 7)], ['POP']]); 
 break;
-case 29: this.$ = $$[$0-5].concat($$[$0-3]).concat([['DUP'], ['JLEZ', $$[$0-1].length + 2]]).concat($$[$0-1]).concat([['DEC'], ['JMP', -1 -($$[$0-1].length + 4)], ['POP']]); 
+case 29: this.$ = $$[$0-5].concat($$[$0-3]).concat([['DUP'], ['LOAD', 0], ['EQ'], ['NOT'], ['JZ', $$[$0-1].length + 2]]).concat($$[$0-1]).concat([['DEC'], ['JMP', -1 -($$[$0-1].length + 7)], ['POP']]); 
 break;
 case 30: this.$ = $$[$0-2].concat($$[$0]).concat([['OR']]); 
 break;
