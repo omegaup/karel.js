@@ -887,7 +887,7 @@ $(document).ready(function(){
     if (layoutExpanded) {
       $('#leftSplitterContainer').css({position: 'absolute', top: 0, left: 0, width: 550, height: h, display: 'block'});
       $('#leftTopPane').css({position: 'absolute', top: 0, left: 0, width: "100%", height: h * 0.8});
-      $('#editor').css({height: '100%', width: '100%', background: '#0f0'});
+      $('#editor').css({height: '100%', width: '100%'});
       $('#leftBottomPane').css({position: 'absolute', top: '80%', left: 0, width: '100%', height: '20%'});
       $('#mensajes').css({height: 135, overflowY: 'auto'});
       $('#pila').css({height: 135, overflowY: 'auto'});
