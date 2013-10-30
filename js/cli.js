@@ -87,6 +87,12 @@ if (opts['0'] == 'compile') {
 	var worldXml = new DOMParser().parseFromString(fs.readFileSync('/dev/stdin', {encoding: 'utf-8'}), 'text/xml');
 	var world = new karel.World(100, 100);
 	world.load(worldXml);
+	if (opts.verbose) {
+		world.runtime.debug = true;
+		world.runtime.addEventListener('debug', function(ev) {
+			console.log(ev.debugType, ev.message);
+		});
+	}
 	world.runtime.load(program);
 	while (world.runtime.step());
 	console.log(world.output());

@@ -82,17 +82,71 @@ var Runtime = function(world) {
 	self.debug = false;
 	self.world = world;
 
-	self.program = [['HALT']];
-
-	self.reset();
+	self.load([['HALT']]);
 };
 
 Runtime.prototype = new EventTarget();
 
+Runtime.HALT = 0;
+Runtime.LINE = 1;
+Runtime.LEFT = 2;
+Runtime.WORLDWALLS = 3;
+Runtime.ORIENTATION = 4;
+Runtime.ROTL = 5;
+Runtime.ROTR = 6;
+Runtime.MASK = 7;
+Runtime.NOT = 8;
+Runtime.AND = 9;
+Runtime.OR = 10;
+Runtime.EQ = 11;
+Runtime.EZ = 12;
+Runtime.JZ = 13;
+Runtime.JMP = 14;
+Runtime.FORWARD = 15;
+Runtime.WORLDBUZZERS = 16;
+Runtime.BAGBUZZERS = 17;
+Runtime.PICKBUZZER = 18;
+Runtime.LEAVEBUZZER = 19;
+Runtime.LOAD = 20;
+Runtime.POP = 21;
+Runtime.DUP = 22;
+Runtime.DEC = 23;
+Runtime.INC = 24;
+Runtime.CALL = 25;
+Runtime.RET = 26;
+Runtime.PARAM = 27;
+
 Runtime.prototype.load = function(opcodes) {
 	var self = this;
+	var opcode_mapping = ['HALT', 'LINE', 'LEFT', 'WORLDWALLS', 'ORIENTATION',
+			'ROTL', 'ROTR', 'MASK', 'NOT', 'AND', 'OR', 'EQ', 'EZ', 'JZ', 'JMP',
+			'FORWARD', 'WORLDBUZZERS', 'BAGBUZZERS', 'PICKBUZZER', 'LEAVEBUZZER',
+			'LOAD', 'POP', 'DUP', 'DEC', 'INC', 'CALL', 'RET', 'PARAM'];
+	var error_mapping = ['WALL', 'WORLDUNDERFLOW', 'BAGUNDERFLOW'];
 
-	self.program = opcodes;
+	self.raw_opcodes = opcodes;
+	var function_map = {};
+	self.function_names = [];
+	var function_idx = 0;
+	self.program = new Int16Array(new ArrayBuffer(opcodes.length * 6));
+	for (var i = 0; i < opcodes.length; i++) {
+		self.program[3*i] = opcode_mapping.indexOf(opcodes[i][0]);
+		if (opcodes[i].length > 1) {
+			self.program[3*i+1] = opcodes[i][1];
+		}
+		if (opcodes[i][0] == 'CALL') {
+			if (!function_map.hasOwnProperty(opcodes[i][2])) {
+				function_map[opcodes[i][2]] = function_idx;
+				self.function_names[function_idx++] = opcodes[i][2];
+			}
+			self.program[3*i+2] = function_map[opcodes[i][2]];
+		} else if(opcodes[i][0] == 'EZ') {
+			self.program[3*i+1] = error_mapping.indexOf(opcodes[i][1]);
+			if (self.program[3*i+1] == -1) {
+				throw new Error('Invalid error: ' + opcodes[i][1]);
+			}
+		}
+	}
 	self.reset();
 };
 
@@ -102,10 +156,11 @@ Runtime.prototype.reset = function() {
 	self.state = {
 		pc: 0,
 		sp: -1,
+		fp: -1,
 		line: 0,
-		stack: [],
-		stackSize: 0,
 		ic: 0,
+		stack: new Int32Array(new ArrayBuffer(0xffff * 16 + 40)),
+		stackSize: 0,
 
 		// Flags
 		jumped: false,
@@ -113,7 +168,11 @@ Runtime.prototype.reset = function() {
 	};
 
 	if (self.debug) {
-		self.fireEvent('debug', {target: self, message: JSON.stringify(self.program)});
+		self.fireEvent('debug', {
+			target: self,
+			message: JSON.stringify(self.raw_opcodes),
+			debugType: 'program'
+		});
 	}
 };
 
@@ -123,8 +182,8 @@ Runtime.prototype.step = function() {
 	while (self.state.running) {
 		self.next();
 
-		if (self.state.running && self.program[self.state.pc][0] == 'LINE') {
-			self.state.line = self.program[self.state.pc][1];
+		if (self.state.running && self.program[3*self.state.pc] == Runtime.LINE) {
+			self.state.line = self.program[3*self.state.pc+1];
 			break;
 		}
 	}
@@ -139,224 +198,277 @@ Runtime.prototype.next = function() {
 
 	var world = self.world;
 
-	self.state.ic += 1;
 	if (self.state.ic >= world.maxInstructions) {
 		self.state.running = false;
 		self.state.error = 'INSTRUCTION LIMIT';
 
-		return;
+		return false;
+	} else if (self.state.stackSize >= self.world.stackSize) {
+		self.state.running = false;
+		self.state.error = 'STACK';
+
+		return false;
 	}
 
-	var opcodes = {
-		'HALT': function(state) {
-			state.running = false;
-		},
-
-		'LINE': function(state, params) {
-			state.line = params[0];
-		},
-
-		'LEFT': function() {
-			world.orientation--;
-			if (world.orientation < 0) {
-				world.orientation = 3;
-			}
-			world.dirty = true;
-		},
-
-		'WORLDWALLS': function(state) {
-			state.stack.push(world.walls(world.i, world.j));
-		},
-
-		'ORIENTATION': function(state) {
-			state.stack.push(world.orientation);
-		},
-
-		'ROTL': function(state) {
-			var rot = state.stack.pop() - 1;
-			if (rot < 0) {
-				rot = 3;
-			}
-			state.stack.push(rot);
-		},
-
-		'ROTR': function(state) {
-			var rot = state.stack.pop() + 1;
-			if (rot > 3) {
-				rot = 0;
-			}
-			state.stack.push(rot);
-		},
-
-		'MASK': function(state) {
-			state.stack.push(1 << state.stack.pop());
-		},
-
-		'NOT': function(state) {
-			state.stack.push((state.stack.pop() === 0) ? 1 : 0);
-		},
-
-		'AND': function(state) {
-			state.stack.push((state.stack.pop() & state.stack.pop()) ? 1 : 0);
-		},
-
-		'OR': function(state) {
-			state.stack.push((state.stack.pop() | state.stack.pop()) ? 1 : 0);
-		},
-
-		'EQ': function(state) {
-			state.stack.push((state.stack.pop() == state.stack.pop()) ? 1 : 0);
-		},
-
-		'EZ': function(state, params) {
-			if (state.stack.pop() === 0) {
-				state.error = params[0];
-				state.running = false;
-			}
-		},
-
-		'JZ': function(state, params) {
-			if (state.stack.pop() === 0) {
-				state.pc += params[0];
-			}
-		},
-
-		'JNZ': function(state, params) {
-			if (state.stack.pop() !== 0) {
-				state.pc += params[0];
-			}
-		},
-
-		'JLEZ': function(state, params) {
-			if (state.stack.pop() <= 0) {
-				state.pc += params[0];
-			}
-		},
-
-		'JMP': function(state, params) {
-			state.pc += params[0];
-		},
-
-		'FORWARD': function() {
-			var di = [0, 1, 0, -1];
-			var dj = [-1, 0, 1, 0];
-
-			world.i += di[world.orientation];
-			world.j += dj[world.orientation];
-			world.dirty = true;
-		},
-
-		'WORLDBUZZERS': function(state) {
-			state.stack.push(world.buzzers(world.i, world.j));
-		},
-
-		'BAGBUZZERS': function(state) {
-			state.stack.push(world.bagBuzzers);
-		},
-
-		'PICKBUZZER': function() {
-			world.pickBuzzer(world.i, world.j);
-		},
-
-		'LEAVEBUZZER': function() {
-			world.leaveBuzzer(world.i, world.j);
-		},
-
-		'LOAD': function(state, params) {
-			state.stack.push(params[0]);
-		},
-
-		'POP': function(state) {
-			state.stack.pop();
-		},
-
-		'DUP': function(state) {
-			state.stack.push(state.stack[state.stack.length - 1]);
-		},
-
-		'DEC': function(state) {
-			state.stack.push(state.stack.pop() - 1);
-		},
-
-		'INC': function(state) {
-			state.stack.push(state.stack.pop() + 1);
-		},
-
-		'CALL': function(state, params) {
-			// sp, pc, param
-			var param = state.stack.pop();
-			var newSP = state.stack.length;
-
-			state.stack.push(state.sp);
-			state.stack.push(state.pc);
-			state.stack.push(param);
-
-			state.sp = newSP;
-			state.pc = params[0];
-			state.jumped = true;
-			state.stackSize++;
-
-			if (state.stackSize >= world.stackSize) {
-				state.running = false;
-				state.error = 'STACK';
-			} else {
-				self.fireEvent('call', {'function': params[1], param: param, line: state.line, target: self});
-			}
-		},
-
-		'RET': function(state) {
-			var oldSP = state.sp;
-			state.pc = state.stack[state.sp + 1];
-			state.sp = state.stack[state.sp];
-
-			while (state.stack.length > oldSP) {
-				state.stack.pop();
-			}
-			state.stackSize--;
-			self.fireEvent('return', {target: self});
-		},
-
-		'PARAM': function(state, params) {
-			state.stack.push(state.stack[state.sp + 2 + params[0]]);
-		}
-	};
-
+	var rot;
+	var di = [0, 1, 0, -1];
+	var dj = [-1, 0, 1, 0];
+	var param, newSP, op1, op2, fname;
 	try {
-		var opcode = self.program[self.state.pc];
-		if (!opcodes[opcode[0]]) {
-			self.state.running = false;
-			if (self.debug) {
-				self.fireEvent('debug', {
-					target: self,
-					message: 'Missing opcode ' + opcode[0],
-					debugType: 'opcode'});
-			}
-			self.state.error = 'INVALIDOPCODE';
-			return false;
+		if (self.debug) {
+			self.fireEvent('debug', {
+				target: self,
+				message: JSON.stringify(self.program[3*self.state.pc] + ' ' + self.raw_opcodes[self.state.pc]),
+				debugType: 'opcode'
+			});
 		}
 
-		opcodes[opcode[0]](self.state, opcode.slice(1));
+		switch (self.program[3*self.state.pc]) {
+			case Runtime.HALT: {
+				self.state.running = false;
+				break;
+			}
+
+			case Runtime.LINE: {
+				self.state.line = self.program[3*self.state.pc+1];
+				break;
+			}
+
+			case Runtime.LEFT: {
+				self.state.ic++;
+				self.world.orientation--;
+				if (self.world.orientation < 0) {
+					self.world.orientation = 3;
+				}
+				self.world.dirty = true;
+				break;
+			}
+
+			case Runtime.WORLDWALLS: {
+				self.state.stack[++self.state.sp] = world.walls(world.i, world.j);
+				break;
+			}
+
+			case Runtime.ORIENTATION: {
+				self.state.stack[++self.state.sp] = world.orientation;
+				break;
+			}
+
+			case Runtime.ROTL: {
+				rot = self.state.stack[self.state.sp] - 1;
+				if (rot < 0) {
+					rot = 3;
+				}
+				self.state.stack[self.state.sp] = rot;
+				break;
+			}
+
+			case Runtime.ROTR: {
+				rot = self.state.stack[self.state.sp] + 1;
+				if (rot > 3) {
+					rot = 0;
+				}
+				self.state.stack[self.state.sp] = rot;
+				break;
+			}
+
+			case Runtime.MASK: {
+				self.state.stack[self.state.sp] = 1 << self.state.stack[self.state.sp];
+				break;
+			}
+
+			case Runtime.NOT: {
+				self.state.stack[self.state.sp] = (self.state.stack[self.state.sp] === 0) ? 1 : 0;
+				break;
+			}
+
+			case Runtime.AND: {
+				op2 = self.state.stack[self.state.sp--];
+				op1 = self.state.stack[self.state.sp--];
+				self.state.stack[++self.state.sp] = (op1 & op2) ? 1 : 0;
+				break;
+			}
+
+			case Runtime.OR: {
+				op2 = self.state.stack[self.state.sp--];
+				op1 = self.state.stack[self.state.sp--];
+				self.state.stack[++self.state.sp] = (op1 | op2) ? 1 : 0;
+				break;
+			}
+
+			case Runtime.EQ: {
+				op2 = self.state.stack[self.state.sp--];
+				op1 = self.state.stack[self.state.sp--];
+				self.state.stack[++self.state.sp] = (op1 == op2) ? 1 : 0;
+				break;
+			}
+
+			case Runtime.EZ: {
+				if (self.state.stack[self.state.sp--] === 0) {
+					self.state.error = ['WALL', 'WORLDUNDERFLOW', 'BAGUNDERFLOW'][self.program[3*self.state.pc+1]];
+					self.state.running = false;
+				}
+				break;
+			}
+
+			case Runtime.JZ: {
+				self.state.ic++;
+				if (self.state.stack[self.state.sp--] === 0) {
+					self.state.pc += self.program[3*self.state.pc+1];
+				}
+				break;
+			}
+
+			case Runtime.JMP: {
+				self.state.ic++;
+				self.state.pc += self.program[3*self.state.pc+1];
+				break;
+			}
+
+			case Runtime.FORWARD: {
+				self.state.ic++;
+				self.world.i += di[self.world.orientation];
+				self.world.j += dj[self.world.orientation];
+				self.world.dirty = true;
+				break;
+			}
+
+			case Runtime.WORLDBUZZERS: {
+				self.state.stack[++self.state.sp] = (self.world.buzzers(world.i, world.j));
+				break;
+			}
+
+			case Runtime.BAGBUZZERS: {
+				self.state.stack[++self.state.sp] = (self.world.bagBuzzers);
+				break;
+			}
+
+			case Runtime.PICKBUZZER: {
+				self.state.ic++;
+				self.world.pickBuzzer(self.world.i, self.world.j);
+				break;
+			}
+
+			case Runtime.LEAVEBUZZER: {
+				self.state.ic++;
+				self.world.leaveBuzzer(self.world.i, self.world.j);
+				break;
+			}
+
+			case Runtime.LOAD: {
+				self.state.stack[++self.state.sp] = self.program[3*self.state.pc+1];
+				break;
+			}
+
+			case Runtime.POP: {
+				self.state.sp--;
+				break;
+			}
+
+			case Runtime.DUP: {
+				self.state.stack[++self.state.sp] = self.state.stack[self.state.sp - 1];
+				break;
+			}
+
+			case Runtime.DEC: {
+				self.state.stack[self.state.sp]--;
+				break;
+			}
+
+			case Runtime.INC: {
+				self.state.stack[self.state.sp]++;
+				break;
+			}
+
+			case Runtime.CALL: {
+				self.state.ic++;
+				// sp, pc, param
+				param = self.state.stack[self.state.sp--];
+				newSP = self.state.sp;
+				fname = self.function_names[self.program[3*self.state.pc+2]];
+
+				self.state.stack[++self.state.sp] = self.state.fp;
+				self.state.stack[++self.state.sp] = newSP;
+				self.state.stack[++self.state.sp] = self.state.pc;
+				self.state.stack[++self.state.sp] = param;
+
+				self.state.fp = newSP + 1;
+				self.state.pc = self.program[3*self.state.pc+1];
+				self.state.jumped = true;
+				self.state.stackSize++;
+
+				if (self.state.stackSize >= self.world.stackSize) {
+					self.state.running = false;
+					self.state.error = 'STACK';
+				} else {
+					self.fireEvent('call', {
+						'function': fname,
+						param: param,
+						line: self.state.line,
+						target: self
+					});
+				}
+				break;
+			}
+
+			case Runtime.RET: {
+				self.state.pc = self.state.stack[self.state.fp + 2];
+				self.state.sp = self.state.stack[self.state.fp + 1];
+				self.state.fp = self.state.stack[self.state.fp];
+				self.state.stackSize--;
+				self.fireEvent('return', {target: self});
+				break;
+			}
+
+			case Runtime.PARAM: {
+				self.state.stack[++self.state.sp] = 
+					self.state.stack[self.state.fp + 3 + self.program[3*self.state.pc+1]];
+				break;
+			}
+
+			default: {
+				self.state.running = false;
+				if (self.debug) {
+					self.fireEvent('debug', {
+						target: self,
+						message: 'Missing opcode ' + self.raw_opcodes[self.state.pc][0],
+						debugType: 'opcode'});
+				}
+
+				self.state.error = 'INVALIDOPCODE';
+				return false;
+			}
+		};
 
 		if (self.state.jumped) {
 			self.state.jumped = false;
 		} else {
-			self.state.pc += 1;
+			self.state.pc++;
 		}
 
 		if (self.debug) {
+			var subarray = [];
+			for (var i = 0; i <= self.state.sp; i++) {
+				subarray.push(self.state.stack[i]);
+			}
+			var copy = {
+				pc: self.state.pc,
+				sp: self.state.sp,
+				fp: self.state.fp,
+				line: self.state.line,
+				ic: self.state.ic,
+				stack: subarray,
+				running: self.state.running
+			};
 			self.fireEvent('debug', {
 				target: self,
-				message: JSON.stringify(opcode),
-				debugType: 'opcode'
-			});
-			self.fireEvent('debug', {
-				target: self,
-				message: JSON.stringify(self.state)
+				message: JSON.stringify(copy),
+				debugType: 'state'
 			});
 		}
 	} catch (e) {
 		self.state.running = false;
-		console.log(e);
+		console.error(e);
 		console.log(e.stack);
 		throw e;
 	}
@@ -377,8 +489,8 @@ World.prototype.init = function(w, h) {
 	self.h = h + 1;
 	self.runtime = new Runtime(self);
 	if (ArrayBuffer) {
-		self.map = new Int16Array(new ArrayBuffer(self.w * self.h * 2));
-		self.currentMap = new Int16Array(new ArrayBuffer(self.w * self.h * 2));
+		self.map = new Int32Array(new ArrayBuffer(self.w * self.h * 4));
+		self.currentMap = new Int32Array(new ArrayBuffer(self.w * self.h * 4));
 		self.wallMap = new Uint8Array(new ArrayBuffer(self.w * self.h));
 	} else {
 		self.map = [];
@@ -869,7 +981,8 @@ World.prototype.output = function() {
 						if (printCoordinate) {
 							line += '(' + j + ') ';
 						}
-						line += self.buzzers(i, j) + ' ';
+						// TODO: Este es un bug en karel.exe.
+						line += (self.buzzers(i, j) & 0xffff) + ' ';
 					}
 					printCoordinate = self.buzzers(i, j) == 0;
 				}
