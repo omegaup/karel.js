@@ -857,9 +857,9 @@ $(document).ready(function(){
         var kecReader = new FileReader();
         kecReader.onload = (function(kecReader, mdo) {
           return function(e) {
+            $('#worldclean').click();
             mundo.import(new Uint16Array(mdo), new Uint16Array(kecReader.result));
             addEventListeners(mundo);
-            $('#worldclean').click();
             wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
             $("#xmlMundo").html(mundo.save());
             $('#importar_modal').modal('hide');
