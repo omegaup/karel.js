@@ -90,25 +90,41 @@ case 1:
     	for (var i = 0; i < $$[$0-5].length; i++) {
     		if ($$[$0-5][i][1] == null) {
     			if (prototypes[$$[$0-5][i][0]] || functions[$$[$0-5][i][0]]) {
-    				throw "Prototype redefinition: " + $$[$0-5][i][0];
+    				yy.parser.parseError("Prototype redefinition: " + $$[$0-5][i][0], {
+							text: $$[$0-5][i][0],
+							line: $$[$0-5][i][3]
+						});
     			}
     			prototypes[$$[$0-5][i][0]] = $$[$0-5][i][2];
     		} else {
-    	    		if (functions[$$[$0-5][i][0]]) {
-    				throw "Function redefinition: " + $$[$0-5][i][0];
-    			} else if (prototypes[$$[$0-5][i][0]]) {
-    				if (prototypes[$$[$0-5][i][0]] != $$[$0-5][i][2]) {
-    					throw "Prototype parameter mismatch";
-    				}
-    			}
+          if (functions[$$[$0-5][i][0]]) {
+            console.log(yy);
+            yy.parser.parseError("Function redefinition: " + $$[$0-5][i][0], {
+              text: $$[$0-5][i][0],
+              line: $$[$0-5][i][3]
+            });
+          } else if (prototypes[$$[$0-5][i][0]]) {
+            if (prototypes[$$[$0-5][i][0]] != $$[$0-5][i][2]) {
+              yy.parser.parseError("Prototype parameter mismatch: " + $$[$0-5][i][0], {
+                text: $$[$0-5][i][0],
+                line: $$[$0-5][i][3]
+              });
+            }
+          }
 
     			functions[$$[$0-5][i][0]] = program.length;
+          var current_line = 0;
 
     			for (var j = 0; j < $$[$0-5][i][1].length; j++) {
-    				if ($$[$0-5][i][1][j][0] == 'CALL' &&
+            if ($$[$0-5][i][1][j][0] == 'LINE') {
+              current_line = $$[$0-5][i][1][j][1];
+            } else if ($$[$0-5][i][1][j][0] == 'CALL' &&
     				    !functions[$$[$0-5][i][1][j][1]] &&
     				    !prototypes[$$[$0-5][i][1][j][1]]) {
-    					throw "Unknown function: " + $$[$0-5][i][1][j][1];
+    					yy.parser.parseError("Unknown function: " + $$[$0-5][i][1][j][1], {
+                text: $$[$0-5][i][1][j][1],
+                line: current_line
+              });
     				}
     			}
     
@@ -116,15 +132,24 @@ case 1:
     		}
     	}
     	
+      var current_line = 0;
     	for (var i = 0; i < program.length; i++) {
-    		if (program[i][0] == 'CALL') {
+        if (program[i][0] == 'LINE') {
+          current_line = program[i][1];
+        } else if (program[i][0] == 'CALL') {
     			if (!functions[program[i][1]]) {
-    				throw "Unknown function: " + program[i][1];
+    				yy.parser.parseError("Undefined function: " + program[i][1], {
+              text: program[i][1],
+              line: current_line
+            });
     			}
     			program[i].push(program[i][1]);
     			program[i][1] = functions[program[i][2]];
     		} else if (program[i][0] == 'PARAM' && program[i][1] != 0) {
-			throw "Unknown variable: " + program[i][1];
+          yy.parser.parseError("Unknown variable: " + program[i][1], {
+            text: program[i][1],
+            line: current_line + 1
+          });
     		}
     	}
     	
@@ -137,24 +162,30 @@ case 3: this.$ = $$[$0-2].concat($$[$0-1]);
 break;
 case 4: this.$ = $$[$0-1]; 
 break;
-case 5: this.$ = [[$$[$0].toLowerCase(), null, 1]]; 
+case 5: this.$ = [[$$[$0].toLowerCase(), null, 1, $$[$0-1][0][1]]]; 
 break;
-case 6: this.$ = [[$$[$0-3].toLowerCase(), null, 2]]; 
+case 6: this.$ = [[$$[$0-3].toLowerCase(), null, 2, $$[$0-4][0][1]]]; 
 break;
-case 7: this.$ = [[$$[$0-2].toLowerCase(), $$[$0-3].concat($$[$0]).concat([['RET']]), 1]]; 
+case 7: this.$ = [[$$[$0-2].toLowerCase(), $$[$0-3].concat($$[$0]).concat([['RET']]), 1, $$[$0-3][0][1]]]; 
 break;
 case 8:
     	var result = $$[$0-6].concat($$[$0]).concat([['RET']]);
+      var current_line = $$[$0-6][0][1];
     	for (var i = 0; i < result.length; i++) {
-    		if (result[i][0] == 'PARAM') {
+        if (result[i][0] == 'LINE') {
+          current_line = result[i][1];
+        } else if (result[i][0] == 'PARAM') {
     			if (result[i][1] == $$[$0-3].toLowerCase()) {
     				result[i][1] = 0;
     			} else {
-				throw "Unknown variable: " + $$[$0-3];
+    				yy.parser.parseError("Unknown variable: " + $$[$0-3], {
+              text: $$[$0-3],
+              line: current_line + 1
+            });
     			}
     		}
     	}
-    	this.$ = [[$$[$0-5].toLowerCase(), result, 2]];
+    	this.$ = [[$$[$0-5].toLowerCase(), result, 2, $$[$0-6][0][1]]];
     
 break;
 case 9: this.$ = $$[$0-2].concat($$[$0]); 

@@ -3,18 +3,27 @@
   <head>
     <meta charset="utf-8">
     <title>Karel.js</title>
-    <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="lib/CodeMirror/lib/codemirror.js"></script>
+    <script src="lib/CodeMirror/addon/selection/active-line.js"></script>
+    <script src="lib/CodeMirror/addon/fold/foldcode.js"></script>
+    <script src="lib/CodeMirror/addon/fold/foldgutter.js"></script>
+    <script src="lib/CodeMirror/addon/fold/indent-fold.js"></script>
+    <script src="lib/CodeMirror/addon/mode/overlay.js"></script>
+    <script src="js/syntax.js"></script>
     <script src="js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/jquery.hammer.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="js/karel.js?ts=4" type="text/javascript" charset="utf-8"></script>
-    <script src="js/mundo.js?ts=4" type="text/javascript" charset="utf-8"></script>
+    <script src="js/karel.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/mundo.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/karelruby.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/kareljava.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/karelpascal.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/CodeMirror/lib/codemirror.css" />
+    <link rel="stylesheet" type="text/css" href="css/karel.css" />
+    <link rel="stylesheet" type="text/css" href="lib/CodeMirror/addon/fold/foldgutter.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css" />
     <style type="text/css" media="screen">
       body {
         overflow: hidden;
@@ -27,10 +36,19 @@
         right: 0px;
         z-index: 1;
       }
-      #editor {
+      #editor, .CodeMirror {
         margin: 0px;
         width: 100%;
-        height: 100%;
+        font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro, monospace;
+        font-size: 12px;
+        line-height: 15px;
+      }
+      .breakpoints { width: .8em; font-size: .5em; }
+      .breakpoint { color: #822; font-size: .4em; }
+      .cm-tab {
+         background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
+         background-position: right;
+         background-repeat: no-repeat;
       }
       .input-prepend {
         margin-top: 10px;
@@ -43,7 +61,26 @@
         overflow-y: scroll;
         padding: 0 10px 10px 10pX;
       }
-      
+      pre.error-popup {
+        display: none;
+        position: absolute;
+        left: 3em;
+        top: 1em;
+        border: 1px solid #000;
+        background: #ff8;
+        width: 30em;
+        z-index: 10;
+        padding: 5px;
+        white-space: normal;
+      }
+      .error:hover .error-popup {
+          display: block;
+      }
+      .parse-error {
+          background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QsEBjIX8OiuEwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAgSURBVAjXPcixAQAwDMMgnP9/VrcyIgqVcGrIBh38rD25RQ/6x3pUhQAAAABJRU5ErkJggg==);
+          background-repeat: repeat-x;
+          background-position: 0 100%;
+      }
       .karel-current-line {
         background: rgba(255, 255, 0, 0.8);
       }
@@ -145,7 +182,7 @@
     <div id="splitterContainer">
       <div id="leftSplitterContainer">
         <div id="leftTopPane">
-          <div id="editor" class="span6">iniciar-programa
+          <textarea id="editor">iniciar-programa
     define-nueva-instruccion gira-derecha como inicio
         repetir 3 veces gira-izquierda;
     fin;
@@ -220,7 +257,7 @@
     inicia-ejecucion
         cuadro;
     termina-ejecucion
-finalizar-programa</div>
+finalizar-programa</textarea>
         </div>
         <div id="leftBottomPane">
           <div class="tabbable"> <!-- Only required for left/right tabs -->

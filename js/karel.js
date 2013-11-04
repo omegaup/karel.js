@@ -1088,7 +1088,7 @@ World.prototype.import = function(mdo, kec) {
 	self.init(width - 1, height - 1);
 	self.setBagBuzzers(mdo[8]);
 	self.move(mdo[10], mdo[9]);
-	self.orientation = self.startOrientation = mdo[11] % 4;
+  self.orientation = self.startOrientation = mdo[11] % 4;
 	var wallcount = mdo[12];
 	var heapcount = mdo[13];
 	//var x10 = mdo[14];

@@ -19,10 +19,10 @@ $(document).ready(function(){
           if (j == rules.length - 1) {
             // el primer token de verdad.
             if (m[0] == 'class') {
-              editor.getSession().setMode("ace/mode/kareljava");
+              //editor.getSession().setMode("ace/mode/kareljava");
               return {parser: new kareljava.Parser(), name: 'java'};
             } else if (m[0].toLowerCase() == 'iniciar-programa') {
-              editor.getSession().setMode("ace/mode/karelpascal");
+              ///editor.getSession().setMode("ace/mode/karelpascal");
               return {parser: new karelpascal.Parser(), name: 'pascal'};
             } else {
               return {parser: new karelruby.Parser(), name: 'ruby'};
@@ -43,14 +43,34 @@ $(document).ready(function(){
     if (hash.recoverable) {
         this.trace(str);
     } else {
-        var e = new Error(str);
-        for (var n in hash) {
-          if (hash.hasOwnProperty(n)) {
-            e[n] = hash[n];
-          }
+      var e = new Error(str);
+      for (var n in hash) {
+        if (hash.hasOwnProperty(n)) {
+          e[n] = hash[n];
         }
-        console.log(e.message);
-        throw e;
+      }
+      e.text = e.text || this.yy.lexer.upcomingInput();
+      var line = editor.getLine(e.line);
+      var i = line.indexOf(e.text, this.yy.lexer.yylloc.first_column);
+      if (i == -1) {
+        i = line.indexOf(e.text);
+      }
+      if (i != -1) {
+        e.loc = {
+          first_line: e.line,
+          last_line: e.line,
+          first_column: i,
+          last_column: i + e.text.length
+        };
+      } else {
+        e.loc = {
+          first_line: e.line,
+          last_line: e.line+1,
+          first_column: 0,
+          last_column: 0
+        };
+      }
+      throw e;
     }
   }
 
@@ -70,12 +90,6 @@ $(document).ready(function(){
     return parser;
   }
 
-  function getErrorLocation(parser) {
-    // Return an object with the following properties: first_line, last_line,
-    // first_column, last_column.
-    return parser.lexer.yylloc;
-  }
-
   function parseWorld(xml) {
     // Parses the xml and returns a document object.
     return new DOMParser().parseFromString(xml, 'text/xml');
@@ -91,29 +105,88 @@ $(document).ready(function(){
     'BAGUNDERFLOW': 'Karel intentó dejar un zumbador pero su mochila estaba vacía!',
     'INSTRUCTION LIMIT': 'Karel ha superado el límite de instrucciones!',
     'STACK': 'La pila de karel se ha desbordado!'
-  }
+  };
+
+  var ERROR_TOKENS = {
+    pascal: {
+      BEGINPROG:'"iniciar-programa"',
+      BEGINEXEC:'"inicia-ejecucion"',
+      ENDEXEC:'"termina-ejecucion"',
+      ENDPROG:'"finalizar-programa"',
+      DEF:'"define-nueva-instruccion"',
+      PROTO:'"define-prototipo-instruccion"',
+      RET:'"sal-de-instruccion"',
+      AS:'"como"',
+      HALT:'"apagate"',
+      LEFT:'"gira-izquierda"',
+      FORWARD:'"avanza"',
+      PICKBUZZER:'"coge-zumbador"',
+      LEAVEBUZZER:'"deja-zumbador"',
+      BEGIN:'"inicio"',
+      END:'"fin"',
+      THEN:'"entonces"',
+      WHILE:'"mientras"',
+      DO:'"hacer"',
+      REPEAT:'"repetir"',
+      TIMES:'"veces"',
+      DEC:'"precede"',
+      INC:'"sucede"',
+      IFZ:'"si-es-cero"',
+      IFNFWALL:'"frente-libre"',
+      IFFWALL:'"frente-bloqueado"',
+      IFNLWALL:'"izquierda-libre"',
+      IFLWALL:'"izquierda-bloqueada"',
+      IFNRWALL:'"derecha-libre"',
+      IFRWALL:'"derecha-bloqueada"',
+      IFWBUZZER:'"junto-a-zumbador"',
+      IFNWBUZZER:'"no-junto-a-zumbador"',
+      IFBBUZZER:'"algun-zumbador-en-la-mochila"',
+      IFNBBUZZER:'"ningun-zumbador-en-la-mochila"',
+      IFN:'"orientado-al-norte"',
+      IFS:'"orientado-al-sur"',
+      IFE:'"orientado-al-este"',
+      IFW:'"orientado-al-oeste"',
+      IFNN:'"no-orientado-al-norte"',
+      IFNS:'"no-orientado-al-sur"',
+      IFNE:'"no-orientado-al-este"',
+      IFNW:'"no-orientado-al-oeste"',
+      ELSE:'"sino"',
+      IF:'"si"',
+      NOT:'"no"',
+      OR:'"o"',
+      AND:'"y"',
+      '(':'"("',
+      ')':'")"',
+      ';':'";"',
+      NUM:'un número',
+      VAR:'un nombre',
+      EOF:'el final del programa'
+    },
+  };
 
   //Preparación del editor
-  var editor = ace.edit("editor");
-  var breakpoints = {};
-  editor.setTheme("ace/theme/chrome");
-  editor.getSession().setMode("ace/mode/karelpascal");
-  editor.on("guttermousedown", function(e){ 
-      var target = e.domEvent.target; 
-      if (target.className.indexOf("ace_gutter-cell") == -1) 
-          return; 
-
-      var row = e.getDocumentPosition().row;
-      if (!breakpoints[row]) {
-        e.editor.session.setBreakpoint(row);
-        breakpoints[row] = true;
-      } else {
-        e.editor.session.clearBreakpoint(row);
-        delete breakpoints[row];
-      }
-      e.stop();
+  var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+      lineNumbers: true,
+      styleActiveLine: true,
+      viewportMargin: Infinity,
+      mode: 'karelpascal',
+      theme: 'karel',
+      foldGutter: {
+          rangeFinder: CodeMirror.fold.indent,
+      },
+      gutters: ['CodeMirror-foldgutter', 'errors', 'breakpoints', 'CodeMirror-linenumbers'],
   });
-  var Range = ace.require("./range").Range;
+  editor.on('gutterClick', function(instance, line, gutter, clickEvent) {
+      if (gutter == 'CodeMirror-foldgutter') return;
+      function makeBreakpoint() {
+          var marker = document.createElement('div');
+          marker.style.color = '#822';
+          marker.innerHTML = '●';
+          return marker;
+      }
+      var markers = instance.lineInfo(line).gutterMarkers;
+      instance.setGutterMarker(line, 'breakpoints', (markers && markers.breakpoints) ? null : makeBreakpoint());
+  });
 
   var world = $("#world")[0];
   var context = world.getContext('2d');
@@ -143,13 +216,13 @@ $(document).ready(function(){
 
   function highlightCurrentLine() {
     if (linea_actual != null) {
-      editor.session.removeGutterDecoration(linea_actual, "karel-current-line");
+      editor.removeLineClass(linea_actual, 'background', 'karel-current-line');
     }
 
     if (mundo.runtime.state.line >= 1) {
       linea_actual = mundo.runtime.state.line;
-      editor.session.addGutterDecoration(linea_actual, "karel-current-line");
-      editor.gotoLine(linea_actual + 1);
+      editor.addLineClass(linea_actual, 'background', 'karel-current-line');
+      editor.setCursor({line: linea_actual, ch: 0});
     }
   }
 
@@ -159,7 +232,9 @@ $(document).ready(function(){
 
     highlightCurrentLine();
 
-    if (breakpoints[linea_actual] && interval) {
+    var markers = editor.lineInfo(linea_actual).gutterMarkers;
+
+    if (markers && markers.breakpoints && interval) {
       $('#mensajes').trigger('info', {'mensaje': 'Breakpoint en la línea '+(linea_actual + 1)});
       clearInterval(interval);
       interval = null;
@@ -193,19 +268,44 @@ $(document).ready(function(){
     var syntax = getSyntax(editor.getValue());
     $("#pila").html('');
     try {
+      editor.clearGutter('errors');
+      var allMarks = editor.getAllMarks();
+      for (var i = 0; i < allMarks.length; i++) {
+          allMarks[i].clear();
+      }
       var compiled = syntax.parser.parse(editor.getValue());
-      editor.getSession().clearAnnotations();
       $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
       return compiled;
     } catch(e) {
-      editor.getSession().setAnnotations([{
-        row: e.line,
-        column: 0,
-        text: e.message,
-        type: "error"
-      }]);
+        if (e.expected) {
+            e.message = 'Error de compilación en la línea ' + (e.line+1) + ': "' + e.text + '"\n' +
+                'Se encontró ' + ERROR_TOKENS.pascal[e.token] + ', se esperaba uno de:';
+            for (var i = 0; i < e.expected.length; i++) {
+                e.message += ' ' + ERROR_TOKENS.pascal[e.expected[i].substring(1, e.expected[i].length - 1)];
+            }
+        } else {
+            var translations = {
+                'Prototype redefinition': 'El prototipo ya había sido declarado',
+                'Function redefinition': 'La función ya había sido definida',
+                'Prototype parameter mismatch': 'El número de parámetros de la función no coincide con el de su prototipo',
+                'Unknown function': 'Función desconocida',
+                'Undefined function': 'Función no definida',
+                'Unknown variable': 'Variable desconocida'
+            };
+            var message = e.message.split(':')[0];
+            e.message = 'Error de compilación en la línea ' + (e.line+1) + '\n' +
+                translations[message] + ': "' + e.text + '"';
+        }
+        var marker = document.createElement('div');
+        marker.className = 'error';
+        marker.style.position = 'relative';
+        marker.innerHTML = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUM2OEZDQTQ4RTU0MTFFMUEzM0VFRTM2RUY1M0RBMjYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUM2OEZDQTU4RTU0MTFFMUEzM0VFRTM2RUY1M0RBMjYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQzY4RkNBMjhFNTQxMUUxQTMzRUVFMzZFRjUzREEyNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQzY4RkNBMzhFNTQxMUUxQTMzRUVFMzZFRjUzREEyNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkgXxbAAAAJbSURBVHjapFNNaBNBFH4zs5vdZLP5sQmNpT82QY209heh1ioWisaDRcSKF0WKJ0GQnrzrxasHsR6EnlrwD0TagxJabaVEpFYxLWlLSS822tr87m66ccfd2GKyVhA6MMybgfe97/vmPUQphd0sZjto9XIn9OOsvlu2nkqRzVU+6vvlzPf8W6bk8dxQ0NPbxAALgCgg2JkaQuhzQau/El0zbmUA7U0Es8v2CiYmKQJHGO1QICCLoqilMhkmurDAyapKgqItezi/USRdJqEYY4D5jCy03ht2yMkkvL91jTTX10qzyyu2hruPRN7jgbH+EOsXcMLgYiThEgAMhABW85oqy1DXdRIdvP1AHJ2acQXvDIrVHcdQNrEKNYSVMSZGMjEzIIAwDXIo+6G/FxcGnzkC3T2oMhLjre49sBB+RRcHLqdafK6sYdE/GGBwU1VpFNj0aN8pJbe+BkZyevUrvLl6Xmm0W9IuTc0DxrDNAJd5oEvI/KRsNC3bQyNjPO9yQ1YHcfj2QvfQc/5TUhJTBc2iM0U7AWDQtc1nJHvD/cfO2s7jaGkiTEfa/Ep8coLu7zmNmh8+dc5lZDuUeFAGUNA/OY6JVaypQ0vjr7XYjUvJM37vt+j1vuTK5DgVfVUoTjVe+y3/LxMxY2GgU+CSLy4cpfsYorRXuXIOi0Vt40h67uZFTdIo6nLaZcwUJWAzwNS0tBnqqKzQDnjdG/iPyZxo46HaKUpbvYkj8qYRTZsBhge+JHhZyh0x9b95JqjVJkT084kZIPwu/mPWqPgfQ5jXh2+92Ay7HedfAgwA6KDWafb4w3cAAAAASUVORK5CYII=" width="16" height="16"/><pre class="error-popup">' + e.message + '</pre>';
+        editor.setGutterMarker(e.line, 'errors', marker);
+        var first = {line: e.loc.first_line, ch: e.loc.first_column};
+        var last = {line: e.loc.last_line, ch: e.loc.last_column};
+        var options = {title: e.message, className: 'parse-error'};
+        var mark = editor.markText(first, last, options);
       $('#mensajes').trigger('error', {'mensaje': '<pre>'+e+'</pre> (sintaxis '+syntax.name+')'});
-      editor.focus();
       return null;
     }
   }
@@ -317,7 +417,7 @@ $(document).ready(function(){
     $("#ejecutar i").removeClass('icon-play').addClass('icon-pause');
     $("#posicion_karel").attr('disabled', 'disabled');
     $("#orientacion_karel").attr('disabled', 'disabled');
-    editor.setReadOnly(true);
+    editor.setOption('readOnly', true);
   });
   $("#ejecutar").bind('unlock', function(evt){
     //Desbloquea los controles de ejecución
@@ -333,7 +433,7 @@ $(document).ready(function(){
     $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
     $("#posicion_karel").removeAttr('disabled');
     $("#orientacion_karel").removeAttr('disabled');
-    editor.setReadOnly(false);
+    editor.setOption('readOnly', false);
   });
   $("#ejecutar").click(function(event){
     if($("#ejecutar i").hasClass('icon-play')) {
@@ -381,12 +481,12 @@ $(document).ready(function(){
     editor.focus();
   });
   $("#pascalsyntax").click(function(event){
-    editor.getSession().setMode("ace/mode/karelpascal");
+    //editor.getSession().setMode("ace/mode/karelpascal");
     editor.setValue("iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aqui }\n        apagate;\n    termina-ejecucion\nfinalizar-programa", 1);
     editor.focus();
   });
   $("#javasyntax").click(function(event){
-    editor.getSession().setMode("ace/mode/kareljava");
+    //editor.getSession().setMode("ace/mode/kareljava");
     editor.setValue("class program {\n    program () {\n        // TODO poner codigo aqui\n        turnoff();\n    }\n}", 1);
     editor.focus();
   });
@@ -501,20 +601,20 @@ $(document).ready(function(){
   });
   $("#worldclean").click(function(event){
     if (linea_actual != null) {
-      editor.session.removeGutterDecoration(linea_actual, "karel-current-line");
+      editor.removeLineClass(linea_actual, 'background', 'karel-current-line');
     }
 
     $('#ejecutar').trigger('unlock');
     $("#pila").html('');
     mundo.load(parseWorld($('script#xmlMundo').html()));
-		if (mundo.bagBuzzers == -1 != $('#inf_zumbadores').hasClass('active')) {
-			$('#inf_zumbadores').toggleClass('active');
-		}
-		if (mundo.bagBuzzers == -1) {
-			$('#mochila').val('').attr('disabled', 'disabled');
-		} else {
-			$('#mochila').val(mundo.bagBuzzers).removeAttr('disabled');
-		}
+    if (mundo.bagBuzzers == -1 != $('#inf_zumbadores').hasClass('active')) {
+        $('#inf_zumbadores').toggleClass('active');
+    }
+    if (mundo.bagBuzzers == -1) {
+        $('#mochila').val('').attr('disabled', 'disabled');
+    } else {
+        $('#mochila').val(mundo.bagBuzzers).removeAttr('disabled');
+    }
     wRender.paint(mundo, world.width, world.height, { editable: true, track_karel: true });
     if ($('#posicion_karel').hasClass('active') != mundo.getDumps(World.DUMP_POSITION)) {
       $('#posicion_karel').button('toggle');
@@ -525,7 +625,7 @@ $(document).ready(function(){
   });
   $("#newworld").click(function(event){
     if (linea_actual != null) {
-      editor.session.removeGutterDecoration(linea_actual, "karel-current-line");
+      editor.removeLineClass(linea_actual, 'background', 'karel-current-line');
     }
 
     $('#ejecutar').trigger('unlock');
@@ -885,7 +985,7 @@ $(document).ready(function(){
     if (layoutExpanded) {
       $('#leftSplitterContainer').css({position: 'absolute', top: 0, left: 0, width: 550, height: h, display: 'block'});
       $('#leftTopPane').css({position: 'absolute', top: 0, left: 0, width: "100%", height: h * 0.8});
-      $('#editor').css({height: '100%', width: '100%'});
+      $('.CodeMirror').css({position: 'absolute', top: 0, left: 0, width: "100%", height: h * 0.8});
       $('#leftBottomPane').css({position: 'absolute', top: '80%', left: 0, width: '100%', height: '20%'});
       $('#mensajes').css({height: 135, overflowY: 'auto'});
       $('#pila').css({height: 135, overflowY: 'auto'});
@@ -902,7 +1002,6 @@ $(document).ready(function(){
       world.width = w - 8;
       world.height = h;
     }
-    editor.resize();
     wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
   }
   $('#splitterContainer').append(
