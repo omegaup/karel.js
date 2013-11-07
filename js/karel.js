@@ -485,20 +485,21 @@ var World = function(w, h) {
 World.prototype.init = function(w, h) {
 	var self = this;
 
-	self.w = w + 1;
-	self.h = h + 1;
+	self.w = w;
+	self.h = h;
 	self.runtime = new Runtime(self);
 	if (ArrayBuffer) {
-		self.map = new Int32Array(new ArrayBuffer(self.w * self.h * 4));
-		self.currentMap = new Int32Array(new ArrayBuffer(self.w * self.h * 4));
-		self.wallMap = new Uint8Array(new ArrayBuffer(self.w * self.h));
+		var len = (self.w + 2) * (self.h + 2);
+		self.map = new Int32Array(new ArrayBuffer(len * 4));
+		self.currentMap = new Int32Array(new ArrayBuffer(len * 4));
+		self.wallMap = new Uint8Array(new ArrayBuffer(len));
 	} else {
 		self.map = [];
 		self.currentMap = [];
 		self.wallMap = [];
 
-		for (var i = 0; i < self.h; i++) {
-			for (var j = 0; j < self.w; j++) {
+		for (var i = 0; i <= self.h; i++) {
+			for (var j = 0; j <= self.w; j++) {
 				self.map.push(0);
 				self.currentMap.push(0);
 				self.wallMap.push(0);
@@ -506,11 +507,14 @@ World.prototype.init = function(w, h) {
 		}
 	}
 
-	for (var i = 0; i < self.h; i++) {
-		self.addWall(1, i, 3);
+	for (var i = 1; i <= self.h; i++) {
 		self.addWall(i, 1, 0);
-		self.addWall(self.h - 1, i, 1);
-		self.addWall(i, self.w - 1, 2);
+		self.addWall(i, self.w, 2);
+  }
+
+	for (var j = 1; j <= self.w; j++) {
+		self.addWall(self.h, j, 1);
+		self.addWall(1, j, 3);
 	}
 
 	self.orientation = 1;
@@ -545,7 +549,7 @@ World.ERROR_MAPPING = {
 World.prototype.walls = function(i, j) {
 	var self = this;
 
-	if (0 > i || i >= self.h || 0 > j || j >= self.w) return 0;
+	if (0 > i || i > self.h || 0 > j || j > self.w) return 0;
 	return self.wallMap[self.w * i + j];
 };
 
@@ -554,21 +558,21 @@ World.prototype.toggleWall = function(i, j, orientation) {
 
 	if (j == 1 && orientation === 0 ||
 			i == 1 && orientation == 3 ||
-			i == self.h - 1 && orientation == 1 ||
-			j == self.w - 1 && orientation == 2) {
+			i == self.h && orientation == 1 ||
+			j == self.w && orientation == 2) {
 		return;
 	}
 
-	if (orientation < 0 || orientation >= 4 || 0 > i || i >= self.h || 0 > j || j >= self.w) return;
+	if (orientation < 0 || orientation >= 4 || 0 > i || i > self.h || 0 > j || j > self.w) return;
 	// Needed to prevent Karel from traversing walls from one direction, but not
 	// from the other.
 	self.wallMap[self.w * i + j] ^= (1 << orientation);
 
 	if (orientation === 0 && j > 1) {
 		self.wallMap[self.w * i + (j - 1)] ^= (1 << 2);
-	} else if (orientation === 1 && i < self.h) {
+	} else if (orientation === 1 && i <= self.h) {
 		self.wallMap[self.w * (i + 1) + j] ^= (1 << 3);
-	} else if (orientation === 2 && j < self.w) {
+	} else if (orientation === 2 && j <= self.w) {
 		self.wallMap[self.w * i + (j + 1)] ^= (1 << 0);
 	} else if (orientation === 3 && i > 1) {
 		self.wallMap[self.w * (i - 1) + j] ^= (1 << 1);
@@ -580,12 +584,12 @@ World.prototype.toggleWall = function(i, j, orientation) {
 World.prototype.addWall = function(i, j, orientation) {
 	var self = this;
 
-	if (orientation < 0 || orientation >= 4 || 0 > i || i >= self.h || 0 > j || j >= self.w) return;
+	if (orientation < 0 || orientation >= 4 || 0 > i || i > self.h || 0 > j || j > self.w) return;
 	self.wallMap[self.w * i + j] |= (1 << orientation);
 
 	if (orientation === 0 && j > 1) self.wallMap[self.w * i + (j - 1)] |= (1 << 2);
-	else if (orientation === 1 && i < self.h) self.wallMap[self.w * (i + 1) + j] |= (1 << 3);
-	else if (orientation === 2 && j < self.w) self.wallMap[self.w * i + (j + 1)] |= (1 << 0);
+	else if (orientation === 1 && i <= self.h) self.wallMap[self.w * (i + 1) + j] |= (1 << 3);
+	else if (orientation === 2 && j <= self.w) self.wallMap[self.w * i + (j + 1)] |= (1 << 0);
 	else if (orientation === 3 && i > 1) self.wallMap[self.w * (i - 1) + j] |= (1 << 1);
 
 	self.dirty = true;
@@ -594,7 +598,7 @@ World.prototype.addWall = function(i, j, orientation) {
 World.prototype.setBuzzers = function(i, j, count) {
 	var self = this;
 
-	if (0 > i || i >= self.h || 0 > j || j >= self.w) return;
+	if (0 > i || i > self.h || 0 > j || j > self.w) return;
 	self.map[self.w * i + j] = self.currentMap[self.w * i + j] =
 		(count == 0xffff) ? -1 : count;
 	self.dirty = true;
@@ -603,14 +607,14 @@ World.prototype.setBuzzers = function(i, j, count) {
 World.prototype.buzzers = function(i, j) {
 	var self = this;
 
-	if (0 > i || i >= self.h || 0 > j || j >= self.w) return 0;
+	if (0 > i || i > self.h || 0 > j || j > self.w) return 0;
 	return self.currentMap[self.w * i + j];
 };
 
 World.prototype.pickBuzzer = function(i, j) {
 	var self = this;
 
-	if (0 > i || i >= self.h || 0 > j || j >= self.w) return;
+	if (0 > i || i > self.h || 0 > j || j > self.w) return;
 	if (self.currentMap[self.w * i + j] != -1) {
 		self.currentMap[self.w * i + j]--;
 	}
@@ -623,7 +627,7 @@ World.prototype.pickBuzzer = function(i, j) {
 World.prototype.leaveBuzzer = function(i, j) {
 	var self = this;
 
-	if (0 > i || i >= self.h || 0 > j || j >= self.w) return;
+	if (0 > i || i > self.h || 0 > j || j > self.w) return;
 	if (self.currentMap[self.w * i + j] != -1) {
 		self.currentMap[self.w * i + j]++;
 	}
@@ -713,11 +717,14 @@ World.prototype.load = function(doc) {
 		self.map[i] = self.currentMap[i] = 0;
 	}
 
-	for (var i = 0; i < self.h; i++) {
-		self.addWall(1, i, 3);
+	for (var i = 1; i <= self.h; i++) {
 		self.addWall(i, 1, 0);
-		self.addWall(self.h - 1, i, 1);
-		self.addWall(i, self.w - 1, 2);
+		self.addWall(i, self.w, 2);
+  }
+
+	for (var j = 1; j <= self.w; j++) {
+		self.addWall(self.h, j, 1);
+		self.addWall(1, j, 3);
 	}
 
 	self.dumps = {};
@@ -908,8 +915,8 @@ World.prototype.save = function() {
 		}
 	};
 
-	for (var i = 0; i < self.h; i++) {
-		for (var j = 0; j < self.w; j++) {
+	for (var i = 1; i <= self.h; i++) {
+		for (var j = 1; j <= self.w; j++) {
 			var buzzers = self.buzzers(i, j);
 			if(buzzers !== 0) {
 				result.mundos.mundo.monton.push({
@@ -921,12 +928,12 @@ World.prototype.save = function() {
 		}
 	}
 
-	for (var i = 1; i < self.h; i++) {
-		for (var j = 1; j < self.w; j++) {
+	for (var i = 1; i <= self.h; i++) {
+		for (var j = 1; j <= self.w; j++) {
 			var walls = self.walls(i, j);
 			for (var k = 2; k < 8; k <<= 1) {
-				if (i == self.h - 1 && k == 2) continue;
-				if (j == self.w - 1 && k == 4) continue;
+				if (i == self.h && k == 2) continue;
+				if (j == self.w && k == 4) continue;
 
 				if ((walls & k) == k) {
 					if (k == 2) {
@@ -971,7 +978,7 @@ World.prototype.output = function() {
 			dumpCells[self.dumpCells[i][0]][self.dumpCells[i][1]] = true;
 		}
 
-		for (var i = self.h; i >= 0; i--) {
+		for (var i = self.h; i > 0; i--) {
 			var printCoordinate = true;
 			var line = '';
 
@@ -1085,7 +1092,7 @@ World.prototype.import = function(mdo, kec) {
 	//var x1 = mdo[5];
 	var width = mdo[6];
 	var height = mdo[7];
-	self.init(width - 1, height - 1);
+	self.init(width, height);
 	self.setBagBuzzers(mdo[8]);
 	self.move(mdo[10], mdo[9]);
   self.orientation = self.startOrientation = mdo[11] % 4;
