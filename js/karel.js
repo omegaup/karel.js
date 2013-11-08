@@ -1077,7 +1077,7 @@ World.prototype.reset = function() {
 World.prototype.import = function(mdo, kec) {
 	var self = this;
 
-	if (mdo.length <= 20 || kec.length <= 30) {
+	if (mdo.length < 20 || kec.length < 30) {
 		throw new Error('Invalid file format');
 	}
 
