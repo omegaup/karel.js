@@ -10,6 +10,7 @@
 "program"		        { return 'PROG'; }
 "define"			{ return 'DEF'; }
 "void"				{ return 'DEF'; }
+"return"      { return 'RET'; }
 "turnoff"                       { return 'HALT'; }
 "turnleft"	                { return 'LEFT'; }
 "move" 		                { return 'FORWARD'; }
@@ -143,6 +144,8 @@ expr
     { $$ = [['LINE', yylineno], ['BAGBUZZERS'], ['EZ', 'BAGUNDERFLOW'], ['LEAVEBUZZER']]; }
   | HALT '(' ')' ';'
     { $$ = [['LINE', yylineno], ['HALT']]; }
+  | RET '(' ')' ';'
+    { $$ = [['LINE', yylineno], ['RET']]; }
   | call ';'
     { $$ = $call; }
   | cond

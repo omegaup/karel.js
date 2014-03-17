@@ -8,6 +8,7 @@
 \#[^\n]*			{/* ignore */}
 "def"				{ return 'DEF'; }
 "apagate"                       { return 'HALT'; }
+"sal-de-instruccion"		{ return 'RET'; }
 "gira-izquierda"                { return 'LEFT'; }
 "avanza"                        { return 'FORWARD'; }
 "coge-zumbador"	                { return 'PICKBUZZER'; }
@@ -147,6 +148,8 @@ expr
     { $$ = [['LINE', yylineno], ['BAGBUZZERS'], ['EZ', 'BAGUNDERFLOW'], ['LEAVEBUZZER']]; }
   | HALT
     { $$ = [['LINE', yylineno], ['HALT']]; }
+  | RET
+    { $$ = [['LINE', yylineno], ['RET']]; }
   | call
     { $$ = $call; }
   | repeat
