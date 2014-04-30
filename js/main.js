@@ -292,6 +292,17 @@ $(document).ready(function(){
                 'Undefined function': 'Función no definida',
                 'Unknown variable': 'Variable desconocida'
             };
+	    if (typeof e === "string") {
+		    var message = e;
+		    e = new Error(e);
+		    e.text = message.split(':')[1];
+		    e.line = 0;
+		    e.loc = {
+			    first_line: 0,
+			    last_line: 0
+		    };
+		    console.log(e);
+	    }
             var message = e.message.split(':')[0];
             e.message = 'Error de compilación en la línea ' + (e.line+1) + '\n' +
                 translations[message] + ': "' + e.text + '"';
