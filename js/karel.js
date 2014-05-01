@@ -539,6 +539,7 @@ World.DUMP_WORLD = 'mundo';
 World.DUMP_POSITION = 'posicion';
 World.DUMP_ORIENTATION = 'orientacion';
 World.DUMP_INSTRUCTIONS = 'instrucciones';
+World.DUMP_BAG = 'mochila';
 World.ERROR_MAPPING = {
 	BAGUNDERFLOW: 'ZUMBADOR INVALIDO',
 	WALL: 'MOVIMIENTO INVALIDO',
@@ -1023,6 +1024,13 @@ World.prototype.output = function() {
 			['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation];
 	}
 
+	if (self.dumps[World.DUMP_BAG]) {
+		result.programas.programa.karel =
+			result.programas.programa.karel || {'#attributes':{}};
+		result.programas.programa.karel['#attributes'].mochila =
+			self.bagBuzzers == -1 ? 'INFINITO' : self.bagBuzzers;
+	}
+
 	return self.serialize(result, 'resultados', 0);
 };
 
@@ -1119,6 +1127,7 @@ World.prototype.import = function(mdo, kec) {
 	if (kec[24]) {
 		self.setDumps(World.DUMP_ORIENTATION, true);
 	}
+	// TODO(lhchavez): DUMP_BAG
 	var dumpcount = kec[27] ? kec[28] : 0;
 	if (dumpcount) {
 		self.setDumps(World.DUMP_WORLD, true);
