@@ -81,6 +81,7 @@ var Runtime = function(world) {
 
 	self.debug = false;
 	self.world = world;
+	self.disableStackEvents = false;
 
 	self.load([['HALT']]);
 };
@@ -400,7 +401,7 @@ Runtime.prototype.next = function() {
 				if (self.state.stackSize >= self.world.stackSize) {
 					self.state.running = false;
 					self.state.error = 'STACK';
-				} else {
+				} else if (!self.disableStackEvents) {
 					self.fireEvent('call', {
 						'function': fname,
 						param: param,
@@ -416,7 +417,9 @@ Runtime.prototype.next = function() {
 				self.state.sp = self.state.stack[self.state.fp + 1];
 				self.state.fp = self.state.stack[self.state.fp];
 				self.state.stackSize--;
-				self.fireEvent('return', {target: self});
+				if (!self.disableStackEvents) {
+					self.fireEvent('return', {target: self});
+				}
 				break;
 			}
 

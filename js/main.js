@@ -360,12 +360,14 @@ $(document).ready(function(){
       mundo.reset();
       mundo.runtime.load(compiled);
       var finished = false;
+      mundo.runtime.disableStackEvents = true;
       for (var i = 0; i < 1000000; i++) {
         if (!mundo.runtime.step()) {
           finished = true;
           break;
         }
       }
+      mundo.runtime.disableStackEvents = false;
       if (!finished) {
         mundo.runtime.state.error = 'INSTRUCTION LIMIT';
       }
