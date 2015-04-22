@@ -61,6 +61,7 @@ EventTarget.prototype.fireEvent = function(type, properties) {
 				evt[p] = properties[p];
 			}
 		}
+		evt.runtime = properties.target;
 	}
 
 	evt._type = type;
@@ -151,6 +152,11 @@ Runtime.prototype.load = function(opcodes) {
 	self.reset();
 };
 
+Runtime.prototype.start = function() {
+	var self = this;
+	self.fireEvent('start', { target: self, world: self.world });
+};
+
 Runtime.prototype.reset = function() {
 	var self = this;
 
@@ -181,11 +187,17 @@ Runtime.prototype.step = function() {
 	var self = this;
 
 	while (self.state.running) {
-		self.next();
+		try {
+			self.next();
 
-		if (self.state.running && self.program[3*self.state.pc] == Runtime.LINE) {
-			self.state.line = self.program[3*self.state.pc+1];
-			break;
+			if (self.state.running && self.program[3*self.state.pc] == Runtime.LINE) {
+				self.state.line = self.program[3*self.state.pc+1];
+				break;
+			}
+		} finally {
+			if (!self.state.running) {
+				self.fireEvent('stop', { target: self, world: self.world });
+			}
 		}
 	}
 

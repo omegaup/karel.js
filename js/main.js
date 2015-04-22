@@ -359,6 +359,7 @@ $(document).ready(function(){
       $('#ejecutar').trigger('lock');
       mundo.reset();
       mundo.runtime.load(compiled);
+      mundo.runtime.start();
       var finished = false;
       mundo.runtime.disableStackEvents = true;
       for (var i = 0; i < 1000000; i++) {
@@ -390,6 +391,7 @@ $(document).ready(function(){
       $('#ejecutar').trigger('lock');
       mundo.reset();
       mundo.runtime.load(compiled);
+      mundo.runtime.start();
       var finished = false;
       for (var i = 0; i < 1000000; i++) {
         if (!mundo.runtime.step()) {
@@ -459,6 +461,7 @@ $(document).ready(function(){
 
           mundo.reset();
           mundo.runtime.load(compiled);
+          mundo.runtime.start();
           interval = setInterval(step, $("#retraso_txt").val());
         }
       } else {
@@ -481,6 +484,7 @@ $(document).ready(function(){
 
         mundo.reset();
         mundo.runtime.load(compiled);
+        mundo.runtime.start();
         step();
         $('#paso').removeAttr('disabled');
         $('#worldclean').removeAttr('disabled');
