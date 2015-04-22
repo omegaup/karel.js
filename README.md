@@ -4,5 +4,8 @@ Karel.js
 Compilador y evaluador de Karel en javascript
 
 
-tienes que darle `git submodule update --init` al repo, porque CodeMirror no está embebido
-después ya es solo cosa de apuntar Chrome al index.html y ya
+## Cómo correr Karel.js en tu máquina
+
+* Haz 'fork' al repositorio y clónalo en tu máquina.
+* Haz `git submodule update --init` al repo, para incluir CodeMirror en tu copia del proyecto.
+* Dirige tu navegador al archivo `index.html`.
