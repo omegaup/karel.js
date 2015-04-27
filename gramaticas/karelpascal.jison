@@ -2,6 +2,7 @@
 
 %lex
 %options case-insensitive
+%options flex
 %%
 
 \s+                             {/* ignore */}

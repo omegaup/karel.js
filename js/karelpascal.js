@@ -760,7 +760,7 @@ pushState:function pushState(condition) {
 stateStackSize:function stateStackSize() {
         return this.conditionStack.length;
     },
-options: {"case-insensitive":true},
+options: {"flex":true},
 performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 
 var YYSTATE=YY_START;
@@ -875,10 +875,12 @@ case 53: return 72;
 break;
 case 54: return 10; 
 break;
+case 55:console.log(yy_.yytext);
+break;
 }
 },
-rules: [/^(?:\s+)/i,/^(?:\{[^}]*\})/i,/^(?:\(\*(?:[^*]|\*(?!\)))*\*\))/i,/^(?:iniciar-programa\b)/i,/^(?:inicia-ejecucion\b)/i,/^(?:termina-ejecucion\b)/i,/^(?:finalizar-programa\b)/i,/^(?:define-nueva-instruccion\b)/i,/^(?:define-prototipo-instruccion\b)/i,/^(?:sal-de-instruccion\b)/i,/^(?:como\b)/i,/^(?:apagate\b)/i,/^(?:gira-izquierda\b)/i,/^(?:avanza\b)/i,/^(?:coge-zumbador\b)/i,/^(?:deja-zumbador\b)/i,/^(?:inicio\b)/i,/^(?:fin\b)/i,/^(?:entonces\b)/i,/^(?:mientras\b)/i,/^(?:hacer\b)/i,/^(?:repetir\b)/i,/^(?:veces\b)/i,/^(?:precede\b)/i,/^(?:sucede\b)/i,/^(?:si-es-cero\b)/i,/^(?:frente-libre\b)/i,/^(?:frente-bloqueado\b)/i,/^(?:izquierda-libre\b)/i,/^(?:izquierda-bloqueada\b)/i,/^(?:derecha-libre\b)/i,/^(?:derecha-bloqueada\b)/i,/^(?:junto-a-zumbador\b)/i,/^(?:no-junto-a-zumbador\b)/i,/^(?:algun-zumbador-en-la-mochila\b)/i,/^(?:ningun-zumbador-en-la-mochila\b)/i,/^(?:orientado-al-norte\b)/i,/^(?:orientado-al-sur\b)/i,/^(?:orientado-al-este\b)/i,/^(?:orientado-al-oeste\b)/i,/^(?:no-orientado-al-norte\b)/i,/^(?:no-orientado-al-sur\b)/i,/^(?:no-orientado-al-este\b)/i,/^(?:no-orientado-al-oeste\b)/i,/^(?:sino\b)/i,/^(?:si\b)/i,/^(?:no\b)/i,/^(?:o\b)/i,/^(?:y\b)/i,/^(?:\()/i,/^(?:\))/i,/^(?:;)/i,/^(?:[0-9]+)/i,/^(?:[a-zA-Z_][a-zA-Z0-9_-]*)/i,/^(?:$)/i],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54],"inclusive":true}}
+rules: [/^(?:\s+)/,/^(?:\{[^}]*\})/,/^(?:\(\*(?:[^*]|\*(?!\)))*\*\))/,/^(?:iniciar-programa)/,/^(?:inicia-ejecucion)/,/^(?:termina-ejecucion)/,/^(?:finalizar-programa)/,/^(?:define-nueva-instruccion)/,/^(?:define-prototipo-instruccion)/,/^(?:sal-de-instruccion)/,/^(?:como)/,/^(?:apagate)/,/^(?:gira-izquierda)/,/^(?:avanza)/,/^(?:coge-zumbador)/,/^(?:deja-zumbador)/,/^(?:inicio)/,/^(?:fin)/,/^(?:entonces)/,/^(?:mientras)/,/^(?:hacer)/,/^(?:repetir)/,/^(?:veces)/,/^(?:precede)/,/^(?:sucede)/,/^(?:si-es-cero)/,/^(?:frente-libre)/,/^(?:frente-bloqueado)/,/^(?:izquierda-libre)/,/^(?:izquierda-bloqueada)/,/^(?:derecha-libre)/,/^(?:derecha-bloqueada)/,/^(?:junto-a-zumbador)/,/^(?:no-junto-a-zumbador)/,/^(?:algun-zumbador-en-la-mochila)/,/^(?:ningun-zumbador-en-la-mochila)/,/^(?:orientado-al-norte)/,/^(?:orientado-al-sur)/,/^(?:orientado-al-este)/,/^(?:orientado-al-oeste)/,/^(?:no-orientado-al-norte)/,/^(?:no-orientado-al-sur)/,/^(?:no-orientado-al-este)/,/^(?:no-orientado-al-oeste)/,/^(?:sino)/,/^(?:si)/,/^(?:no)/,/^(?:o)/,/^(?:y)/,/^(?:\()/,/^(?:\))/,/^(?:;)/,/^(?:[0-9]+)/,/^(?:[a-zA-Z_][a-zA-Z0-9_-]*)/,/^(?:$)/,/^(?:.)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55],"inclusive":true}}
 };
 return lexer;
 })();
