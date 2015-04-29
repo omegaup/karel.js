@@ -184,79 +184,8 @@
       <div id="leftSplitterContainer">
         <div id="leftTopPane">
           <textarea id="editor">iniciar-programa
-    define-nueva-instruccion gira-derecha como inicio
-        repetir 3 veces gira-izquierda;
-    fin;
-
-    define-nueva-instruccion lado como inicio
-        mientras no-junto-a-zumbador hacer inicio
-            avanza;
-            si junto-a-zumbador entonces inicio
-                coge-zumbador;
-                si junto-a-zumbador entonces inicio
-                    coge-zumbador;
-                fin sino inicio
-                    gira-izquierda;
-                    gira-izquierda;
-                    avanza;
-                    gira-izquierda;
-                    deja-zumbador;
-                fin;
-            fin;
-        fin;
-        avanza;
-    fin;
-
-    define-nueva-instruccion cuadro como inicio
-        si junto-a-zumbador entonces inicio
-            coge-zumbador;
-            coge-zumbador;
-        fin;
-
-        { Detecta si se est&aacute; en el centro de la diana. }
-        avanza;
-        si junto-a-zumbador entonces inicio
-            coge-zumbador;
-            si junto-a-zumbador entonces inicio
-                coge-zumbador;
-            fin sino inicio
-                deja-zumbador;
-                gira-izquierda;
-                gira-izquierda;
-                avanza;
-                mientras algun-zumbador-en-la-mochila hacer inicio
-                    deja-zumbador;
-                    avanza;
-                    deja-zumbador;
-                    gira-izquierda;
-                    gira-izquierda;
-                    avanza;
-                fin;
-                apagate;
-            fin;
-        fin;
-
-        repetir 4 veces inicio
-            si junto-a-zumbador entonces inicio
-               coge-zumbador;
-               coge-zumbador;
-            fin;
-            lado;
-        fin;
-
-        { Avanza al siguiente nivel de la diana. }
-        avanza;
-        gira-derecha;
-        avanza;
-        avanza;
-        gira-izquierda;
-
-        { Recursividad para hacer un ciclo infinito. }
-        cuadro;
-    fin;
-
     inicia-ejecucion
-        cuadro;
+        { Escribe aquí tu programa. }
     termina-ejecucion
 finalizar-programa</textarea>
         </div>
@@ -346,85 +275,10 @@ finalizar-programa</textarea>
   <condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000" />
   <mundos>
     <mundo nombre="mundo_0" ancho="100" alto="100">
-      <monton x="1" y="1" zumbadores="1"/>
-      <monton x="1" y="2" zumbadores="1"/>
-      <monton x="1" y="3" zumbadores="1"/>
-      <monton x="1" y="4" zumbadores="1"/>
-      <monton x="1" y="5" zumbadores="1"/>
-      <monton x="1" y="6" zumbadores="1"/>
-      <monton x="1" y="7" zumbadores="1"/>
-      <monton x="1" y="8" zumbadores="1"/>
-      <monton x="1" y="9" zumbadores="1"/>
-      <monton x="1" y="10" zumbadores="1"/>
-      <monton x="1" y="11" zumbadores="1"/>
-      <monton x="2" y="1" zumbadores="1"/>
-      <monton x="2" y="2" zumbadores="2"/>
-      <monton x="2" y="11" zumbadores="1"/>
-      <monton x="3" y="1" zumbadores="1"/>
-      <monton x="3" y="3" zumbadores="1"/>
-      <monton x="3" y="4" zumbadores="1"/>
-      <monton x="3" y="5" zumbadores="1"/>
-      <monton x="3" y="6" zumbadores="1"/>
-      <monton x="3" y="7" zumbadores="1"/>
-      <monton x="3" y="8" zumbadores="1"/>
-      <monton x="3" y="9" zumbadores="1"/>
-      <monton x="3" y="11" zumbadores="1"/>
-      <monton x="4" y="1" zumbadores="1"/>
-      <monton x="4" y="3" zumbadores="1"/>
-      <monton x="4" y="9" zumbadores="1"/>
-      <monton x="4" y="11" zumbadores="1"/>
-      <monton x="5" y="1" zumbadores="1"/>
-      <monton x="5" y="3" zumbadores="1"/>
-      <monton x="5" y="5" zumbadores="1"/>
-      <monton x="5" y="6" zumbadores="1"/>
-      <monton x="5" y="7" zumbadores="1"/>
-      <monton x="5" y="9" zumbadores="1"/>
-      <monton x="5" y="11" zumbadores="1"/>
-      <monton x="6" y="1" zumbadores="1"/>
-      <monton x="6" y="3" zumbadores="1"/>
-      <monton x="6" y="5" zumbadores="1"/>
-      <monton x="6" y="6" zumbadores="2"/>
-      <monton x="6" y="7" zumbadores="1"/>
-      <monton x="6" y="9" zumbadores="1"/>
-      <monton x="6" y="11" zumbadores="1"/>
-      <monton x="7" y="1" zumbadores="1"/>
-      <monton x="7" y="3" zumbadores="1"/>
-      <monton x="7" y="5" zumbadores="1"/>
-      <monton x="7" y="6" zumbadores="1"/>
-      <monton x="7" y="7" zumbadores="1"/>
-      <monton x="7" y="9" zumbadores="1"/>
-      <monton x="7" y="11" zumbadores="1"/>
-      <monton x="8" y="1" zumbadores="1"/>
-      <monton x="8" y="3" zumbadores="1"/>
-      <monton x="8" y="9" zumbadores="1"/>
-      <monton x="8" y="11" zumbadores="1"/>
-      <monton x="9" y="1" zumbadores="1"/>
-      <monton x="9" y="3" zumbadores="1"/>
-      <monton x="9" y="4" zumbadores="1"/>
-      <monton x="9" y="5" zumbadores="1"/>
-      <monton x="9" y="6" zumbadores="1"/>
-      <monton x="9" y="7" zumbadores="1"/>
-      <monton x="9" y="8" zumbadores="1"/>
-      <monton x="9" y="9" zumbadores="1"/>
-      <monton x="9" y="11" zumbadores="1"/>
-      <monton x="10" y="1" zumbadores="1"/>
-      <monton x="10" y="11" zumbadores="1"/>
-      <monton x="11" y="1" zumbadores="1"/>
-      <monton x="11" y="2" zumbadores="1"/>
-      <monton x="11" y="3" zumbadores="1"/>
-      <monton x="11" y="4" zumbadores="1"/>
-      <monton x="11" y="5" zumbadores="1"/>
-      <monton x="11" y="6" zumbadores="1"/>
-      <monton x="11" y="7" zumbadores="1"/>
-      <monton x="11" y="8" zumbadores="1"/>
-      <monton x="11" y="9" zumbadores="1"/>
-      <monton x="11" y="10" zumbadores="1"/>
-      <monton x="11" y="11" zumbadores="1"/>
-      <posicionDump x="6" y="6" />
     </mundo>
   </mundos>
   <programas tipoEjecucion="CONTINUA" intruccionesCambioContexto="1" milisegundosParaPasoAutomatico="0">
-    <programa nombre="p1" ruta="{$2$}" mundoDeEjecucion="mundo_0" xKarel="2" yKarel="10" direccionKarel="ESTE" mochilaKarel="0" >
+    <programa nombre="p1" ruta="{$2$}" mundoDeEjecucion="mundo_0" xKarel="1" yKarel="1" direccionKarel="NORTE" mochilaKarel="0" >
       <despliega tipo="MUNDO" />
     </programa>
   </programas>
