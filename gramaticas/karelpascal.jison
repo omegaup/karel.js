@@ -65,85 +65,94 @@
 %nonassoc XIF
 %nonassoc ELSE
 
+%{
+function validate(function_list, program, yy) {
+	var prototypes = {};
+	var functions = {};
+
+	for (var i = 0; i < function_list.length; i++) {
+		if (function_list[i][1] == null) {
+			if (prototypes[function_list[i][0]] || functions[function_list[i][0]]) {
+				yy.parser.parseError("Prototype redefinition: " + function_list[i][0], {
+					text: function_list[i][0],
+					line: function_list[i][3]
+				});
+			}
+			prototypes[function_list[i][0]] = function_list[i][2];
+		} else {
+			if (functions[function_list[i][0]]) {
+				console.log(yy);
+				yy.parser.parseError("Function redefinition: " + function_list[i][0], {
+					text: function_list[i][0],
+					line: function_list[i][3]
+				});
+			} else if (prototypes[function_list[i][0]]) {
+				if (prototypes[function_list[i][0]] != function_list[i][2]) {
+					yy.parser.parseError("Prototype parameter mismatch: " + function_list[i][0], {
+						text: function_list[i][0],
+						line: function_list[i][3]
+					});
+				}
+			}
+
+			prototypes[function_list[i][0]] = function_list[i][2];
+			functions[function_list[i][0]] = program.length;
+			var current_line = 0;
+
+			for (var j = 0; j < function_list[i][1].length; j++) {
+				if (function_list[i][1][j][0] == 'LINE') {
+					current_line = function_list[i][1][j][1];
+				} else if (function_list[i][1][j][0] == 'CALL' &&
+						!functions[function_list[i][1][j][1]] &&
+						!prototypes[function_list[i][1][j][1]]) {
+					yy.parser.parseError("Unknown function: " + function_list[i][1][j][1], {
+						text: function_list[i][1][j][1],
+						line: current_line
+					});
+				}
+			}
+
+			program = program.concat(function_list[i][1]);
+		}
+	}
+	
+	var current_line = 0;
+	for (var i = 0; i < program.length; i++) {
+		if (program[i][0] == 'LINE') {
+			current_line = program[i][1];
+		} else if (program[i][0] == 'CALL') {
+			if (!functions[program[i][1]]) {
+				yy.parser.parseError("Undefined function: " + program[i][1], {
+					text: program[i][1],
+					line: current_line
+				});
+			} else if (prototypes[program[i][1]] != program[i][2]) {
+				yy.parser.parseError("Function parameter mismatch: " + program[i][1], {
+					text: program[i][1],
+					line: current_line
+				});
+			}
+			program[i][2] = program[i][1];
+			program[i][1] = functions[program[i][1]];
+		} else if (program[i][0] == 'PARAM' && program[i][1] != 0) {
+			yy.parser.parseError("Unknown variable: " + program[i][1], {
+				text: program[i][1],
+				line: current_line + 1
+			});
+		}
+	}
+	
+	return program;
+}
+%}
+
 %%
 
 program
   : BEGINPROG def_list BEGINEXEC expr_list ENDEXEC ENDPROG EOF
-    %{
-    	var program = $expr_list.concat([['LINE', yylineno], ['HALT']]);
-    	var prototypes = {};
-    	var functions = {};
-
-    	for (var i = 0; i < $def_list.length; i++) {
-    		if ($def_list[i][1] == null) {
-    			if (prototypes[$def_list[i][0]] || functions[$def_list[i][0]]) {
-    				yy.parser.parseError("Prototype redefinition: " + $def_list[i][0], {
-							text: $def_list[i][0],
-							line: $def_list[i][3]
-						});
-    			}
-    			prototypes[$def_list[i][0]] = $def_list[i][2];
-    		} else {
-          if (functions[$def_list[i][0]]) {
-            console.log(yy);
-            yy.parser.parseError("Function redefinition: " + $def_list[i][0], {
-              text: $def_list[i][0],
-              line: $def_list[i][3]
-            });
-          } else if (prototypes[$def_list[i][0]]) {
-            if (prototypes[$def_list[i][0]] != $def_list[i][2]) {
-              yy.parser.parseError("Prototype parameter mismatch: " + $def_list[i][0], {
-                text: $def_list[i][0],
-                line: $def_list[i][3]
-              });
-            }
-          }
-
-    			functions[$def_list[i][0]] = program.length;
-          var current_line = 0;
-
-    			for (var j = 0; j < $def_list[i][1].length; j++) {
-            if ($def_list[i][1][j][0] == 'LINE') {
-              current_line = $def_list[i][1][j][1];
-            } else if ($def_list[i][1][j][0] == 'CALL' &&
-    				    !functions[$def_list[i][1][j][1]] &&
-    				    !prototypes[$def_list[i][1][j][1]]) {
-    					yy.parser.parseError("Unknown function: " + $def_list[i][1][j][1], {
-                text: $def_list[i][1][j][1],
-                line: current_line
-              });
-    				}
-    			}
-    
-    			program = program.concat($def_list[i][1]);
-    		}
-    	}
-    	
-      var current_line = 0;
-    	for (var i = 0; i < program.length; i++) {
-        if (program[i][0] == 'LINE') {
-          current_line = program[i][1];
-        } else if (program[i][0] == 'CALL') {
-    			if (!functions[program[i][1]]) {
-    				yy.parser.parseError("Undefined function: " + program[i][1], {
-              text: program[i][1],
-              line: current_line
-            });
-    			}
-    			program[i].push(program[i][1]);
-    			program[i][1] = functions[program[i][2]];
-    		} else if (program[i][0] == 'PARAM' && program[i][1] != 0) {
-          yy.parser.parseError("Unknown variable: " + program[i][1], {
-            text: program[i][1],
-            line: current_line + 1
-          });
-    		}
-    	}
-    	
-    	return program;
-    %}
+    { return validate($def_list, $expr_list.concat([['LINE', yylineno], ['HALT']]), yy); }
   | BEGINPROG BEGINEXEC expr_list ENDEXEC ENDPROG EOF
-    { return $expr_list.concat([['HALT']]); }
+    { return validate([], $expr_list.concat([['LINE', yylineno], ['HALT']]), yy); }
   ;
   
 def_list
@@ -224,9 +233,9 @@ expr
 
 call
   : var
-    { $$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $var.toLowerCase()], ['LINE', yylineno]]; }
+    { $$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $var.toLowerCase(), 1], ['LINE', yylineno]]; }
   | var '(' integer ')'
-    { $$ = [['LINE', yylineno]].concat($integer).concat([['CALL', $var.toLowerCase()], ['LINE', yylineno]]); }
+    { $$ = [['LINE', yylineno]].concat($integer).concat([['CALL', $var.toLowerCase(), 2], ['LINE', yylineno]]); }
   ;
   
 cond

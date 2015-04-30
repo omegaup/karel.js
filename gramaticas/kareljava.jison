@@ -58,40 +58,62 @@
 %nonassoc XIF
 %nonassoc ELSE
 
+%{
+function validate(function_list, program, yy) {
+	var functions = {};
+	var prototypes = {};
+	
+	for (var i = 0; i < function_list.length; i++) {
+		if (functions[function_list[i][0]]) {
+			yy.parser.parseError("Function redefinition: " + function_list[i][0], {
+				text: function_list[i][0],
+				line: function_list[i][3]
+			});
+		}
+		
+		functions[function_list[i][0]] = program.length;
+		prototypes[function_list[i][0]] = function_list[i][2];
+		program = program.concat(function_list[i][1]);
+	}
+
+	var current_line = 0;
+	for (var i = 0; i < program.length; i++) {
+		if (program[i][0] == 'LINE') {
+			current_line = program[i][1];
+		} else if (program[i][0] == 'CALL') {
+			if (!functions[program[i][1]] || !prototypes[program[i][1]]) {
+				yy.parser.parseError("Undefined function: " + program[i][1], {
+					text: program[i][1],
+					line: current_line
+				});
+			} else if (prototypes[program[i][1]] != program[i][2]) {
+				yy.parser.parseError("Function parameter mismatch: " + program[i][1], {
+					text: program[i][1],
+					line: current_line
+				});
+			}
+			
+			program[i][2] = program[i][1];
+			program[i][1] = functions[program[i][1]];
+		} else if (program[i][0] == 'PARAM' && program[i][1] != 0) {
+			yy.parser.parseError("Unknown variable: " + program[i][1], {
+				text: program[i][1],
+				line: current_line + 1
+			});
+		}
+	}
+	
+	return program;
+}
+%}
+
 %%
 
 program
   : CLASS PROG BEGIN def_list PROG '(' ')' block END EOF
-    %{
-    	var program = $block.concat([['LINE', yylineno], ['HALT']]);
-    	var functions = {};
-    	
-    	for (var i = 0; i < $def_list.length; i++) {
-    		if (functions[$def_list[i][0]]) {
-    			throw "Function redefinition: " + $def_list[i][0];
-    		}
-    		
-    		functions[$def_list[i][0]] = program.length;
-    		program = program.concat($def_list[i][1]);
-    	}
-    	
-    	for (var i = 0; i < program.length; i++) {
-    		if (program[i][0] == 'CALL') {
-    			if (!functions[program[i][1]]) {
-    				throw "Unknown function: " + program[i][1];
-    			}
-    			
-    			program[i].push(program[i][1]);
-    			program[i][1] = functions[program[i][2]];
-    		} else if (program[i][0] == 'PARAM' && program[i][1] != 0) {
-			throw "Unknown variable: " + program[i][1];
-    		}
-    	}
-    	
-    	return program;
-    %}
+    { return validate($def_list, $block.concat([['LINE', yylineno], ['HALT']]), yy); }
   | CLASS PROG BEGIN PROG '(' ')' block END EOF
-    { return $block.concat([['HALT']]); }
+    { return validate([], $block.concat([['LINE', yylineno], ['HALT']]), yy); }
   ;
 
 block
@@ -108,7 +130,7 @@ def_list
 
 def
   : DEF line var '(' ')' block
-    { $$ = [[$var, $line.concat($block).concat([['RET']])]]; }
+    { $$ = [[$var, $line.concat($block).concat([['RET']]), 1]]; }
   | DEF line var '(' var ')' block
     %{
     	var result = $line.concat($block).concat([['RET']]);
@@ -117,11 +139,14 @@ def
     			if (result[i][1] == $5) {
     				result[i][1] = 0;
     			} else {
-				throw "Unknown variable: " + $5;
+						yy.parser.parseError("Unknown variable: " + $5, {
+							text: $5,
+							line: yylineno
+						});
     			}
     		}
     	}
-    	$$ = [[$var, result]];
+    	$$ = [[$var, result, 2]];
     %}
   ;
 
@@ -162,9 +187,9 @@ expr
 
 call
   : var '(' ')'
-    { $$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $var], ['LINE', yylineno]]; }
+    { $$ = [['LINE', yylineno], ['LOAD', 0], ['CALL', $var, 1], ['LINE', yylineno]]; }
   | var '(' integer ')'
-    { $$ = [['LINE', yylineno]].concat($integer).concat([['CALL', $var], ['LINE', yylineno]]); }
+    { $$ = [['LINE', yylineno]].concat($integer).concat([['CALL', $var, 2], ['LINE', yylineno]]); }
   ;
   
 cond
