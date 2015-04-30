@@ -1,4 +1,23 @@
 $(document).ready(function(){
+  var ValidatorCallbacks = function() {
+  };
+
+  ValidatorCallbacks.prototype.info = function(message) {
+    $('#mensajes').trigger('info', {'mensaje': message });
+  };
+
+  ValidatorCallbacks.prototype.error = function(message) {
+    $('#mensajes').trigger('error', {'mensaje': message });
+  };
+
+  ValidatorCallbacks.prototype.error = function(message) {
+    $('#mensajes').trigger('success', {'mensaje': message });
+  };
+
+  ValidatorCallbacks.prototype.invalidCell = function(x, y) {
+    $('#mensajes').trigger('error', {'mensaje': 'Celda inválida (' + x + ', ' + y + ')'});
+  };
+
   function detectParser(str) {
     var rules = [
       /^\s+/,
@@ -80,6 +99,9 @@ $(document).ready(function(){
             '(' + evt.param + ') Línea <span class="badge badge-info">'+(evt.line+1)+'</span></div>');
       });
       world.runtime.addEventListener('return', function(evt){
+          var arreglo = $("#pila > div:first-child").remove();
+      });
+      world.runtime.addEventListener('start', function(evt){
           var arreglo = $("#pila > div:first-child").remove();
       });
   }
@@ -462,8 +484,12 @@ $(document).ready(function(){
 
           mundo.reset();
           mundo.runtime.load(compiled);
-          mundo.runtime.start();
-          interval = setInterval(step, $("#retraso_txt").val());
+          if (mundo.runtime.start()) {
+            interval = setInterval(step, $("#retraso_txt").val());
+          } else {
+            $('#ejecutar').trigger('unlock');
+            compiled = null;
+          }
         }
       } else {
         $('#ejecutar').trigger('lock');
@@ -485,7 +511,11 @@ $(document).ready(function(){
 
         mundo.reset();
         mundo.runtime.load(compiled);
-        mundo.runtime.start();
+        if (!mundo.runtime.start()) {
+          $('#ejecutar').trigger('unlock');
+          compiled = null;
+          return;
+        }
         step();
         $('#paso').removeAttr('disabled');
         $('#worldclean').removeAttr('disabled');

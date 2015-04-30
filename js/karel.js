@@ -546,6 +546,9 @@ World.prototype.init = function(w, h) {
 	self.stackSize = 65000;
 	self.worldName = 'mundo_0';
 	self.programName = 'p1';
+	// TODO: implement.
+	self.preValidators = [];
+	self.postValidators = [];
 
 	self.dirty = true;
 };
