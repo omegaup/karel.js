@@ -1,23 +1,4 @@
 $(document).ready(function(){
-  var ValidatorCallbacks = function() {
-  };
-
-  ValidatorCallbacks.prototype.info = function(message) {
-    $('#mensajes').trigger('info', {'mensaje': message });
-  };
-
-  ValidatorCallbacks.prototype.error = function(message) {
-    $('#mensajes').trigger('error', {'mensaje': message });
-  };
-
-  ValidatorCallbacks.prototype.error = function(message) {
-    $('#mensajes').trigger('success', {'mensaje': message });
-  };
-
-  ValidatorCallbacks.prototype.invalidCell = function(x, y) {
-    $('#mensajes').trigger('error', {'mensaje': 'Celda inválida (' + x + ', ' + y + ')'});
-  };
-
   function detectParser(str) {
     var rules = [
       /^\s+/,
@@ -209,6 +190,17 @@ $(document).ready(function(){
       var markers = instance.lineInfo(line).gutterMarkers;
       instance.setGutterMarker(line, 'breakpoints', (markers && markers.breakpoints) ? null : makeBreakpoint());
   });
+	function validatorCallbacks(message) {
+		if (message.type == 'error') {
+			$('#mensajes').trigger('error', {mensaje: message.message});
+		} else if (message.type == 'info') {
+			$('#mensajes').trigger('info', {mensaje: message.message});
+		} else if (message.type == 'invalidCell') {
+			$('#mensajes').trigger('error', {mensaje: 'La celda (' + message.x + ', ' + message.y + ') es inválida'});
+		} else {
+			console.error('Mensaje no reconocido', message);
+		}
+	}
 
   var world = $("#world")[0];
   var context = world.getContext('2d');
@@ -278,6 +270,13 @@ $(document).ready(function(){
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
+				mundo.postValidate(validatorCallbacks).then(function (didValidation) {
+					if (didValidation) {
+						$('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
+					}
+				}, function(message) {
+					$('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
+				});
       }
       highlightCurrentLine();
       // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
@@ -382,30 +381,46 @@ $(document).ready(function(){
       $('#ejecutar').trigger('lock');
       mundo.reset();
       mundo.runtime.load(compiled);
-      mundo.runtime.start();
-      var finished = false;
-      mundo.runtime.disableStackEvents = true;
-      for (var i = 0; i < 1000000; i++) {
-        if (!mundo.runtime.step()) {
-          finished = true;
-          break;
-        }
-      }
-      mundo.runtime.disableStackEvents = false;
-      if (!finished) {
-        mundo.runtime.state.error = 'INSTRUCTION LIMIT';
-      }
-      wRender.paint(mundo, world.width, world.height, { track_karel: true });
-      if(mundo.runtime.state.error) {
-        $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
-      } else {
-        $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
-      }
-      highlightCurrentLine();
-      // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
-      editor.focus();
-      $("#ejecutar").attr('disabled', 'disabled');
-      $("#worldclean").removeAttr('disabled');
+			mundo.preValidate(validatorCallbacks).then(function (didValidation) {
+				if (didValidation) {
+					$('#mensajes').trigger('success', {'mensaje': 'La validación fue exitosa' });
+				}
+				mundo.runtime.start();
+				var finished = false;
+				mundo.runtime.disableStackEvents = true;
+				for (var i = 0; i < 1000000; i++) {
+					if (!mundo.runtime.step()) {
+						finished = true;
+						break;
+					}
+				}
+				mundo.runtime.disableStackEvents = false;
+				if (!finished) {
+					mundo.runtime.state.error = 'INSTRUCTION LIMIT';
+				}
+				wRender.paint(mundo, world.width, world.height, { track_karel: true });
+				if(mundo.runtime.state.error) {
+					$("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
+				} else {
+					$("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
+					mundo.postValidate(validatorCallbacks).then(function (didValidation) {
+						if (didValidation) {
+							$('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
+						}
+					}, function(message) {
+						$('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
+					});
+				}
+				highlightCurrentLine();
+				// Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
+				editor.focus();
+				$("#ejecutar").attr('disabled', 'disabled');
+				$("#worldclean").removeAttr('disabled');
+			}, function(message) {
+				$('#mensajes').trigger('error', {'mensaje': 'La validación falló' + (message ? ': ' + message : '') });
+				compiled = null;
+				$('#ejecutar').trigger('unlock');
+			});
     }
   });
   $("#save_out").click(function(event){
@@ -430,6 +445,13 @@ $(document).ready(function(){
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
+				mundo.postValidate(validatorCallbacks).then(function (didValidation) {
+					if (didValidation) {
+						$('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
+					}
+				}, function(message) {
+					$('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
+				});
       }
       highlightCurrentLine();
       // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
@@ -484,12 +506,17 @@ $(document).ready(function(){
 
           mundo.reset();
           mundo.runtime.load(compiled);
-          if (mundo.runtime.start()) {
-            interval = setInterval(step, $("#retraso_txt").val());
-          } else {
-            $('#ejecutar').trigger('unlock');
-            compiled = null;
-          }
+					mundo.preValidate(validatorCallbacks).then(function (didValidation) {
+						if (didValidation) {
+							$('#mensajes').trigger('success', {'mensaje': 'La validación fue exitosa' });
+						}
+						mundo.runtime.start();
+						interval = setInterval(step, $("#retraso_txt").val());
+					}, function(message) {
+						$('#mensajes').trigger('error', {'mensaje': 'La validación falló' + (message ? ': ' + message : '') });
+						$('#ejecutar').trigger('unlock');
+						compiled = null;
+					});
         }
       } else {
         $('#ejecutar').trigger('lock');
@@ -511,16 +538,21 @@ $(document).ready(function(){
 
         mundo.reset();
         mundo.runtime.load(compiled);
-        if (!mundo.runtime.start()) {
-          $('#ejecutar').trigger('unlock');
-          compiled = null;
-          return;
-        }
-        step();
-        $('#paso').removeAttr('disabled');
-        $('#worldclean').removeAttr('disabled');
-        $('#futuro').removeAttr('disabled');
-        $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
+				mundo.preValidate(validatorCallbacks).then(function (didValidation) {
+					if (didValidation) {
+						$('#mensajes').trigger('success', {'mensaje': 'La validación fue exitosa' });
+					}
+					mundo.runtime.start();
+					step();
+					$('#paso').removeAttr('disabled');
+					$('#worldclean').removeAttr('disabled');
+					$('#futuro').removeAttr('disabled');
+					$("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
+				}, function(message) {
+					$('#mensajes').trigger('error', {'mensaje': 'La validación falló' + (message ? ': ' + message : '') });
+					$('#ejecutar').trigger('unlock');
+					compiled = null;
+				});
       }
     } else {
       step();

@@ -546,7 +546,6 @@ World.prototype.init = function(w, h) {
 	self.stackSize = 65000;
 	self.worldName = 'mundo_0';
 	self.programName = 'p1';
-	// TODO: implement.
 	self.preValidators = [];
 	self.postValidators = [];
 
@@ -563,6 +562,75 @@ World.ERROR_MAPPING = {
 	WALL: 'MOVIMIENTO INVALIDO',
 	WORLDUNDERFLOW: 'ZUMBADOR INVALIDO',
 	STACK: 'STACK OVERFLOW'
+};
+
+World.prototype.validate = function(script, callbacks) {
+	var self = this;
+	return new Promise(function(resolve, reject) {
+		var sandbox = $.sandbox({
+			url: 'sandbox.html',
+				// timeout: 2000,
+				input: {
+					script: 'data:application/javascript,' + encodeURIComponent(script),
+					mundo: self.save()
+				},
+				callback: function(data, error) {
+					if (error !== undefined) {
+						sandbox.terminate();
+						sandbox = null;
+						reject(error);
+					} else {
+						if (data.type == 'result') {
+							sandbox.terminate();
+							sandbox = null;
+							resolve(data.value);
+						} else {
+							callbacks(data);
+						}
+					}
+				}
+		});
+	});
+};
+
+World.prototype.preValidate = function(callbacks) {
+	var self = this;
+
+	var promises = [];
+	for (idx in self.preValidators) {
+		if (!self.preValidators.hasOwnProperty(idx)) continue;
+		promises.push(self.validate(self.preValidators[idx], callbacks));
+	}
+
+	return new Promise(function (resolve, reject) {
+		Promise.all(promises).then(function(results) {
+			if (results.every(function (x) { return !!x; })) {
+				resolve(promises.length);
+			} else {
+				reject('');
+			}
+		}, reject);
+	});
+};
+
+World.prototype.postValidate = function(callbacks) {
+	var self = this;
+
+	var promises = [];
+	for (idx in self.postValidators) {
+		if (!self.postValidators.hasOwnProperty(idx)) continue;
+		promises.push(self.validate(self.postValidators[idx], callbacks));
+	}
+
+	return new Promise(function (resolve, reject) {
+		Promise.all(promises).then(function(results) {
+			if (results.every(function (x) { return !!x; })) {
+				resolve(promises.length);
+			} else {
+				reject('');
+			}
+		}, reject);
+	});
 };
 
 World.prototype.walls = function(i, j) {
@@ -728,6 +796,8 @@ World.prototype.toggleDumps = function(d) {
 World.prototype.load = function(doc) {
 	var self = this;
 
+	self.preValidators = [];
+	self.postValidators = [];
 	for (var i = 0; i < self.wallMap.length; i++) {
 		self.wallMap[i] = 0;
 	}
@@ -750,12 +820,17 @@ World.prototype.load = function(doc) {
 	self.dumpCells = [];
 	self.maxInstructions = 10000000;
 	self.stackSize = 65000;
+	self.move(1, 1);
 
 	var rules = {
 		condiciones: function(condiciones) {
 			self.maxInstructions =
-				parseInt(condiciones.getAttribute('instruccionesMaximasAEjecutar'), 10) || 10000000;
-			self.stackSize = parseInt(condiciones.getAttribute('longitudStack'), 10) || 65000;
+				parseInt(
+						condiciones.getAttribute('instruccionesMaximasAEjecutar') ||
+						condiciones.getAttribute('instruccionesMaximasAEjecutar'), 10) ||
+				10000000;
+			self.stackSize = parseInt(condiciones.getAttribute('longitudStack') ||
+					condiciones.getAttribute('longitudStack'), 10) || 65000;
 		},
 
 		monton: function(monton) {
@@ -797,16 +872,34 @@ World.prototype.load = function(doc) {
 				parseInt(dump.getAttribute('x'), 10)]);
 		},
 
+		validador: function(validador) {
+			var src = null;
+			if (validador.getAttribute('src')) {
+				src = $.ajax({
+					type: 'GET',
+					url: validador.getAttribute('src'),
+					async: false
+				}).responseText;
+			} else {
+				src = validador.firstChild.nodeValue;
+			}
+			if (validador.getAttribute('tipo') == 'post') {
+				self.postValidators.push(src);
+			} else {
+				self.preValidators.push(src);
+			}
+		},
+
 		programa: function(programa) {
-			self.di = self.h / 2 - parseInt(programa.getAttribute('yKarel'), 10);
-			self.dj = self.w / 2 - parseInt(programa.getAttribute('xKarel'), 10);
-			self.rotate(programa.getAttribute('direccionKarel'));
-			self.worldName = programa.getAttribute('mundoDeEjecucion');
+			var xKarel = parseInt(programa.getAttribute('xKarel') || programa.getAttribute('xkarel'), 10);
+			var yKarel = parseInt(programa.getAttribute('yKarel') || programa.getAttribute('ykarel'), 10);
+			self.di = self.h / 2 - yKarel;
+			self.dj = self.w / 2 - xKarel;
+			self.rotate(programa.getAttribute('direccionKarel') || programa.getAttribute('direccionkarel'));
+			self.worldName = programa.getAttribute('mundoDeEjecucion') || programa.getAttribute('mundodeejecucion');
 			self.programName = programa.getAttribute('nombre');
-			self.move(
-				parseInt(programa.getAttribute('yKarel'), 10),
-				parseInt(programa.getAttribute('xKarel'), 10));
-			var bagBuzzers = programa.getAttribute('mochilaKarel') || 0;
+			self.move(yKarel, xKarel);
+			var bagBuzzers = programa.getAttribute('mochilaKarel') || programa.getAttribute('mochilakarel') || 0;
 			if (bagBuzzers == 'INFINITO') {
 				self.setBagBuzzers(-1);
 			} else {
@@ -822,8 +915,8 @@ World.prototype.load = function(doc) {
 		}
 
 		for (var i = 0; i < node.childNodes.length; i++) {
-			if (node.childNodes[i].nodeType == node.ELEMENT_NODE) {
-				traverse(node.childNodes[i]);
+			if (node.childNodes.item(i).nodeType === (node.ELEMENT_NODE || DOMNode.ELEMENT_NODE)) {
+				traverse(node.childNodes.item(i));
 			}
 		}
 	}
@@ -978,6 +1071,16 @@ World.prototype.save = function() {
 		}
 	}
 
+	if (self.preValidators || self.postValidators) {
+		result.validadores = [];
+		for (var i = 0; i < self.preValidators.length; i++) {
+			result.validadores.push({validador: {'#attributes': {tipo: 'pre'}, '#text': '<![CDATA[' + self.preValidators[i] + ']]>'}});
+		}
+		for (var i = 0; i < self.postValidators.length; i++) {
+			result.validadores.push({validador: {'#attributes': {tipo: 'post'}, '#text': '<![CDATA[' + self.postValidators[i] + ']]>'}});
+		}
+	}
+
 	return self.serialize(result, 'ejecucion', 0);
 };
 
@@ -1064,8 +1167,8 @@ World.prototype.errorMap = function(s) {
 World.prototype.move = function(i, j) {
 	var self = this;
 
-	self.i = self.start_i = parseInt(i, 10);
-	self.j = self.start_j = parseInt(j, 10);
+	self.i = self.start_i = i;
+	self.j = self.start_j = j;
 	self.dirty = true;
 };
 
