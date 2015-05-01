@@ -694,7 +694,13 @@ $(document).ready(function(){
 
     $('#ejecutar').trigger('unlock');
     $("#pila").html('');
-    mundo.load(parseWorld($('script#xmlMundo').html()));
+    var src = null;
+    if (document.location.hash.indexOf('#mundo:') === 0) {
+      src = decodeURIComponent(document.location.hash.substring(7));
+    } else {
+      src = $('script#xmlMundo').html();
+    }
+    mundo.load(parseWorld(src));
     if (mundo.bagBuzzers == -1 != $('#inf_zumbadores').hasClass('active')) {
         $('#inf_zumbadores').toggleClass('active');
     }
