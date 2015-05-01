@@ -222,7 +222,13 @@ $(document).ready(function(){
       $('#mensajes_cuenta').html('');
     }
   });
-  mundo.load(parseWorld($('script#xmlMundo').html()));
+  var src = null;
+  if (document.location.hash.indexOf('#mundo:') === 0) {
+    src = decodeURIComponent(document.location.hash.substring(7));
+  } else {
+    src = $('script#xmlMundo').html();
+  }
+  mundo.load(parseWorld(src));
   $("#world").attr('width', $("#world").width());
   wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
 
