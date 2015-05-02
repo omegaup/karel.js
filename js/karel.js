@@ -823,6 +823,30 @@ World.prototype.load = function(doc) {
 	self.move(1, 1);
 
 	var rules = {
+		mundo: function(mundo) {
+			var alto = mundo.getAttribute('alto');
+			var ancho = mundo.getAttribute('ancho');
+
+			if (!alto || !ancho) {
+				return;
+			}
+			alto = parseInt(alto, 10);
+			ancho = parseInt(ancho, 10);
+			if (!alto || !ancho) {
+				return;
+			}
+
+			for (var i = 1; i <= alto; i++) {
+				self.addWall(i, 1, 0);
+				self.addWall(i, ancho, 2);
+			}
+
+			for (var j = 1; j <= ancho; j++) {
+				self.addWall(alto, j, 1);
+				self.addWall(1, j, 3);
+			}
+		},
+
 		condiciones: function(condiciones) {
 			self.maxInstructions =
 				parseInt(
