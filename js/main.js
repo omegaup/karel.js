@@ -580,7 +580,7 @@ $(document).ready(function(){
   });
   $("#retraso_minus").click(function(){
     var valor = $("#retraso_txt").val()*1;
-    if(valor > 50){
+    if(valor >= 50){
       valor -= 50;
       $("#retraso_txt").val(valor);
       if (interval) {
@@ -602,7 +602,7 @@ $(document).ready(function(){
   });
   $("#retraso_txt").blur(function(event){
     var valor = $("#retraso_txt").val()*1;
-    if(valor < 50 || valor > 1000) {
+    if(valor < 0 || valor > 1000) {
       $("#retraso_txt").val(500);
       if (interval) {
         clearInterval(interval);
