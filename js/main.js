@@ -215,6 +215,7 @@ $(document).ready(function(){
   var linea_actual = null;
   var tab_actual = 'mensajes';
   var mensajes_no_leidos = 0;
+  var currentCell = undefined;
   $('a[data-toggle="tab"]').on('shown', function(e) {
     tab_actual = e.target.firstChild.nodeValue.toLowerCase().trim();
     if (tab_actual == 'mensajes') {
@@ -748,12 +749,7 @@ $(document).ready(function(){
   $("#world").click(function(event){
     $("#wcontext_menu").css("display", "none");
     // Firefox no reconoce offsetX. UGH.
-    var x = event.offsetX ||
-            (event.clientX + document.body.scrollLeft +
-             document.documentElement.scrollLeft - $('#world').offset().left);
-    var y = event.offsetY ||
-            (event.clientY + document.body.scrollTop +
-             document.documentElement.scrollTop - $('#world').offset().top);
+    
     //Maneja los clicks en el mundo
     if ((world.width-50)<=x && x <=(world.width-20) && 10<=y && y<=40) {
         wRender.moveNorth();
@@ -764,13 +760,11 @@ $(document).ready(function(){
     } else if ((world.width-50+17-35)<=x && x<=(world.width-20+17-35) && 45<=y && y<=75) {
         wRender.moveWest();
     } else if(mundo_editable) {
-        var cellInfo = wRender.calculateCell(x,world.height-y);
-        console.log(x + " " + (world.height-y) + " " + JSON.stringify(cellInfo));
-        if (mundo.isInbounds(cellInfo.row,cellInfo.column)) {
+        if (mundo.isInbounds(currentCell.row,currentCell.column)) {
           
-          if (cellInfo.kind == Kind.Corner) {
+          if (currentCell.kind == Kind.Corner) {
             if (wRender.polygon) {
-              var result = wRender.polygonFinish(cellInfo.row, cellInfo.column);
+              var result = wRender.polygonFinish(currentCell.row, currentCell.column);
               if (result) {
                 for (var i = result.start_row; i < result.finish_row; i++) {
                   mundo.toggleWall(i, result.start_column, 0); // oeste
@@ -780,27 +774,27 @@ $(document).ready(function(){
                 }
               }
             }
-            wRender.polygonStart(cellInfo.row, cellInfo.column);
+            wRender.polygonStart(currentCell.row, currentCell.column);
           } else {
             wRender.polygonClear();
             
-            if (cellInfo.kind == Kind.WestWall) {
-              mundo.toggleWall(cellInfo.row, cellInfo.column, 0); // oeste
+            if (currentCell.kind == Kind.WestWall) {
+              mundo.toggleWall(currentCell.row, currentCell.column, 0); // oeste
             
-            }  else if (cellInfo.kind == Kind.SouthWall) {
-                mundo.toggleWall(cellInfo.row, cellInfo.column, 3); // sur
+            }  else if (currentCell.kind == Kind.SouthWall) {
+                mundo.toggleWall(currentCell.row, currentCell.column, 3); // sur
             
-            } else if (cellInfo.kind == Kind.Beeper){
+            } else if (currentCell.kind == Kind.Beeper){
               if (borrar_zumbadores) {
-                  mundo.setBuzzers(cellInfo.row, cellInfo.column, 0);
+                  mundo.setBuzzers(currentCell.row, currentCell.column, 0);
               } if (event.shiftKey) {
-                  mundo.toggleDumpCell(cellInfo.row, cellInfo.column);
+                  mundo.toggleDumpCell(currentCell.row, currentCell.column);
               } else {
-                  zumbadores = mundo.buzzers(cellInfo.row, cellInfo.column);
+                  zumbadores = mundo.buzzers(currentCell.row, currentCell.column);
                   if (zumbadores >= 0 && !event.ctrlKey)
-                      mundo.setBuzzers(cellInfo.row, cellInfo.column, zumbadores+1);
+                      mundo.setBuzzers(currentCell.row, currentCell.column, zumbadores+1);
                   else if (zumbadores > 0 && event.ctrlKey)
-                      mundo.setBuzzers(cellInfo.row, cellInfo.column, zumbadores-1);
+                      mundo.setBuzzers(currentCell.row, currentCell.column, zumbadores-1);
               }
             }
           }
@@ -819,8 +813,14 @@ $(document).ready(function(){
             (event.clientY + document.body.scrollTop +
              document.documentElement.scrollTop - $('#world').offset().top);
     var cellInfo = wRender.calculateCell(x,world.height-y);
-    console.log(x + " " + (world.height-y) + " " + JSON.stringify(cellInfo));
-    if (mundo_editable) {
+    
+    changed = !((currentCell) && 
+              cellInfo.row == currentCell.row &&
+              cellInfo.column == currentCell.column &&
+              cellInfo.kind == currentCell.kind);
+    currentCell = cellInfo;
+    if (mundo_editable && changed) {
+      console.log(x + " " + (world.height-y) + " " + JSON.stringify(cellInfo));
       if (mundo.isInbounds(cellInfo.row,cellInfo.column)) {
         wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
         if (cellInfo.kind == Kind.Corner) {
