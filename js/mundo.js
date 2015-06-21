@@ -7,9 +7,10 @@ var Kind = {
     NorthWall: 3,
     EastWall: 4,
     SouthWall: 5,
+    Outbounds: 6
 };
 
-var WorldRender = function(context){
+var WorldRender = function(context, worldHeight, worldWidth){
     this.should_draw = true;
     this.context = context;
 
@@ -21,6 +22,9 @@ var WorldRender = function(context){
 
     this.tamano_celda = 30;
     this.margin = 7.5;
+
+    this.maxRows = worldHeight;
+    this.maxColumns = worldWidth;
 
     this.polygon = false;
     this.polygon_begin = undefined;
@@ -366,14 +370,15 @@ var WorldRender = function(context){
 
     this.calculateCell = function(x,y) {
 
-        x += this.margin;
-        y += this.margin;
+        mx = Math.max(x+this.margin,this.tamano_celda);
+        my = Math.max(y+this.margin,this.tamano_celda)
 
-        var column = Math.floor(x/this.tamano_celda) + this.primera_columna-1;
-        var row = Math.floor(y/this.tamano_celda) + this.primera_fila-1;
-
-        var x_in_wall = Math.floor((x / this.margin) % 4 ) < 2;
-        var y_in_wall = Math.floor((y / this.margin) % 4) < 2;
+        var column = Math.floor(mx/this.tamano_celda) + this.primera_columna-1;
+            column = Math.min(column,this.maxColumns+1);
+        var row =  Math.floor(my/this.tamano_celda) + this.primera_fila-1;
+            row = Math.min(row,this.maxRows+1);
+        var x_in_wall = Math.floor((mx / this.margin) % 4 ) < 2;
+        var y_in_wall = Math.floor((my / this.margin) % 4) < 2;
         var kind = Kind.Beeper;
         if (x_in_wall && y_in_wall) 
             kind = Kind.Corner;
@@ -382,6 +387,11 @@ var WorldRender = function(context){
         else if (y_in_wall)
             kind = Kind.SouthWall;
 
-        return {row: row, column: column, kind: kind};
+        return {row: row, 
+                column: column, 
+                kind: kind,
+                x: x,
+                y: y
+            };
     };
 }

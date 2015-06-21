@@ -1227,12 +1227,6 @@ World.prototype.reset = function() {
 	self.dirty = true;
 };
 
-World.prototype.isInbounds = function(row,column){
-	var self = this;
-
-	return 0 < row && row <= self.h && 0 < column && column <= self.w;
-};
-
 World.prototype.import = function(mdo, kec) {
 	var self = this;
 
