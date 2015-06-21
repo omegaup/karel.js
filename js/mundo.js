@@ -1,5 +1,14 @@
 /* Cosas para dibujar el canvas del mundo */
 
+var Kind = {
+    Beeper: 0, 
+    Corner: 1,
+    WestWall: 2,
+    NorthWall: 3,
+    EastWall: 4,
+    SouthWall: 5,
+};
+
 var WorldRender = function(context){
     this.should_draw = true;
     this.context = context;
@@ -11,6 +20,7 @@ var WorldRender = function(context){
     this.num_columnas = 1
 
     this.tamano_celda = 30;
+    this.margin = 7.5;
 
     this.polygon = false;
     this.polygon_begin = undefined;
@@ -231,8 +241,8 @@ var WorldRender = function(context){
 
         if (this.polygon) {
             context.fillStyle = '#ff0000';
-            context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna + 1)*30-2,
-                             origen.y-(this.polygon_begin[0] - this.primera_fila)*30+26-30,
+            context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna)*30-2,
+                             origen.y-(this.polygon_begin[0] - this.primera_fila)*30+26,
                              6,
                              6);
             if (this.polygon_end) {
@@ -320,5 +330,44 @@ var WorldRender = function(context){
                          origen.y-(fila - this.primera_fila)*30 + 2,
                          this.tamano_celda - 6,
                          this.tamano_celda - 6);
+    };
+
+    this.moveSouth = function() {
+        if (this.primera_fila > 1)  this.primera_fila -= 1
+    };
+
+    this.moveNorth = function() {
+        if (this.primera_fila+this.num_filas-2 < 100)
+            this.primera_fila += 1
+    };
+
+    this.moveWest = function() {
+        if (this.primera_columna > 1)  this.primera_columna -= 1
+    };
+
+    this.moveEast = function() {
+        if (this.primera_columna+this.num_columnas-2 < 100)
+            this.primera_columna += 1
+    };
+
+    this.calculatePosition = function(x,y) {
+
+        x += this.margin;
+        y += this.margin;
+
+        var column = Math.floor(x/this.tamano_celda) + this.primera_columna-1;
+        var row = Math.floor(y/this.tamano_celda) + this.primera_fila-1;
+
+        var x_in_wall = Math.floor((x / this.margin) % 4 ) < 2;
+        var y_in_wall = Math.floor((y / this.margin) % 4) < 2;
+        var kind = Kind.Beeper;
+        if (x_in_wall && y_in_wall) 
+            kind = Kind.Corner;
+        else if (x_in_wall)
+            kind = Kind.WestWall;
+        else if (y_in_wall)
+            kind = Kind.SouthWall;
+
+        return {row: row, column: column, kind: kind};
     };
 }

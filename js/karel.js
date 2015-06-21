@@ -80,7 +80,7 @@ EventTarget.prototype.fireEvent = function(type, properties) {
 var Runtime = function(world) {
 	var self = this;
 
-	self.debug = false;
+	self.debug = true;
 	self.world = world;
 	self.disableStackEvents = false;
 
@@ -1225,6 +1225,12 @@ World.prototype.reset = function() {
 	self.runtime.reset();
 
 	self.dirty = true;
+};
+
+World.prototype.isInbounds = function(row,column){
+	var self = this;
+
+	return 0 < row && row <= self.h && 0 < row && row <= self.h;
 };
 
 World.prototype.import = function(mdo, kec) {
