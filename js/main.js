@@ -785,6 +785,9 @@ $(document).ready(function(){
                   }
                 }
               }
+              if (event.ctrlKey) {
+                wRender.polygonStart(clickInfo.row, clickInfo.column);
+              }
             } else {
               wRender.polygonStart(clickInfo.row, clickInfo.column);
             }
