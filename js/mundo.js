@@ -241,34 +241,39 @@ var WorldRender = function(context){
 
         if (this.polygon) {
             context.fillStyle = '#ff0000';
-            context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna)*30-2,
-                             origen.y-(this.polygon_begin[0] - this.primera_fila)*30+26,
-                             6,
-                             6);
+            var from_x = origen.x+(this.polygon_begin[1] - this.primera_columna)*30;
+            var from_y = origen.y-(this.polygon_begin[0] - this.primera_fila)*30;
+            var width = 4;
+            var height = 4;
+            //corner marker
+            context.fillRect(from_x-2,from_y+26,6,6);
+
             if (this.polygon_end) {
                 context.fillStyle = '#0000ff';
                 if (this.polygon_begin[0] == this.polygon_end[0]) {
-                    context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna + 1)*30-1,
-                                     origen.y-(this.polygon_begin[0] - this.primera_fila)*30+27-30,
-                                     30 * (this.polygon_end[1] - this.polygon_begin[1]),
-                                     4);
+                    width = 30 * (this.polygon_end[1] - this.polygon_begin[1]);
                 } else {
-                    context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna + 1)*30-1,
-                                     origen.y-(this.polygon_begin[0] - this.primera_fila)*30,
-                                     4,
-                                     30 * (this.polygon_begin[0] - this.polygon_end[0]));
+                    height = 30 * (this.polygon_begin[0] - this.polygon_end[0]);
                 }
+                context.fillRect(from_x-1,from_y+27,width,height);
             }
         }
     };
 
     this.polygonStart = function(fila, columna) {
-        this.polygon = true;
-        this.polygon_begin = [fila, columna];
+        this.polygon = !((this.polygon_begin) &&
+                        (this.polygon_begin[0] == fila) &&
+                        (this.polygon_begin[1] == columna));
+        if (this.polygon) {
+            this.polygon_begin = [fila, columna];
+        } else {
+            this.polygon_begin = undefined;
+        }
     };
 
     this.polygonUpdate = function(fila, columna) {
-        if (this.polygon_begin[0] == fila || this.polygon_begin[1] == columna) {
+        //debe compartir alguna coordenada pero no las dos
+        if (this.polygon_begin[0] == fila ^ this.polygon_begin[1] == columna) {
             this.polygon_end = [fila, columna];
         } else {
             this.polygon_end = undefined;
@@ -277,22 +282,31 @@ var WorldRender = function(context){
 
     this.polygonFinish = function(fila, columna) {
         this.polygonUpdate(fila, columna);
-        this.polygon = false;
 
-        var result = [this.polygon_begin, this.polygon_end];
-        this.polygon_begin = this.polygon_end = undefined;
-        if (result[1]) {
+        if (this.polygon_end) {
+            var result = {
+                start_row: Math.min(this.polygon_begin[0],this.polygon_end[0]),
+                finish_row: Math.max(this.polygon_begin[0],this.polygon_end[0]),
+                start_column: Math.min(this.polygon_begin[1],this.polygon_end[1]),
+                finish_column: Math.max(this.polygon_begin[1],this.polygon_end[1])
+            };
+            this.polygonClear();
             return result;
         } else {
             return null;
         }
     };
 
+    this.polygonClear = function() {
+        this.polygon_begin = this.polygon_end = undefined;
+        this.polygon = false;
+    }
+
     this.hoverCorner = function(fila, columna, mundo_ancho, mundo_alto) {
         var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
         context.fillStyle = 'rgba(255,0,0,0.5)';
-        context.fillRect(origen.x+(columna - this.primera_columna + 1)*30 - 4,
-                         origen.y-(fila - this.primera_fila)*30 - 6,
+        context.fillRect(origen.x+(columna - this.primera_columna)*30 - 4,
+                         origen.y-(fila - this.primera_fila)*30 + 24,
                          10,
                          10);
     };
@@ -350,7 +364,7 @@ var WorldRender = function(context){
             this.primera_columna += 1
     };
 
-    this.calculatePosition = function(x,y) {
+    this.calculateCell = function(x,y) {
 
         x += this.margin;
         y += this.margin;

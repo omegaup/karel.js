@@ -764,48 +764,44 @@ $(document).ready(function(){
     } else if ((world.width-50+17-35)<=x && x<=(world.width-20+17-35) && 45<=y && y<=75) {
         wRender.moveWest();
     } else if(mundo_editable) {
-        var clickInfo = wRender.calculatePosition(x,world.height-y);
-        console.log(x + " " + (world.height-y) + " " + JSON.stringify(clickInfo));
-        if (mundo.isInbounds(clickInfo.row,clickInfo.column)) {
-          if (clickInfo.kind == Kind.Corner) {
+        var cellInfo = wRender.calculateCell(x,world.height-y);
+        console.log(x + " " + (world.height-y) + " " + JSON.stringify(cellInfo));
+        if (mundo.isInbounds(cellInfo.row,cellInfo.column)) {
+          
+          if (cellInfo.kind == Kind.Corner) {
             if (wRender.polygon) {
-              var result = wRender.polygonFinish(clickInfo.row, clickInfo.column);
+              var result = wRender.polygonFinish(cellInfo.row, cellInfo.column);
               if (result) {
-                if (result[0][0] != result[1][0]) {
-                  for (var i = Math.min(result[0][0], result[1][0]);
-                       i < Math.max(result[0][0], result[1][0]);
-                       i++) {
-                    mundo.toggleWall(i, result[0][1], 0); // oeste
-                  }
-                } else {
-                  for (var i = Math.min(result[0][1], result[1][1]);
-                       i < Math.max(result[0][1], result[1][1]);
-                       i++) {
-                      mundo.toggleWall(result[0][0] , i, 3); // sur
-                  }
+                for (var i = result.start_row; i < result.finish_row; i++) {
+                  mundo.toggleWall(i, result.start_column, 0); // oeste
+                }
+                for (var i = result.start_column; i < result.finish_column; i++) {
+                  mundo.toggleWall(result.start_row , i, 3); // sur
                 }
               }
-              if (event.ctrlKey) {
-                wRender.polygonStart(clickInfo.row, clickInfo.column);
-              }
-            } else {
-              wRender.polygonStart(clickInfo.row, clickInfo.column);
             }
-          } else if (clickInfo.kind == Kind.WestWall) {
-              mundo.toggleWall(clickInfo.row, clickInfo.column, 0); // oeste
-          }  else if (clickInfo.kind == Kind.SouthWall) {
-              mundo.toggleWall(clickInfo.row, clickInfo.column, 3); // sur
-          } else if (clickInfo.kind == Kind.Beeper){
-            if (borrar_zumbadores) {
-                mundo.setBuzzers(clickInfo.row, clickInfo.column, 0);
-            } if (event.shiftKey) {
-                mundo.toggleDumpCell(clickInfo.row, clickInfo.column);
-            } else {
-                zumbadores = mundo.buzzers(clickInfo.row, clickInfo.column);
-                if (zumbadores >= 0 && !event.ctrlKey)
-                    mundo.setBuzzers(clickInfo.row, clickInfo.column, zumbadores+1);
-                else if (zumbadores > 0 && event.ctrlKey)
-                    mundo.setBuzzers(clickInfo.row, clickInfo.column, zumbadores-1);
+            wRender.polygonStart(cellInfo.row, cellInfo.column);
+          } else {
+            wRender.polygonClear();
+            
+            if (cellInfo.kind == Kind.WestWall) {
+              mundo.toggleWall(cellInfo.row, cellInfo.column, 0); // oeste
+            
+            }  else if (cellInfo.kind == Kind.SouthWall) {
+                mundo.toggleWall(cellInfo.row, cellInfo.column, 3); // sur
+            
+            } else if (cellInfo.kind == Kind.Beeper){
+              if (borrar_zumbadores) {
+                  mundo.setBuzzers(cellInfo.row, cellInfo.column, 0);
+              } if (event.shiftKey) {
+                  mundo.toggleDumpCell(cellInfo.row, cellInfo.column);
+              } else {
+                  zumbadores = mundo.buzzers(cellInfo.row, cellInfo.column);
+                  if (zumbadores >= 0 && !event.ctrlKey)
+                      mundo.setBuzzers(cellInfo.row, cellInfo.column, zumbadores+1);
+                  else if (zumbadores > 0 && event.ctrlKey)
+                      mundo.setBuzzers(cellInfo.row, cellInfo.column, zumbadores-1);
+              }
             }
           }
       }
@@ -822,54 +818,28 @@ $(document).ready(function(){
     var y = event.offsetY ||
             (event.clientY + document.body.scrollTop +
              document.documentElement.scrollTop - $('#world').offset().top);
-    var columna = Math.floor(x/wRender.tamano_celda) + wRender.primera_columna-1;
-    var fila = Math.floor((world.height-y)/wRender.tamano_celda) + wRender.primera_fila-1;
-
-    var excedente_horizontal = x % wRender.tamano_celda;
-    var excedente_vertical = (world.height-y) % wRender.tamano_celda;
-    var margen = wRender.tamano_celda / 4;
-    if (wRender.polygon) {
-        if ((excedente_horizontal < margen || excedente_horizontal > (wRender.tamano_celda - margen)) &&
-            (excedente_vertical < margen || excedente_vertical > (wRender.tamano_celda - margen))) {
-            if (excedente_horizontal < margen) {
-                columna -= 1;
-            }
-            if (excedente_vertical < margen) {
-                fila -= 1;
-            }
-            if (mundo.isInbounds(fila,columna)) {
-                wRender.polygonUpdate(fila, columna);
-                wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
-            }
-        }
-    } else if (mundo_editable) {
+    var cellInfo = wRender.calculateCell(x,world.height-y);
+    console.log(x + " " + (world.height-y) + " " + JSON.stringify(cellInfo));
+    if (mundo_editable) {
+      if (mundo.isInbounds(cellInfo.row,cellInfo.column)) {
         wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
-        if (mundo.isInbounds(fila,columna)) {
-            if ((excedente_horizontal < margen || excedente_horizontal > (wRender.tamano_celda - margen)) &&
-                (excedente_vertical < margen || excedente_vertical > (wRender.tamano_celda - margen))) {
-                if (excedente_horizontal < margen) {
-                    columna -= 1;
-                }
-                if (excedente_vertical < margen) {
-                    fila -= 1;
-                }
-                if (mundo.isInbounds(fila,columna)) {
-                    wRender.hoverCorner(fila, columna, world.width, world.height);
-                }
-            } else if (!wRender.polygon && 0 < fila && fila < 101 && 0 < columna && columna < 101) {
-                if (excedente_horizontal < margen) {
-                    wRender.hoverWall(fila, columna, 0, world.width, world.height); // oeste
-                } else if (excedente_horizontal > (wRender.tamano_celda - margen)) {
-                    wRender.hoverWall(fila, columna, 2, world.width, world.height); // este
-                } else if (excedente_vertical < margen) {
-                    wRender.hoverWall(fila, columna, 3, world.width, world.height); // sur
-                } else if (excedente_vertical > (wRender.tamano_celda - margen)) {
-                    wRender.hoverWall(fila, columna, 1, world.width, world.height); // norte
-                } else {
-                    wRender.hoverBuzzer(fila, columna, world.width, world.height);
-                }
-            }
+        if (cellInfo.kind == Kind.Corner) {
+          if (wRender.polygon) {
+            wRender.polygonUpdate(cellInfo.row, cellInfo.column);
+            wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+          } else {
+            wRender.hoverCorner(cellInfo.row, cellInfo.column, world.width, world.height);
+          }
+        } else {          
+          if (cellInfo.kind == Kind.WestWall) {
+              wRender.hoverWall(cellInfo.row, cellInfo.column, 0, world.width, world.height); // oeste
+          }  else if (cellInfo.kind == Kind.SouthWall) {
+              wRender.hoverWall(cellInfo.row, cellInfo.column, 3, world.width, world.height); // sur
+          } else if (cellInfo.kind == Kind.Beeper){
+              wRender.hoverBuzzer(cellInfo.row, cellInfo.column, world.width, world.height);
+          }
         }
+      }
     }
   });
   $("#world").bind("contextmenu", function(e){
