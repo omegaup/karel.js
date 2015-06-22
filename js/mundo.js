@@ -35,7 +35,7 @@ var WorldRender = function(context, worldHeight, worldWidth){
 
         function dibuja_karel(context, world, origen){ //Dibujar a Karel
 
-            context.fillStyle = '#0000FF';
+            context.fillStyle = '#007EBE';
             context.beginPath();
             if (world.orientation == 0) { // oeste
                 context.moveTo( origen.x, origen.y+15 );
@@ -75,7 +75,7 @@ var WorldRender = function(context, worldHeight, worldWidth){
         }
 
         context.clearRect(0, 0, mundo_ancho, mundo_alto);
-        context.fillStyle="#959595";
+        context.fillStyle="#e6e6e6";
         context.fillRect(0, 0, mundo_ancho, mundo_alto);
 
         var tamanio_lienzo = {x:(mundo_ancho-30), y:(mundo_alto-30)};
@@ -109,7 +109,7 @@ var WorldRender = function(context, worldHeight, worldWidth){
             for(var j=0;j<this.num_columnas;j++) {
                 x = origen.x+30*j;
                 y = origen.y-30*i;
-                context.fillStyle="#656565";
+                context.fillStyle="#818181";
                 context.fillRect(x-2, y+26, 6, 6);
             }
         }
@@ -203,46 +203,6 @@ var WorldRender = function(context, worldHeight, worldWidth){
 
         $('#mochila').val(world.bagBuzzers);
 
-        //Pad de control
-        context.fillStyle = '#305881'
-        context.beginPath();
-        context.moveTo(tamanio_mundo.x-70+35, 5)
-        context.lineTo(tamanio_mundo.x-70+69, 5+55)
-        context.lineTo(tamanio_mundo.x-70+35, 5+110)
-        context.lineTo(tamanio_mundo.x-70+1, 5+55)
-        context.closePath()
-        context.fill()
-
-        //Controles de movimiento
-        context.fillStyle = '#60b151'
-        context.beginPath();
-        context.moveTo(mundo_ancho-40-10, 40)
-        context.lineTo(mundo_ancho-10-10, 40)
-        context.lineTo(mundo_ancho-25-10, 10)
-        context.closePath()
-        context.fill()
-
-        context.beginPath();
-        context.moveTo(mundo_ancho-40-10, 10+70) //Sur
-        context.lineTo(mundo_ancho-10-10, 10+70)
-        context.lineTo(mundo_ancho-25-10, 40+70)
-        context.closePath()
-        context.fill()
-
-        context.beginPath();
-        context.moveTo(mundo_ancho-25-8, 45) //Este
-        context.lineTo(mundo_ancho-25+30-8, 45+15)
-        context.lineTo(mundo_ancho-25-8, 45+30)
-        context.closePath()
-        context.fill()
-
-        context.beginPath();
-        context.moveTo(mundo_ancho-25-50+30+8, 45) //Oeste
-        context.lineTo(mundo_ancho-25-50+8, 45+15)
-        context.lineTo(mundo_ancho-25-50+30+8, 45+30)
-        context.closePath()
-        context.fill()
-
         if (this.polygon) {
             context.fillStyle = '#ff0000';
             var from_x = origen.x+(this.polygon_begin[1] - this.primera_columna)*30;
@@ -253,7 +213,7 @@ var WorldRender = function(context, worldHeight, worldWidth){
             context.fillRect(from_x-2,from_y+26,6,6);
 
             if (this.polygon_end) {
-                context.fillStyle = '#0000ff';
+                context.fillStyle = '#007EBE';
                 if (this.polygon_begin[0] == this.polygon_end[0]) {
                     width = 30 * (this.polygon_end[1] - this.polygon_begin[1]);
                 } else {

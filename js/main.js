@@ -204,7 +204,7 @@ $(document).ready(function(){
 
   var world = $("#world")[0];
   var context = world.getContext('2d');
-  var wRender = new WorldRender(context);
+  var wRender = new WorldRender(context,100,100);
   var borrar_zumbadores = false;
   var zumbadores_anterior = 0;
   var fila_evento;
@@ -742,64 +742,74 @@ $(document).ready(function(){
     }
   });
   $("body").keyup(function(event){
+    var repaint = false;
+    var tag = event.target.tagName.toLowerCase();
+    //globals
     if(event.keyCode == 27) {
       $("#wcontext_menu").css("display", "none");
     }
-  });
-  $("#world").click(function(event){
-    $("#wcontext_menu").css("display", "none");
-    // Firefox no reconoce offsetX. UGH.
-    
-    //Maneja los clicks en el mundo
-    if ((world.width-50)<=x && x <=(world.width-20) && 10<=y && y<=40) {
-        wRender.moveNorth();
-    } else if ((world.width-50)<=x && x<=(world.width-20) && 80<=y && y<=110) {
-        wRender.moveSouth();
-    } else if ((world.width-50+17)<=x && x<=(world.width-20+17) && 45<=y && y<=75) {
-        wRender.moveEast();
-    } else if ((world.width-50+17-35)<=x && x<=(world.width-20+17-35) && 45<=y && y<=75) {
+    //not in the editor    
+    if ( tag != 'input' && tag != 'textarea') {
+      if (event.keyCode == 37) {
         wRender.moveWest();
-    } else if(mundo_editable) {
-        if (mundo.isInbounds(currentCell.row,currentCell.column)) {
-          
-          if (currentCell.kind == Kind.Corner) {
-            if (wRender.polygon) {
-              var result = wRender.polygonFinish(currentCell.row, currentCell.column);
-              if (result) {
-                for (var i = result.start_row; i < result.finish_row; i++) {
-                  mundo.toggleWall(i, result.start_column, 0); // oeste
-                }
-                for (var i = result.start_column; i < result.finish_column; i++) {
-                  mundo.toggleWall(result.start_row , i, 3); // sur
-                }
-              }
+        repaint = true;
+      } else if (event.keyCode == 38) {
+          wRender.moveNorth();
+          repaint = true;
+      } else if (event.keyCode == 39) {
+          wRender.moveEast();
+          repaint = true;
+      } else if (event.keyCode == 40) {
+          wRender.moveSouth();
+          repaint = true;
+      }
+    }
+
+    if (repaint) {
+      wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+    }
+  });
+  
+  $("#world").click(function(event){
+    $("#wcontext_menu").css("display", "none");    
+    //Maneja los clicks en el mundo
+    if(mundo_editable && currentCell) {
+      if (currentCell.kind == Kind.Corner) {
+        if (wRender.polygon) {
+          var result = wRender.polygonFinish(currentCell.row, currentCell.column);
+          if (result) {
+            for (var i = result.start_row; i < result.finish_row; i++) {
+              mundo.toggleWall(i, result.start_column, 0); // oeste
             }
-            wRender.polygonStart(currentCell.row, currentCell.column);
-          } else {
-            wRender.polygonClear();
-            
-            if (currentCell.kind == Kind.WestWall) {
-              mundo.toggleWall(currentCell.row, currentCell.column, 0); // oeste
-            
-            }  else if (currentCell.kind == Kind.SouthWall) {
-                mundo.toggleWall(currentCell.row, currentCell.column, 3); // sur
-            
-            } else if (currentCell.kind == Kind.Beeper){
-              if (borrar_zumbadores) {
-                  mundo.setBuzzers(currentCell.row, currentCell.column, 0);
-              } if (event.shiftKey) {
-                  mundo.toggleDumpCell(currentCell.row, currentCell.column);
-              } else {
-                  zumbadores = mundo.buzzers(currentCell.row, currentCell.column);
-                  if (zumbadores >= 0 && !event.ctrlKey)
-                      mundo.setBuzzers(currentCell.row, currentCell.column, zumbadores+1);
-                  else if (zumbadores > 0 && event.ctrlKey)
-                      mundo.setBuzzers(currentCell.row, currentCell.column, zumbadores-1);
-              }
+            for (var i = result.start_column; i < result.finish_column; i++) {
+              mundo.toggleWall(result.start_row , i, 3); // sur
             }
           }
+        }
+        wRender.polygonStart(currentCell.row, currentCell.column);
+      } else {
+        wRender.polygonClear();
+        
+        if (currentCell.kind == Kind.WestWall) {
+          mundo.toggleWall(currentCell.row, currentCell.column, 0); // oeste
+        
+        }  else if (currentCell.kind == Kind.SouthWall) {
+            mundo.toggleWall(currentCell.row, currentCell.column, 3); // sur
+        
+        } else if (currentCell.kind == Kind.Beeper){
+          if (borrar_zumbadores) {
+              mundo.setBuzzers(currentCell.row, currentCell.column, 0);
+          } if (event.shiftKey) {
+              mundo.toggleDumpCell(currentCell.row, currentCell.column);
+          } else {
+              zumbadores = mundo.buzzers(currentCell.row, currentCell.column);
+              if (zumbadores >= 0 && !event.ctrlKey)
+                  mundo.setBuzzers(currentCell.row, currentCell.column, zumbadores+1);
+              else if (zumbadores > 0 && event.ctrlKey)
+                  mundo.setBuzzers(currentCell.row, currentCell.column, zumbadores-1);
+          }
+        }
       }
-      //console.log(fila+", "+columna);
       $("#xmlMundo").html(mundo.save());
     }
     //Volvemos a pintar el canvas
@@ -821,23 +831,21 @@ $(document).ready(function(){
     currentCell = cellInfo;
     if (mundo_editable && changed) {
       console.log(x + " " + (world.height-y) + " " + JSON.stringify(cellInfo));
-      if (mundo.isInbounds(cellInfo.row,cellInfo.column)) {
-        wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
-        if (cellInfo.kind == Kind.Corner) {
-          if (wRender.polygon) {
-            wRender.polygonUpdate(cellInfo.row, cellInfo.column);
-            wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
-          } else {
-            wRender.hoverCorner(cellInfo.row, cellInfo.column, world.width, world.height);
-          }
-        } else {          
-          if (cellInfo.kind == Kind.WestWall) {
-              wRender.hoverWall(cellInfo.row, cellInfo.column, 0, world.width, world.height); // oeste
-          }  else if (cellInfo.kind == Kind.SouthWall) {
-              wRender.hoverWall(cellInfo.row, cellInfo.column, 3, world.width, world.height); // sur
-          } else if (cellInfo.kind == Kind.Beeper){
-              wRender.hoverBuzzer(cellInfo.row, cellInfo.column, world.width, world.height);
-          }
+      
+      wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+      if (cellInfo.kind == Kind.Corner) {
+        if (wRender.polygon) {
+          wRender.polygonUpdate(cellInfo.row, cellInfo.column);
+          wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+        } 
+        wRender.hoverCorner(cellInfo.row, cellInfo.column, world.width, world.height);
+      } else {          
+        if (cellInfo.kind == Kind.WestWall) {
+            wRender.hoverWall(cellInfo.row, cellInfo.column, 0, world.width, world.height); // oeste
+        }  else if (cellInfo.kind == Kind.SouthWall) {
+            wRender.hoverWall(cellInfo.row, cellInfo.column, 3, world.width, world.height); // sur
+        } else if (cellInfo.kind == Kind.Beeper){
+            wRender.hoverBuzzer(cellInfo.row, cellInfo.column, world.width, world.height);
         }
       }
     }
