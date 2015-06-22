@@ -1,6 +1,16 @@
 /* Cosas para dibujar el canvas del mundo */
 
-var WorldRender = function(context){
+var Kind = {
+    Beeper: 0, 
+    Corner: 1,
+    WestWall: 2,
+    NorthWall: 3,
+    EastWall: 4,
+    SouthWall: 5,
+    Outbounds: 6
+};
+
+var WorldRender = function(context, worldHeight, worldWidth){
     this.should_draw = true;
     this.context = context;
 
@@ -11,6 +21,10 @@ var WorldRender = function(context){
     this.num_columnas = 1
 
     this.tamano_celda = 30;
+    this.margin = 7.5;
+
+    this.maxRows = worldHeight;
+    this.maxColumns = worldWidth;
 
     this.polygon = false;
     this.polygon_begin = undefined;
@@ -21,47 +35,47 @@ var WorldRender = function(context){
 
         function dibuja_karel(context, world, origen){ //Dibujar a Karel
 
-            context.fillStyle = '#0000FF';
+            context.fillStyle = '#007EBE';
             context.beginPath();
             if (world.orientation == 0) { // oeste
                 context.moveTo( origen.x, origen.y+15 );
-                context.lineTo( origen.x+13, origen.y );
-                context.lineTo( origen.x+13, origen.y+7 );
-                context.lineTo( origen.x+27, origen.y+7 );
-                context.lineTo( origen.x+27, origen.y+23 );
-                context.lineTo( origen.x+13, origen.y+23 );
-                context.lineTo( origen.x+13, origen.y+30 );
+                context.lineTo( origen.x+14, origen.y+1 );
+                context.lineTo( origen.x+14, origen.y+8 );
+                context.lineTo( origen.x+28, origen.y+8 );
+                context.lineTo( origen.x+28, origen.y+22 );
+                context.lineTo( origen.x+14, origen.y+22 );
+                context.lineTo( origen.x+14, origen.y+29 );
             } else if (world.orientation == 1) { // norte
-                context.moveTo ( origen.x, origen.y+13 );
+                context.moveTo ( origen.x+1, origen.y+14 );
                 context.lineTo ( origen.x+15, origen.y );
-                context.lineTo ( origen.x+30, origen.y+13 );
-                context.lineTo ( origen.x+23, origen.y+13 );
-                context.lineTo ( origen.x+23, origen.y+27 );
-                context.lineTo ( origen.x+7, origen.y+27 );
-                context.lineTo ( origen.x+7, origen.y+13 );
+                context.lineTo ( origen.x+29, origen.y+14 );
+                context.lineTo ( origen.x+22, origen.y+14 );
+                context.lineTo ( origen.x+22, origen.y+28 );
+                context.lineTo ( origen.x+8, origen.y+28 );
+                context.lineTo ( origen.x+8, origen.y+14 );
             } else if (world.orientation == 2) { // este
-                context.moveTo ( origen.x+3, origen.y+7 );
-                context.lineTo ( origen.x+17, origen.y+7 );
-                context.lineTo ( origen.x+17, origen.y );
+                context.moveTo ( origen.x+2, origen.y+8 );
+                context.lineTo ( origen.x+17, origen.y+8 );
+                context.lineTo ( origen.x+17, origen.y+1 );
                 context.lineTo ( origen.x+30, origen.y+15 );
-                context.lineTo ( origen.x+17, origen.y+30 );
-                context.lineTo ( origen.x+17, origen.y+23 );
-                context.lineTo ( origen.x+3, origen.y+23 );
+                context.lineTo ( origen.x+17, origen.y+29 );
+                context.lineTo ( origen.x+17, origen.y+22 );
+                context.lineTo ( origen.x+2, origen.y+22 );
             } else if (world.orientation == 3) { // sur
-                context.moveTo ( origen.x+7, origen.y+3 );
-                context.lineTo ( origen.x+23, origen.y+3 );
-                context.lineTo ( origen.x+23, origen.y+17 );
-                context.lineTo ( origen.x+30, origen.y+17 );
+                context.moveTo ( origen.x+8, origen.y+2 );
+                context.lineTo ( origen.x+22, origen.y+2 );
+                context.lineTo ( origen.x+22, origen.y+17 );
+                context.lineTo ( origen.x+29, origen.y+17 );
                 context.lineTo ( origen.x+15, origen.y+30 );
-                context.lineTo ( origen.x, origen.y+17);
-                context.lineTo ( origen.x+7, origen.y+17);
+                context.lineTo ( origen.x+1, origen.y+17);
+                context.lineTo ( origen.x+8, origen.y+17);
             }
             context.closePath();
             context.fill();
         }
 
         context.clearRect(0, 0, mundo_ancho, mundo_alto);
-        context.fillStyle="#959595";
+        context.fillStyle="#e6e6e6";
         context.fillRect(0, 0, mundo_ancho, mundo_alto);
 
         var tamanio_lienzo = {x:(mundo_ancho-30), y:(mundo_alto-30)};
@@ -95,7 +109,7 @@ var WorldRender = function(context){
             for(var j=0;j<this.num_columnas;j++) {
                 x = origen.x+30*j;
                 y = origen.y-30*i;
-                context.fillStyle="#656565";
+                context.fillStyle="#818181";
                 context.fillRect(x-2, y+26, 6, 6);
             }
         }
@@ -189,76 +203,41 @@ var WorldRender = function(context){
 
         $('#mochila').val(world.bagBuzzers);
 
-        //Pad de control
-        context.fillStyle = '#305881'
-        context.beginPath();
-        context.moveTo(tamanio_mundo.x-70+35, 5)
-        context.lineTo(tamanio_mundo.x-70+69, 5+55)
-        context.lineTo(tamanio_mundo.x-70+35, 5+110)
-        context.lineTo(tamanio_mundo.x-70+1, 5+55)
-        context.closePath()
-        context.fill()
-
-        //Controles de movimiento
-        context.fillStyle = '#60b151'
-        context.beginPath();
-        context.moveTo(mundo_ancho-40-10, 40)
-        context.lineTo(mundo_ancho-10-10, 40)
-        context.lineTo(mundo_ancho-25-10, 10)
-        context.closePath()
-        context.fill()
-
-        context.beginPath();
-        context.moveTo(mundo_ancho-40-10, 10+70) //Sur
-        context.lineTo(mundo_ancho-10-10, 10+70)
-        context.lineTo(mundo_ancho-25-10, 40+70)
-        context.closePath()
-        context.fill()
-
-        context.beginPath();
-        context.moveTo(mundo_ancho-25-8, 45) //Este
-        context.lineTo(mundo_ancho-25+30-8, 45+15)
-        context.lineTo(mundo_ancho-25-8, 45+30)
-        context.closePath()
-        context.fill()
-
-        context.beginPath();
-        context.moveTo(mundo_ancho-25-50+30+8, 45) //Oeste
-        context.lineTo(mundo_ancho-25-50+8, 45+15)
-        context.lineTo(mundo_ancho-25-50+30+8, 45+30)
-        context.closePath()
-        context.fill()
-
         if (this.polygon) {
             context.fillStyle = '#ff0000';
-            context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna + 1)*30-2,
-                             origen.y-(this.polygon_begin[0] - this.primera_fila)*30+26-30,
-                             6,
-                             6);
+            var from_x = origen.x+(this.polygon_begin[1] - this.primera_columna)*30;
+            var from_y = origen.y-(this.polygon_begin[0] - this.primera_fila)*30;
+            var width = 4;
+            var height = 4;
+            //corner marker
+            context.fillRect(from_x-2,from_y+26,6,6);
+
             if (this.polygon_end) {
-                context.fillStyle = '#0000ff';
+                context.fillStyle = '#007EBE';
                 if (this.polygon_begin[0] == this.polygon_end[0]) {
-                    context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna + 1)*30-1,
-                                     origen.y-(this.polygon_begin[0] - this.primera_fila)*30+27-30,
-                                     30 * (this.polygon_end[1] - this.polygon_begin[1]),
-                                     4);
+                    width = 30 * (this.polygon_end[1] - this.polygon_begin[1]);
                 } else {
-                    context.fillRect(origen.x+(this.polygon_begin[1] - this.primera_columna + 1)*30-1,
-                                     origen.y-(this.polygon_begin[0] - this.primera_fila)*30,
-                                     4,
-                                     30 * (this.polygon_begin[0] - this.polygon_end[0]));
+                    height = 30 * (this.polygon_begin[0] - this.polygon_end[0]);
                 }
+                context.fillRect(from_x-1,from_y+27,width,height);
             }
         }
     };
 
     this.polygonStart = function(fila, columna) {
-        this.polygon = true;
-        this.polygon_begin = [fila, columna];
+        this.polygon = !((this.polygon_begin) &&
+                        (this.polygon_begin[0] == fila) &&
+                        (this.polygon_begin[1] == columna));
+        if (this.polygon) {
+            this.polygon_begin = [fila, columna];
+        } else {
+            this.polygon_begin = undefined;
+        }
     };
 
     this.polygonUpdate = function(fila, columna) {
-        if (this.polygon_begin[0] == fila || this.polygon_begin[1] == columna) {
+        //debe compartir alguna coordenada pero no las dos
+        if (this.polygon_begin[0] == fila ^ this.polygon_begin[1] == columna) {
             this.polygon_end = [fila, columna];
         } else {
             this.polygon_end = undefined;
@@ -267,24 +246,48 @@ var WorldRender = function(context){
 
     this.polygonFinish = function(fila, columna) {
         this.polygonUpdate(fila, columna);
-        this.polygon = false;
 
-        var result = [this.polygon_begin, this.polygon_end];
-        this.polygon_begin = this.polygon_end = undefined;
-        if (result[1]) {
+        if (this.polygon_end) {
+            var result = {
+                start_row: Math.min(this.polygon_begin[0],this.polygon_end[0]),
+                finish_row: Math.max(this.polygon_begin[0],this.polygon_end[0]),
+                start_column: Math.min(this.polygon_begin[1],this.polygon_end[1]),
+                finish_column: Math.max(this.polygon_begin[1],this.polygon_end[1])
+            };
+            this.polygonClear();
             return result;
         } else {
             return null;
         }
     };
 
+    this.polygonClear = function() {
+        this.polygon_begin = this.polygon_end = undefined;
+        this.polygon = false;
+    }
+
+    this.hoverRuler = function(fila, columna, mundo_ancho, mundo_alto) {
+        var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
+        context.fillStyle = 'rgba(255,0,0,0.4)';
+        //pinta de rojo sobre la zona gris
+        context.fillRect(6,
+                         origen.y-(fila - this.primera_fila )*30 + 3,
+                         this.tamano_celda - 6,
+                         this.tamano_celda - 6);
+        context.fillRect(origen.x+(columna - this.primera_columna )*30 + 3,
+                         origen.y + 30,
+                         this.tamano_celda - 6,
+                         this.tamano_celda - 4);
+    }
+
     this.hoverCorner = function(fila, columna, mundo_ancho, mundo_alto) {
         var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
         context.fillStyle = 'rgba(255,0,0,0.5)';
-        context.fillRect(origen.x+(columna - this.primera_columna + 1)*30 - 4,
-                         origen.y-(fila - this.primera_fila)*30 - 6,
+        context.fillRect(origen.x+(columna - this.primera_columna)*30 - 4,
+                         origen.y-(fila - this.primera_fila)*30 + 24,
                          10,
                          10);
+        this.hoverRuler(fila, columna, mundo_ancho, mundo_alto);
     };
 
     this.hoverWall = function(fila, columna, orientacion, mundo_ancho, mundo_alto) {
@@ -311,6 +314,7 @@ var WorldRender = function(context){
                              24,
                              6);
         }
+        this.hoverRuler(fila, columna, mundo_ancho, mundo_alto);
     };
 
     this.hoverBuzzer = function(fila, columna, mundo_ancho, mundo_alto) {
@@ -320,5 +324,51 @@ var WorldRender = function(context){
                          origen.y-(fila - this.primera_fila)*30 + 2,
                          this.tamano_celda - 6,
                          this.tamano_celda - 6);
+        this.hoverRuler(fila, columna, mundo_ancho, mundo_alto);
+    };
+
+    this.moveSouth = function() {
+        if (this.primera_fila > 1)  this.primera_fila -= 1
+    };
+
+    this.moveNorth = function() {
+        if (this.primera_fila+this.num_filas-2 < 100)
+            this.primera_fila += 1
+    };
+
+    this.moveWest = function() {
+        if (this.primera_columna > 1)  this.primera_columna -= 1
+    };
+
+    this.moveEast = function() {
+        if (this.primera_columna+this.num_columnas-2 < 100)
+            this.primera_columna += 1
+    };
+
+    this.calculateCell = function(x,y) {
+
+        mx = Math.max(x+this.margin,this.tamano_celda);
+        my = Math.max(y+this.margin,this.tamano_celda)
+
+        var column = Math.floor(mx/this.tamano_celda) + this.primera_columna-1;
+            column = Math.min(column,this.maxColumns+1);
+        var row =  Math.floor(my/this.tamano_celda) + this.primera_fila-1;
+            row = Math.min(row,this.maxRows+1);
+        var x_in_wall = Math.floor((mx / this.margin) % 4 ) < 2;
+        var y_in_wall = Math.floor((my / this.margin) % 4) < 2;
+        var kind = Kind.Beeper;
+        if (x_in_wall && y_in_wall) 
+            kind = Kind.Corner;
+        else if (x_in_wall)
+            kind = Kind.WestWall;
+        else if (y_in_wall)
+            kind = Kind.SouthWall;
+
+        return {row: row, 
+                column: column, 
+                kind: kind,
+                x: x,
+                y: y
+            };
     };
 }
