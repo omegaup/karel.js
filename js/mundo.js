@@ -39,36 +39,36 @@ var WorldRender = function(context, worldHeight, worldWidth){
             context.beginPath();
             if (world.orientation == 0) { // oeste
                 context.moveTo( origen.x, origen.y+15 );
-                context.lineTo( origen.x+13, origen.y );
-                context.lineTo( origen.x+13, origen.y+7 );
-                context.lineTo( origen.x+27, origen.y+7 );
-                context.lineTo( origen.x+27, origen.y+23 );
-                context.lineTo( origen.x+13, origen.y+23 );
-                context.lineTo( origen.x+13, origen.y+30 );
+                context.lineTo( origen.x+14, origen.y+1 );
+                context.lineTo( origen.x+14, origen.y+8 );
+                context.lineTo( origen.x+28, origen.y+8 );
+                context.lineTo( origen.x+28, origen.y+22 );
+                context.lineTo( origen.x+14, origen.y+22 );
+                context.lineTo( origen.x+14, origen.y+29 );
             } else if (world.orientation == 1) { // norte
-                context.moveTo ( origen.x, origen.y+13 );
+                context.moveTo ( origen.x+1, origen.y+14 );
                 context.lineTo ( origen.x+15, origen.y );
-                context.lineTo ( origen.x+30, origen.y+13 );
-                context.lineTo ( origen.x+23, origen.y+13 );
-                context.lineTo ( origen.x+23, origen.y+27 );
-                context.lineTo ( origen.x+7, origen.y+27 );
-                context.lineTo ( origen.x+7, origen.y+13 );
+                context.lineTo ( origen.x+29, origen.y+14 );
+                context.lineTo ( origen.x+22, origen.y+14 );
+                context.lineTo ( origen.x+22, origen.y+28 );
+                context.lineTo ( origen.x+8, origen.y+28 );
+                context.lineTo ( origen.x+8, origen.y+14 );
             } else if (world.orientation == 2) { // este
-                context.moveTo ( origen.x+3, origen.y+7 );
-                context.lineTo ( origen.x+17, origen.y+7 );
-                context.lineTo ( origen.x+17, origen.y );
+                context.moveTo ( origen.x+2, origen.y+8 );
+                context.lineTo ( origen.x+17, origen.y+8 );
+                context.lineTo ( origen.x+17, origen.y+1 );
                 context.lineTo ( origen.x+30, origen.y+15 );
-                context.lineTo ( origen.x+17, origen.y+30 );
-                context.lineTo ( origen.x+17, origen.y+23 );
-                context.lineTo ( origen.x+3, origen.y+23 );
+                context.lineTo ( origen.x+17, origen.y+29 );
+                context.lineTo ( origen.x+17, origen.y+22 );
+                context.lineTo ( origen.x+2, origen.y+22 );
             } else if (world.orientation == 3) { // sur
-                context.moveTo ( origen.x+7, origen.y+3 );
-                context.lineTo ( origen.x+23, origen.y+3 );
-                context.lineTo ( origen.x+23, origen.y+17 );
-                context.lineTo ( origen.x+30, origen.y+17 );
+                context.moveTo ( origen.x+8, origen.y+2 );
+                context.lineTo ( origen.x+22, origen.y+2 );
+                context.lineTo ( origen.x+22, origen.y+17 );
+                context.lineTo ( origen.x+29, origen.y+17 );
                 context.lineTo ( origen.x+15, origen.y+30 );
-                context.lineTo ( origen.x, origen.y+17);
-                context.lineTo ( origen.x+7, origen.y+17);
+                context.lineTo ( origen.x+1, origen.y+17);
+                context.lineTo ( origen.x+8, origen.y+17);
             }
             context.closePath();
             context.fill();
@@ -266,6 +266,20 @@ var WorldRender = function(context, worldHeight, worldWidth){
         this.polygon = false;
     }
 
+    this.hoverRuler = function(fila, columna, mundo_ancho, mundo_alto) {
+        var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
+        context.fillStyle = 'rgba(255,0,0,0.4)';
+        //pinta de rojo sobre la zona gris
+        context.fillRect(6,
+                         origen.y-(fila - this.primera_fila )*30 + 3,
+                         this.tamano_celda - 6,
+                         this.tamano_celda - 6);
+        context.fillRect(origen.x+(columna - this.primera_columna )*30 + 3,
+                         origen.y + 30,
+                         this.tamano_celda - 6,
+                         this.tamano_celda - 4);
+    }
+
     this.hoverCorner = function(fila, columna, mundo_ancho, mundo_alto) {
         var origen = {x:30, y:mundo_alto-60} //Coordenada para dibujar la primera casilla
         context.fillStyle = 'rgba(255,0,0,0.5)';
@@ -273,6 +287,7 @@ var WorldRender = function(context, worldHeight, worldWidth){
                          origen.y-(fila - this.primera_fila)*30 + 24,
                          10,
                          10);
+        this.hoverRuler(fila, columna, mundo_ancho, mundo_alto);
     };
 
     this.hoverWall = function(fila, columna, orientacion, mundo_ancho, mundo_alto) {
@@ -299,6 +314,7 @@ var WorldRender = function(context, worldHeight, worldWidth){
                              24,
                              6);
         }
+        this.hoverRuler(fila, columna, mundo_ancho, mundo_alto);
     };
 
     this.hoverBuzzer = function(fila, columna, mundo_ancho, mundo_alto) {
@@ -308,6 +324,7 @@ var WorldRender = function(context, worldHeight, worldWidth){
                          origen.y-(fila - this.primera_fila)*30 + 2,
                          this.tamano_celda - 6,
                          this.tamano_celda - 6);
+        this.hoverRuler(fila, columna, mundo_ancho, mundo_alto);
     };
 
     this.moveSouth = function() {
