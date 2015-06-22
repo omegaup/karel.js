@@ -80,7 +80,7 @@ EventTarget.prototype.fireEvent = function(type, properties) {
 var Runtime = function(world) {
 	var self = this;
 
-	self.debug = true;
+	self.debug = false;
 	self.world = world;
 	self.disableStackEvents = false;
 

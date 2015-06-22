@@ -854,8 +854,6 @@ $(document).ready(function(){
               cellInfo.kind == currentCell.kind);
     currentCell = cellInfo;
     if (mundo_editable && changed) {
-      console.log(x + " " + (world.height-y) + " " + JSON.stringify(cellInfo));
-      
       wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
       if (cellInfo.kind == Kind.Corner) {
         if (wRender.polygon) {
