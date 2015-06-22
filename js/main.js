@@ -743,30 +743,54 @@ $(document).ready(function(){
   });
   $("body").keyup(function(event){
     var repaint = false;
+    var saveWorld = false;
     var tag = event.target.tagName.toLowerCase();
     //globals
-    if(event.keyCode == 27) {
+    if(event.which == 27) {
       $("#wcontext_menu").css("display", "none");
     }
     //not in the editor    
     if ( tag != 'input' && tag != 'textarea') {
-      if (event.keyCode == 37) {
+      repaint = true;
+      saveWorld = true;
+      if (event.which == 37) {
         wRender.moveWest();
-        repaint = true;
-      } else if (event.keyCode == 38) {
+        saveWorld = false;
+        
+      } else if (event.which == 38) {
           wRender.moveNorth();
-          repaint = true;
-      } else if (event.keyCode == 39) {
+          saveWorld = false;
+          
+      } else if (event.which == 39) {
           wRender.moveEast();
-          repaint = true;
-      } else if (event.keyCode == 40) {
+          saveWorld = false;
+          
+      } else if (event.which == 40) {
           wRender.moveSouth();
-          repaint = true;
+          saveWorld = false;
+          
+      } else if (currentCell && event.which >= 96 && event.which <= 105) {
+          mundo.setBuzzers(currentCell.row, currentCell.column, event.which - 96);
+      } else if (currentCell && event.which >= 48 && event.which <= 57) {
+          mundo.setBuzzers(currentCell.row, currentCell.column, event.which - 48);
+      } else if (currentCell && event.which == 73) { //I
+        mundo.setBuzzers(currentCell.row, currentCell.column, -1);
+      } else if (currentCell && event.which == 82) { //R
+        mundo.setBuzzers(currentCell.row, currentCell.column, Math.random() * 100);
+      } else if (currentCell && event.which == 78) { //N
+        mundo.setBuzzers(currentCell.row, currentCell.column, prompt("¿Cuántos zumbadores?", '0'));
+      } else if (currentCell && event.which == 68) { //D
+        mundo.toggleDumpCell(currentCell.row, currentCell.column);
+      } else {
+        repaint = false;
       }
-    }
+    }   
 
     if (repaint) {
       wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+    }
+    if (saveWorld) {
+      $("#xmlMundo").html(mundo.save());
     }
   });
   
