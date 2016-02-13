@@ -5,61 +5,72 @@
 %options flex
 %%
 
-\s+                             {/* ignore */}
-\{[^}]*\}			{/* ignore */}
-\(\*(?:[^*]|\*(?!\)))*\*\)		{/* ignore */}
-"iniciar-programa"              { return 'BEGINPROG'; }
-"inicia-ejecucion"              { return 'BEGINEXEC'; }
-"termina-ejecucion"             { return 'ENDEXEC'; }
-"finalizar-programa"            { return 'ENDPROG'; }
-"define-nueva-instruccion"      { return 'DEF'; }
-"define-prototipo-instruccion"  { return 'PROTO'; }
-"sal-de-instruccion"		{ return 'RET'; }
-"como"                          { return 'AS'; }
-"apagate"                       { return 'HALT'; }
-"gira-izquierda"                { return 'LEFT'; }
-"avanza"                        { return 'FORWARD'; }
-"coge-zumbador"                 { return 'PICKBUZZER'; }
-"deja-zumbador"                 { return 'LEAVEBUZZER'; }
-"inicio"                        { return 'BEGIN'; }
-"fin"                           { return 'END'; }
-"entonces"                      { return 'THEN'; }
-"mientras"                      { return 'WHILE'; }
-"hacer"                         { return 'DO'; }
-"repetir"                       { return 'REPEAT'; }
-"veces"                         { return 'TIMES'; }
-"precede"                       { return 'DEC'; }
-"sucede"                        { return 'INC'; }
-"si-es-cero"                    { return 'IFZ'; }
-"frente-libre"                  { return 'IFNFWALL'; }
-"frente-bloqueado"              { return 'IFFWALL'; }
-"izquierda-libre"               { return 'IFNLWALL'; }
-"izquierda-bloqueada"           { return 'IFLWALL'; }
-"derecha-libre"                 { return 'IFNRWALL'; }
-"derecha-bloqueada"             { return 'IFRWALL'; }
-"junto-a-zumbador"              { return 'IFWBUZZER'; }
-"no-junto-a-zumbador"           { return 'IFNWBUZZER'; }
-"algun-zumbador-en-la-mochila"  { return 'IFBBUZZER'; }
-"ningun-zumbador-en-la-mochila" { return 'IFNBBUZZER'; }
-"orientado-al-norte"            { return 'IFN'; }
-"orientado-al-sur"              { return 'IFS'; }
-"orientado-al-este"             { return 'IFE'; }
-"orientado-al-oeste"            { return 'IFW'; }
-"no-orientado-al-norte"         { return 'IFNN'; }
-"no-orientado-al-sur"           { return 'IFNS'; }
-"no-orientado-al-este"          { return 'IFNE'; }
-"no-orientado-al-oeste"         { return 'IFNW'; }
-"sino"                          { return 'ELSE'; }
-"si"                            { return 'IF'; }
-"no"                            { return 'NOT'; }
-"o"                             { return 'OR'; }
-"y"                             { return 'AND'; }
-"("                             { return '('; }
-")"                             { return ')'; }
-";"                             { return ';'; }
-[0-9]+                          { return 'NUM'; }
-[a-zA-Z_][a-zA-Z0-9_-]*         { return 'VAR'; }
-<<EOF>>                         { return 'EOF'; }
+\s+                                         {/* ignore */}
+\{[^}]*\}                                   {/* ignore */}
+\(\*(?:[^*]|\*(?!\)))*\*\)                  {/* ignore */}
+"iniciar-programa"                          { return 'BEGINPROG'; }
+"inicia-ejecucion"                          { return 'BEGINEXEC'; }
+"inicia-ejecución"                          { return 'BEGINEXEC'; }
+"termina-ejecucion"                         { return 'ENDEXEC'; }
+"termina-ejecución"                         { return 'ENDEXEC'; }
+"finalizar-programa"                        { return 'ENDPROG'; }
+"define-nueva-instruccion"                  { return 'DEF'; }
+"define-nueva-instrucción"                  { return 'DEF'; }
+"define-prototipo-instruccion"              { return 'PROTO'; }
+"define-prototipo-instrucción"              { return 'PROTO'; }
+"sal-de-instruccion"                        { return 'RET'; }
+"sal-de-instrucción"                        { return 'RET'; }
+"como"                                      { return 'AS'; }
+"apagate"                                   { return 'HALT'; }
+"apágate"                                   { return 'HALT'; }
+"gira-izquierda"                            { return 'LEFT'; }
+"avanza"                                    { return 'FORWARD'; }
+"coge-zumbador"                             { return 'PICKBUZZER'; }
+"deja-zumbador"                             { return 'LEAVEBUZZER'; }
+"inicio"                                    { return 'BEGIN'; }
+"fin"                                       { return 'END'; }
+"entonces"                                  { return 'THEN'; }
+"mientras"                                  { return 'WHILE'; }
+"hacer"                                     { return 'DO'; }
+"repetir"                                   { return 'REPEAT'; }
+"veces"                                     { return 'TIMES'; }
+"precede"                                   { return 'DEC'; }
+"sucede"                                    { return 'INC'; }
+"si-es-cero"                                { return 'IFZ'; }
+"frente-libre"                              { return 'IFNFWALL'; }
+"frente-bloqueado"                          { return 'IFFWALL'; }
+"izquierda-libre"                           { return 'IFNLWALL'; }
+"izquierda-bloqueada"                       { return 'IFLWALL'; }
+"derecha-libre"                             { return 'IFNRWALL'; }
+"derecha-bloqueada"                         { return 'IFRWALL'; }
+"junto-a-zumbador"                          { return 'IFWBUZZER'; }
+"no-junto-a-zumbador"                       { return 'IFNWBUZZER'; }
+"algun-zumbador-en-la-mochila"              { return 'IFBBUZZER'; }
+"algún-zumbador-en-la-mochila"              { return 'IFBBUZZER'; }
+"ningun-zumbador-en-la-mochila"             { return 'IFNBBUZZER'; }
+"ningún-zumbador-en-la-mochila"             { return 'IFNBBUZZER'; }
+"orientado-al-norte"                        { return 'IFN'; }
+"orientado-al-sur"                          { return 'IFS'; }
+"orientado-al-este"                         { return 'IFE'; }
+"orientado-al-oeste"                        { return 'IFW'; }
+"no-orientado-al-norte"                     { return 'IFNN'; }
+"no-orientado-al-sur"                       { return 'IFNS'; }
+"no-orientado-al-este"                      { return 'IFNE'; }
+"no-orientado-al-oeste"                     { return 'IFNW'; }
+"sino"                                      { return 'ELSE'; }
+"si-no"                                     { return 'ELSE'; }
+"si"                                        { return 'IF'; }
+"no"                                        { return 'NOT'; }
+"o"                                         { return 'OR'; }
+"u"                                         { return 'OR'; }
+"y"                                         { return 'AND'; }
+"e"                                         { return 'AND'; }
+"("                                         { return '('; }
+")"                                         { return ')'; }
+";"                                         { return ';'; }
+[0-9]+                                      { return 'NUM'; }
+[A-Za-zÀ-ÖØ-öø-ÿ_][A-Za-zÀ-ÖØ-öø-ÿ0-9_-]*   { return 'VAR'; }
+<<EOF>>                                     { return 'EOF'; }
 /lex
 
 %nonassoc XIF
