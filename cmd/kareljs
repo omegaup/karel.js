@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+       
+
+program
+    .version('0.0.1');
+
+program
+    .command('compile <sourcefile>')
+    .description('Compiles source file')
+    .option("-o, --output [outputfile]", "Specifies the output file (default sourfile.kx'")
+    .action(function(sourcefile, options){
+        var path = require('path'); 
+        console.log('compiling %s',sourcefile);
+        if (!options.output) {
+            options.output = path.parse(sourcefile).name;
+        }
+        console.log('saved to %s',options.output);
+    });
+
+program
+    .command('run <compiledfile>')
+    .description('runs file')
+    .action(function(compiledfile){
+        console.log('running %s',compiledfile);
+    });
+
+program.parse(process.argv);
