@@ -12,9 +12,10 @@
   "author": "@pacharrin",
   "license": "BSD",
   "dependencies": {
-    "commander": "^2.9.0"
+    "commander": "^2.9.0",
+    "xmldom": "^0.1.22"
   },
   "bin": {
-   "kareljs": "./kareljs"
- }
+    "kareljs": "./kareljs"
+  }
 }

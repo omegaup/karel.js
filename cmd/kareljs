@@ -1,29 +1,50 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-       
+var fs = require('fs');
+var version = require('./package.json').version;
+var karel = require('../js/karel.js');
 
 program
-    .version('0.0.1');
+.version(version);
 
 program
-    .command('compile <sourcefile>')
-    .description('Compiles source file')
-    .option("-o, --output [outputfile]", "Specifies the output file (default sourfile.kx'")
-    .action(function(sourcefile, options){
-        var path = require('path'); 
-        console.log('compiling %s',sourcefile);
-        if (!options.output) {
-            options.output = path.parse(sourcefile).name;
-        }
-        console.log('saved to %s',options.output);
-    });
+.command('compile <sourcefile>')
+.description('Compiles source file')
+.option("-o, --output [outputfile]", "Specifies the output file (default sourfile.kx'")
+  .action(function(sourcefile, options){
+    var path = require('path'); 
+    if (!options.output) {
+      options.output = path.parse(sourcefile).name + '.kx';
+    }
+    
+    
+    var file = fs.readFileSync(sourcefile, {encoding: 'utf-8'});
+    var lang = karel.detectLanguage(file);   
+    var parser = null;
+  
+    switch(lang) {
+      case 'java':
+        parser = require('../js/kareljava.js').parse;
+        break;
+      case 'pascal':
+        parser = require('../js/karelpascal.js').parse;
+        break;
+      case 'ruby':
+        parser = require('../js/karelruby.js').parse;
+        break;
+    }
+
+    var compiled = parser(file);
+  
+    fs.writeFileSync(options.output, JSON.stringify(compiled));
+  });
 
 program
-    .command('run <compiledfile>')
-    .description('runs file')
-    .action(function(compiledfile){
-        console.log('running %s',compiledfile);
-    });
+.command('run <compiledfile>')
+.description('runs file')
+.action(function(compiledfile){
+  console.log('running %s',compiledfile);
+});
 
 program.parse(process.argv);
