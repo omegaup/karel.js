@@ -1299,6 +1299,47 @@ World.prototype.import = function(mdo, kec) {
 	}
 };
 
+
+function detectLanguage(code) {
+	var rules = [
+      /^\s+/,
+      /^\/\/[^\n]*/,
+      /^#[^\n]*/,
+      /^(?:\/\*(?:[^*]|\*[^)])*\*\/)/,
+      /^{[^}]*}/,
+      /^\(\*([^*]|\*[^)])*\*\)/,
+      /^[^a-zA-Z0-9_-]+/,
+      /^[a-zA-Z0-9_-]+/
+    ];
+  var i = 0;
+
+  while (i < code.length) {
+    for (var j = 0; j < rules.length; j++) {
+      var m = rules[j].exec(code.substring(i));
+      if (m !== null) {
+        if (j == rules.length - 1) {
+          // el primer token de verdad.
+          if (m[0] == 'class') {
+            return 'java';
+          } else if (m[0].toLowerCase() == 'iniciar-programa') {
+            return 'pascal';
+          } else {
+            return 'ruby';
+          }
+        } else {
+          // comentario o no-token.
+          i += m[0].length;
+          break;
+        }
+      }
+    }
+  }
+
+  return 'none';
+
+}
+
 if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 	exports.World = World;
+	exports.detectLanguage = detectLanguage;
 }

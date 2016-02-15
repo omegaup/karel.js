@@ -1,42 +1,21 @@
 $(document).ready(function(){
-  function detectParser(str) {
-    var rules = [
-      /^\s+/,
-      /^\/\/[^\n]*/,
-      /^#[^\n]*/,
-      /^(?:\/\*(?:[^*]|\*[^)])*\*\/)/,
-      /^{[^}]*}/,
-      /^\(\*([^*]|\*[^)])*\*\)/,
-      /^[^a-zA-Z0-9_-]+/,
-      /^[a-zA-Z0-9_-]+/
-    ];
-    var i = 0;
+  function getParser(str) {
+    language = detectLanguage(str);
 
-    while (i < str.length) {
-      for (var j = 0; j < rules.length; j++) {
-        var m = rules[j].exec(str.substring(i));
-        if (m !== null) {
-          if (j == rules.length - 1) {
-            // el primer token de verdad.
-            if (m[0] == 'class') {
-              //editor.getSession().setMode("ace/mode/kareljava");
-              return {parser: new kareljava.Parser(), name: 'java'};
-            } else if (m[0].toLowerCase() == 'iniciar-programa') {
-              ///editor.getSession().setMode("ace/mode/karelpascal");
-              return {parser: new karelpascal.Parser(), name: 'pascal'};
-            } else {
-              return {parser: new karelruby.Parser(), name: 'ruby'};
-            }
-          } else {
-            // comentario o no-token.
-            i += m[0].length;
-            break;
-          }
-        }
-      }
+    switch(language) {
+      case 'pascal': 
+        return {parser: new karelpascal.Parser(), name: 'pascal'};
+        break;
+      case 'java':
+        return {parser: new kareljava.Parser(), name: 'java'};
+        break;
+      case 'ruby':
+        return {parser: new karelruby.Parser(), name: 'ruby'};
+        break;
+      default:
+        return {parser: new kareljava.Parser(), name: 'pascal'};
+        break;
     }
-
-    return {parser: new karelruby.Parser(), name: 'ruby'};
   }
 
   function parseError(str, hash) {
@@ -88,7 +67,7 @@ $(document).ready(function(){
   }
 
   function getSyntax(str) {
-    var parser = detectParser(str);
+    var parser = getParser(str);
     parser.parser.yy.parseError = parseError;
     return parser;
   }

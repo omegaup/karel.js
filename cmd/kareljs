@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var fs = require('fs');
+var version = require('./package.json').version;
+var karel = require('../js/karel.js');
+
+program
+.version(version);
+
+program
+.command('compile <sourcefile>')
+.description('Compiles source file')
+.option('-o, --output [outputfile]', 'Specifies the output file (default sourcefile.kx)')
+  .action(function(sourcefile, options){
+    var path = require('path'); 
+    if (!options.output) {
+      options.output = path.parse(sourcefile).name + '.kx';
+    }    
+    
+    var file = fs.readFileSync(sourcefile, {encoding: 'utf-8'});
+    var lang = karel.detectLanguage(file);   
+    var parser = null;
+  
+    switch (lang) {
+      case 'java':
+        parser = require('../js/kareljava.js').parse;
+        break;
+      case 'pascal':
+        parser = require('../js/karelpascal.js').parse;
+        break;
+      case 'ruby':
+        parser = require('../js/karelruby.js').parse;
+        break;
+    }
+
+    var compiled = parser(file);
+  
+    fs.writeFileSync(options.output, JSON.stringify(compiled));
+  });
+
+program
+.command('run <compiledfile>')
+.option('--debug','enables debug output')
+.description('runs file')
+.action(function(compiledfile,options){
+  var file = fs.readFileSync(compiledfile, {encoding: 'utf-8'});
+  var json = JSON.parse(file);
+  var DOMParser = require('xmldom').DOMParser;
+  var worldXml = new DOMParser().parseFromString(fs.readFileSync(process.stdin.fd, {encoding: 'utf-8'}), 'text/xml');
+  var world = new karel.World(100, 100);
+  world.load(worldXml);
+  if (options.debug) {
+    world.runtime.debug = true;
+    world.runtime.addEventListener('debug', function(ev) {
+      console.log(ev.debugType, ev.message);
+    });
+  }
+  world.runtime.load(json);
+  while (world.runtime.step());
+  console.log(world.output());
+});
+
+program.parse(process.argv);
