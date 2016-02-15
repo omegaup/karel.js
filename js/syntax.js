@@ -28,7 +28,7 @@ CodeMirror.defineMode("karelpascal", function() {
       stream.eatWhile(/[\w\.]/);
       return "number";
     }
-    stream.eatWhile(/[\w_-]/);
+    stream.eatWhile(/[\wÀ-ÖØ-öø-ÿ_-]/);
     var cur = stream.current().toLowerCase();
     var style = "variable";
     if (keywords.propertyIsEnumerable(cur)) style = "keyword";
