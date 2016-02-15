@@ -8,6 +8,6 @@
 
 ##installation
 
- - Go to /cmd
- - sudo npm install -g
+ - Go to `cmd/`
+ - `sudo npm install -g`
  - Enjoy

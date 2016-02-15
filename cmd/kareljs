@@ -16,14 +16,13 @@ program
     var path = require('path'); 
     if (!options.output) {
       options.output = path.parse(sourcefile).name + '.kx';
-    }
-    
+    }    
     
     var file = fs.readFileSync(sourcefile, {encoding: 'utf-8'});
     var lang = karel.detectLanguage(file);   
     var parser = null;
   
-    switch(lang) {
+    switch (lang) {
       case 'java':
         parser = require('../js/kareljava.js').parse;
         break;
@@ -48,7 +47,7 @@ program
   var file = fs.readFileSync(compiledfile, {encoding: 'utf-8'});
   var json = JSON.parse(file);
   var DOMParser = require('xmldom').DOMParser;
-  var worldXml = new DOMParser().parseFromString(fs.readFileSync('/dev/stdin', {encoding: 'utf-8'}), 'text/xml');
+  var worldXml = new DOMParser().parseFromString(fs.readFileSync(process.stdin.fd, {encoding: 'utf-8'}), 'text/xml');
   var world = new karel.World(100, 100);
   world.load(worldXml);
   if (options.debug) {

@@ -69,7 +69,6 @@ EventTarget.prototype.fireEvent = function(type, properties) {
 	self.dispatchEvent(evt);
 };
 
-
 /**
  * A class that holds the state of computation and executes opcodes.
  *
