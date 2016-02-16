@@ -3,7 +3,7 @@ $(document).ready(function(){
     language = detectLanguage(str);
 
     switch(language) {
-      case 'pascal': 
+      case 'pascal':
         return {parser: new karelpascal.Parser(), name: 'pascal'};
         break;
       case 'java':
@@ -252,9 +252,19 @@ $(document).ready(function(){
     }
   });
   var src = null;
+  if (sessionStorage) {
+    var restoredSource = sessionStorage.getItem('karelsource');
+    if (restoredSource) {
+      editor.setValue(restoredSource);
+    }
+    var restoredWorld = sessionStorage.getItem('karelworld');
+    if (restoredWorld) {
+      src = restoredWorld;
+    }
+  }
   if (document.location.hash.indexOf('#mundo:') === 0) {
     src = decodeURIComponent(document.location.hash.substring(7));
-  } else {
+  } else if (!src) {
     src = $('script#xmlMundo').html();
   }
   mundo.load(parseWorld(src));
@@ -321,6 +331,10 @@ $(document).ready(function(){
   }
 
   function compile() {
+    if (sessionStorage) {
+      sessionStorage.setItem('karelsource', editor.getValue());
+      sessionStorage.setItem('karelworld', mundo.save());
+    }
     var syntax = getSyntax(editor.getValue());
     $("#pila").html('');
     try {
