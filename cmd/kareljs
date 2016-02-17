@@ -2,7 +2,7 @@
 
 var program = require('commander');
 var fs = require('fs');
-var version = require('./package.json').version;
+var version = require('../package.json').version;
 var karel = require('../js/karel.js');
 
 program

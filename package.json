@@ -1,18 +1,33 @@
 {
   "name": "karel.js",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Compilador y evaluador de Karel en javascript",
   "scripts": {
+    "start": "electron standalone.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "kareljs": "./cmd/kareljs"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/omegaup/karel.js.git"
   },
-  "author": "OmegaUp",
+  "bugs": {
+    "url": "https://github.com/omegaup/karel.js/issues"
+  },
+  "author": "omegaUp",
   "license": "MIT",
   "readmeFilename": "README.md",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "xmldom": "^0.1.22"
+  },
+  "keywords": [
+    "karel"
+  ],
   "devDependencies": {
+    "electron-prebuilt": "^0.36.0",
     "grunt": "~0.4.4",
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-jshint": "~0.4.3",
