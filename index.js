@@ -13,10 +13,10 @@ let mainWindow;
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 600,
-    nodeIntegration: false
-  });
+		width: 1000,
+		height: 600,
+		nodeIntegration: false
+	});
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
