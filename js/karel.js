@@ -425,6 +425,10 @@ Runtime.prototype.next = function() {
 			}
 
 			case Runtime.RET: {
+				if (self.state.fp < 0) {
+					self.state.running = false;
+					break;
+				}
 				self.state.pc = self.state.stack[self.state.fp + 2];
 				self.state.sp = self.state.stack[self.state.fp + 1];
 				self.state.fp = self.state.stack[self.state.fp];
@@ -436,7 +440,7 @@ Runtime.prototype.next = function() {
 			}
 
 			case Runtime.PARAM: {
-				self.state.stack[++self.state.sp] = 
+				self.state.stack[++self.state.sp] =
 					self.state.stack[self.state.fp + 3 + self.program[3*self.state.pc+1]];
 				break;
 			}
