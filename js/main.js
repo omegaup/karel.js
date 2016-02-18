@@ -54,6 +54,9 @@ $(document).ready(function(){
   }
 
   function addEventListeners(world) {
+      world.runtime.addEventListener('debug', function(evt){
+          console.log(evt);
+      });
       world.runtime.addEventListener('call', function(evt){
           $("#pila").prepend('<div class="well well-small">' + evt.function +
             '(' + evt.param + ') Línea <span class="badge badge-info">'+(evt.line+1)+'</span></div>');
@@ -238,6 +241,9 @@ $(document).ready(function(){
   var fila_evento;
   var columna_evento;
   var mundo = new World(100, 100);
+  if (location.hash == '#debug') {
+    mundo.runtime.debug = true;
+  }
   addEventListeners(mundo);
   var mundo_editable = true;
   var linea_actual = null;
@@ -344,6 +350,9 @@ $(document).ready(function(){
           allMarks[i].clear();
       }
       var compiled = syntax.parser.parse(editor.getValue());
+      if (location.hash == '#debug') {
+        console.log(JSON.stringify(compiled));
+      }
       $('#mensajes').trigger('info', {'mensaje': 'Programa compilado (sintaxis '+syntax.name+')'});
       return compiled;
     } catch(e) {
@@ -770,6 +779,9 @@ $(document).ready(function(){
 
     $('#ejecutar').trigger('unlock');
     mundo = new World(100, 100);
+    if (location.hash == '#debug') {
+      mundo.runtime.debug = true;
+    }
     addEventListeners(mundo);
     wRender.paint(mundo, world.width, world.height, { editable: true, track_karel: true });
     $("#xmlMundo").html(mundo.save());
