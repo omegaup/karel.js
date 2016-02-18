@@ -30,7 +30,7 @@ $(document).ready(function(){
       }
       e.text = e.text;
       var line = editor.getLine(e.line);
-      var i = line.indexOf(e.text, hash.loc.first_column);
+      var i = line.indexOf(e.text, hash.loc ? hash.loc.first_column : 0);
       if (i == -1) {
         i = line.indexOf(e.text);
       }
