@@ -1,6 +1,6 @@
 {
   "name": "karel.js",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Compilador y evaluador de Karel en javascript",
   "scripts": {
     "start": "electron index.js",
@@ -32,7 +32,7 @@
     },
     "win" : {
       "title" : "karel.js",
-      "version" : "0.1.0",
+      "version" : "0.2.1",
       "publisher": "omegaUp",
       "icon" : "img/win_icon.ico",
       "verbosity": 1
@@ -40,7 +40,7 @@
     "linux" : {
       "arch" : 64,
       "target" : "deb",
-      "version" : "0.1.0",
+      "version" : "0.2.1",
       "title" : "karel.js",
       "executable" : "kareljs",
       "comment": "kareljs",

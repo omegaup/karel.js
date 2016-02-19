@@ -84,6 +84,29 @@ $(document).ready(function(){
     return s.replace(/</g, '&lt;').replace(/</g, '&gt;');
   }
 
+  function modalPrompt(label, value) {
+    var dfd = jQuery.Deferred();
+    $('#prompt_modal h4').html(label);
+    $('#prompt_modal label').html(label);
+    $('#prompt_modal input[type="text"]').val(value);
+    $('#prompt_modal').modal('show');
+    function resolve(e) {
+      dfd.resolve($('#prompt_value').val());
+      $('#prompt_modal').modal('hide');
+      return false;
+    }
+    $('#prompt_modal form').on('submit', resolve);
+    $('#prompt_modal button.btn-primary').on('click', resolve);
+    $('#prompt_modal').on('hidden.bs.modal', function () {
+      $('#prompt_modal form').off('submit', resolve);
+      $('#prompt_modal button.btn-primary').off('click', resolve);
+      if (dfd.state() == "pending") {
+        dfd.reject();
+      }
+    });
+    return dfd;
+  }
+
   var ERROR_CODES = {
     'WALL': 'Karel ha chocado con un muro!',
     'WORLDUNDERFLOW': 'Karel intentó tomar zumbadores en una posición donde no había!',
@@ -810,29 +833,29 @@ $(document).ready(function(){
       if (event.which == 37) {
         wRender.moveWest();
         saveWorld = false;
-
       } else if (event.which == 38) {
-          wRender.moveNorth();
-          saveWorld = false;
-
+        wRender.moveNorth();
+        saveWorld = false;
       } else if (event.which == 39) {
-          wRender.moveEast();
-          saveWorld = false;
-
+        wRender.moveEast();
+        saveWorld = false;
       } else if (event.which == 40) {
-          wRender.moveSouth();
-          saveWorld = false;
-
+        wRender.moveSouth();
+        saveWorld = false;
       } else if (currentCell && event.which >= 96 && event.which <= 105) {
-          mundo.setBuzzers(currentCell.row, currentCell.column, event.which - 96);
+        mundo.setBuzzers(currentCell.row, currentCell.column, event.which - 96);
       } else if (currentCell && event.which >= 48 && event.which <= 57) {
-          mundo.setBuzzers(currentCell.row, currentCell.column, event.which - 48);
+        mundo.setBuzzers(currentCell.row, currentCell.column, event.which - 48);
       } else if (currentCell && event.which == 73) { //I
         mundo.setBuzzers(currentCell.row, currentCell.column, -1);
       } else if (currentCell && event.which == 82) { //R
         mundo.setBuzzers(currentCell.row, currentCell.column, Math.random() * 100);
       } else if (currentCell && event.which == 78) { //N
-        mundo.setBuzzers(currentCell.row, currentCell.column, prompt("¿Cuántos zumbadores?", '0'));
+        modalPrompt("¿Cuántos zumbadores?", '0').then(function(response) {
+          mundo.setBuzzers(currentCell.row, currentCell.column, response);
+          wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+          $("#xmlMundo").html(mundo.save());
+        });
       } else if (currentCell && event.which == 68) { //D
         mundo.toggleDumpCell(currentCell.row, currentCell.column);
       } else {
@@ -1057,10 +1080,17 @@ $(document).ready(function(){
     $("#xmlMundo").html(mundo.save());
   });
   $("#n_zumbadores").click(function(event){
-    mundo.setBuzzers(fila_evento, columna_evento, prompt("¿Cuántos zumbadores?", '0'));
-    $("#wcontext_menu").css("display", "none");
-    wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
-    $("#xmlMundo").html(mundo.save());
+    modalPrompt("¿Cuántos zumbadores?", '0').then(
+      function(response) {
+        mundo.setBuzzers(fila_evento, columna_evento, response);
+        $("#wcontext_menu").css("display", "none");
+        wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
+        $("#xmlMundo").html(mundo.save());
+      },
+      function() {
+        $("#wcontext_menu").css("display", "none");
+      }
+    );
   });
   $("#inf_zumbadores_ctx").click(function(event){
     mundo.setBuzzers(fila_evento, columna_evento, -1);
@@ -1148,6 +1178,9 @@ $(document).ready(function(){
           layoutExpanded = !layoutExpanded;
           recalcDimensions();
         }));
+  $('#prompt_modal').on('shown.bs.modal', function () {
+      $('#prompt_value').select();
+  });
   recalcDimensions();
   $(window).resize(recalcDimensions);
 });
