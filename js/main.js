@@ -986,7 +986,6 @@ $(document).ready(function(){
     return false;
   };
   $('#world').hammer().on("drag", function(event) {
-    event.gesture.preventDefault();
     var x = event.gesture.deltaX % 2;
     var y = event.gesture.deltaY % 2;
 
@@ -1003,8 +1002,25 @@ $(document).ready(function(){
     }
 
     wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
-    return false;
   });
+
+  $('#world').hammer().on('release', function(event){
+    event.gesture.preventDefault();
+  });
+
+  $('#world').on('mouseup', function(event){
+    event.preventDefault()
+  });
+
+  Hammer($('#world')).on('dragstart', function(event) {
+    $(document.body).css( 'cursor', 'move' );
+  });
+
+  Hammer($('#world')).on('dragend', function(event) {
+    $(document.body).css( 'cursor', 'auto' );
+    currentCell = undefined;
+  });
+
   $("#inf_zumbadores").click(function(event){
     if($(this).hasClass('active')) { //ya hay infinitos
       mundo.setBagBuzzers(zumbadores_anterior);
