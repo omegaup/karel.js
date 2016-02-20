@@ -949,7 +949,7 @@ $(document).ready(function(){
       }
     }
   });
-  $("#world").bind("contextmenu", function(e){
+  $("#world").bind("contextmenu", function(event){
     // Maneja el click derecho sobre el mundo
     if (mundo_editable) {
       var x = event.pageX;
