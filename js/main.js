@@ -645,7 +645,7 @@ $(document).ready(function(){
   });
   $("#pascalsyntax").click(function(event){
     //editor.getSession().setMode("ace/mode/karelpascal");
-    editor.setValue("iniciar-programa\n    inicia-ejecución\n        { TODO poner código aquí }\n        apágate;\n    termina-ejecución\nfinalizar-programa", 1);
+    editor.setValue("iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aquí }\n        apagate;\n    termina-ejecucion\nfinalizar-programa", 1);
     editor.focus();
   });
   $("#javasyntax").click(function(event){
@@ -827,7 +827,7 @@ $(document).ready(function(){
       $("#wcontext_menu").css("display", "none");
     }
     //not in the editor
-    if ( tag != 'input' && tag != 'textarea') {
+    if ( tag != 'input' && tag != 'textarea' && mundo_editable) {
       repaint = true;
       saveWorld = true;
       if (event.which == 37) {
@@ -949,7 +949,7 @@ $(document).ready(function(){
       }
     }
   });
-  $("#world").bind("contextmenu", function(e){
+  $("#world").bind("contextmenu", function(event){
     // Maneja el click derecho sobre el mundo
     if (mundo_editable) {
       var x = event.pageX;
@@ -986,7 +986,6 @@ $(document).ready(function(){
     return false;
   };
   $('#world').hammer().on("drag", function(event) {
-    event.gesture.preventDefault();
     var x = event.gesture.deltaX % 2;
     var y = event.gesture.deltaY % 2;
 
@@ -1003,8 +1002,25 @@ $(document).ready(function(){
     }
 
     wRender.paint(mundo, world.width, world.height, { editable: mundo_editable });
-    return false;
   });
+
+  $('#world').hammer().on('release', function(event){
+    event.gesture.preventDefault();
+  });
+
+  $('#world').on('mouseup', function(event){
+    event.preventDefault()
+  });
+
+  Hammer($('#world')).on('dragstart', function(event) {
+    $(document.body).css( 'cursor', 'move' );
+  });
+
+  Hammer($('#world')).on('dragend', function(event) {
+    $(document.body).css( 'cursor', 'auto' );
+    currentCell = undefined;
+  });
+
   $("#inf_zumbadores").click(function(event){
     if($(this).hasClass('active')) { //ya hay infinitos
       mundo.setBagBuzzers(zumbadores_anterior);
