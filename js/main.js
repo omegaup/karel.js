@@ -645,7 +645,7 @@ $(document).ready(function(){
   });
   $("#pascalsyntax").click(function(event){
     //editor.getSession().setMode("ace/mode/karelpascal");
-    editor.setValue("iniciar-programa\n    inicia-ejecución\n        { TODO poner código aquí }\n        apágate;\n    termina-ejecución\nfinalizar-programa", 1);
+    editor.setValue("iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aquí }\n        apagate;\n    termina-ejecucion\nfinalizar-programa", 1);
     editor.focus();
   });
   $("#javasyntax").click(function(event){
