@@ -827,7 +827,7 @@ $(document).ready(function(){
       $("#wcontext_menu").css("display", "none");
     }
     //not in the editor
-    if ( tag != 'input' && tag != 'textarea') {
+    if ( tag != 'input' && tag != 'textarea' && mundo_editable) {
       repaint = true;
       saveWorld = true;
       if (event.which == 37) {
