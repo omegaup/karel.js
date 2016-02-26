@@ -124,7 +124,7 @@ Runtime.prototype.load = function(opcodes) {
 			'ROTL', 'ROTR', 'MASK', 'NOT', 'AND', 'OR', 'EQ', 'EZ', 'JZ', 'JMP',
 			'FORWARD', 'WORLDBUZZERS', 'BAGBUZZERS', 'PICKBUZZER', 'LEAVEBUZZER',
 			'LOAD', 'POP', 'DUP', 'DEC', 'INC', 'CALL', 'RET', 'PARAM'];
-	var error_mapping = ['WALL', 'WORLDUNDERFLOW', 'BAGUNDERFLOW'];
+	var error_mapping = ['WALL', 'WORLDUNDERFLOW', 'BAGUNDERFLOW', 'INSTRUCTION'];
 
 	self.raw_opcodes = opcodes;
 	var function_map = {};
@@ -168,6 +168,12 @@ Runtime.prototype.reset = function() {
 		ic: 0,
 		stack: new Int32Array(new ArrayBuffer(0xffff * 16 + 40)),
 		stackSize: 0,
+
+		// Instruction counts
+		moveCount: 0,
+		turnLeftCount: 0,
+		pickBuzzerCount: 0,
+		leaveBuzzerCount: 0,
 
 		// Flags
 		jumped: false,
@@ -213,10 +219,10 @@ Runtime.prototype.next = function() {
 
 	if (self.state.ic >= world.maxInstructions) {
 		self.state.running = false;
-		self.state.error = 'INSTRUCTION LIMIT';
+		self.state.error = 'INSTRUCTION';
 
 		return false;
-	} else if (self.state.stackSize >= self.world.stackSize) {
+	} else if (self.state.stackSize >= self.world.maxStackSize) {
 		self.state.running = false;
 		self.state.error = 'STACK';
 
@@ -254,6 +260,10 @@ Runtime.prototype.next = function() {
 					self.world.orientation = 3;
 				}
 				self.world.dirty = true;
+				if (++self.turnLeftCount >= self.world.maxTurnLeft) {
+					self.state.running = false;
+					self.state.error = 'INSTRUCTION';
+				}
 				break;
 			}
 
@@ -343,6 +353,10 @@ Runtime.prototype.next = function() {
 				self.world.i += di[self.world.orientation];
 				self.world.j += dj[self.world.orientation];
 				self.world.dirty = true;
+				if (++self.moveCount >= self.world.maxMove) {
+					self.state.running = false;
+					self.state.error = 'INSTRUCTION';
+				}
 				break;
 			}
 
@@ -359,12 +373,20 @@ Runtime.prototype.next = function() {
 			case Runtime.PICKBUZZER: {
 				self.state.ic++;
 				self.world.pickBuzzer(self.world.i, self.world.j);
+				if (++self.pickBuzzerCount >= self.world.maxPickBuzzer) {
+					self.state.running = false;
+					self.state.error = 'INSTRUCTION';
+				}
 				break;
 			}
 
 			case Runtime.LEAVEBUZZER: {
 				self.state.ic++;
 				self.world.leaveBuzzer(self.world.i, self.world.j);
+				if (++self.leaveBuzzerCount >= self.world.maxLeaveBuzzer) {
+					self.state.running = false;
+					self.state.error = 'INSTRUCTION';
+				}
 				break;
 			}
 
@@ -410,7 +432,7 @@ Runtime.prototype.next = function() {
 				self.state.jumped = true;
 				self.state.stackSize++;
 
-				if (self.state.stackSize >= self.world.stackSize) {
+				if (self.state.stackSize >= self.world.maxStackSize) {
 					self.state.running = false;
 					self.state.error = 'STACK';
 				} else if (!self.disableStackEvents) {
@@ -526,6 +548,20 @@ World.prototype.init = function(w, h) {
 		}
 	}
 
+	self.clear();
+};
+
+World.prototype.clear = function() {
+	var self = this;
+
+	for (var i = 0; i < self.wallMap.length; i++) {
+		self.wallMap[i] = 0;
+	}
+
+	for (var i = 0; i < self.map.length; i++) {
+		self.map[i] = self.currentMap[i] = 0;
+	}
+
 	for (var i = 1; i <= self.h; i++) {
 		self.addWall(i, 1, 0);
 		self.addWall(i, self.w, 2);
@@ -547,7 +583,13 @@ World.prototype.init = function(w, h) {
 	self.dumps = {};
 	self.dumpCells = [];
 	self.maxInstructions = 10000000;
-	self.stackSize = 65000;
+	self.maxMove = -1;
+	self.maxTurnLeft = -1;
+	self.maxPickBuzzer = -1;
+	self.maxLeaveBuzzer = -1;
+	self.maxKarelBeepers = -1;
+	self.maxBeepers = -1;
+	self.maxStackSize = 65000;
 	self.worldName = 'mundo_0';
 	self.programName = 'p1';
 	self.preValidators = [];
@@ -565,7 +607,8 @@ World.ERROR_MAPPING = {
 	BAGUNDERFLOW: 'ZUMBADOR INVALIDO',
 	WALL: 'MOVIMIENTO INVALIDO',
 	WORLDUNDERFLOW: 'ZUMBADOR INVALIDO',
-	STACK: 'STACK OVERFLOW'
+	STACK: 'STACK OVERFLOW',
+	INSTRUCTION: 'LIMITE DE INSTRUCCIONES'
 };
 
 World.prototype.validate = function(script, callbacks) {
@@ -800,31 +843,7 @@ World.prototype.toggleDumps = function(d) {
 World.prototype.load = function(doc) {
 	var self = this;
 
-	self.preValidators = [];
-	self.postValidators = [];
-	for (var i = 0; i < self.wallMap.length; i++) {
-		self.wallMap[i] = 0;
-	}
-
-	for (var i = 0; i < self.map.length; i++) {
-		self.map[i] = self.currentMap[i] = 0;
-	}
-
-	for (var i = 1; i <= self.h; i++) {
-		self.addWall(i, 1, 0);
-		self.addWall(i, self.w, 2);
-  }
-
-	for (var j = 1; j <= self.w; j++) {
-		self.addWall(self.h, j, 1);
-		self.addWall(1, j, 3);
-	}
-
-	self.dumps = {};
-	self.dumpCells = [];
-	self.maxInstructions = 10000000;
-	self.stackSize = 65000;
-	self.move(1, 1);
+	self.clear();
 
 	var rules = {
 		mundo: function(mundo) {
@@ -854,11 +873,29 @@ World.prototype.load = function(doc) {
 		condiciones: function(condiciones) {
 			self.maxInstructions =
 				parseInt(
-						condiciones.getAttribute('instruccionesMaximasAEjecutar') ||
 						condiciones.getAttribute('instruccionesMaximasAEjecutar'), 10) ||
 				10000000;
-			self.stackSize = parseInt(condiciones.getAttribute('longitudStack') ||
+			self.maxStackSize = parseInt(
 					condiciones.getAttribute('longitudStack'), 10) || 65000;
+		},
+
+		comando: function(comando) {
+			var name = comando.getAttribute('nombre');
+			var val = parseInt(comando.getAttribute('maximoNumeroDeEjecuciones'), 10);
+
+			if (!name || !val) {
+				return;
+			}
+
+			if (name == 'AVANZA') {
+				self.maxMove = val;
+			} else if (name == 'GIRA_IZQUIERDA') {
+				self.maxTurnLeft = val;
+			} else if (name == 'COGE_ZUMBADOR') {
+				self.maxPickBuzzer = val;
+			} else if (name == 'DEJA_ZUMBADOR') {
+				self.maxLeaveBuzzer = val;
+			}
 		},
 
 		monton: function(monton) {
@@ -1019,7 +1056,7 @@ World.prototype.save = function() {
 		condiciones: {
 			'#attributes': {
 				instruccionesMaximasAEjecutar: self.maxInstructions,
-				longitudStack: self.stackSize
+				longitudStack: self.maxStackSize
 			}
 		},
 		mundos: {
@@ -1257,26 +1294,33 @@ World.prototype.import = function(mdo, kec) {
 	var heapcount = mdo[13];
 	//var x10 = mdo[14];
 
-	self.maxInstructions = 10000000;
-	self.stackSize = 65000;
 	if (kec[0]) {
 		self.maxInstructions = kec[1];
 	}
-	/*
-	maxmove = kec[1][1] if kec[1][0] else False
-	maxturnleft = kec[2][1] if kec[2][0] else False
-	maxpickbeeper = kec[3][1] if kec[3][0] else False
-	maxputbeeper = kec[4][1] if kec[4][0] else False
-	maxkarelbeepers = kec[5][1] if kec[5][0] else False
-	maxbeepers = kec[6][1] if kec[6][0] else False
-	*/
+	if (kec[3]) {
+		self.maxMove = kec[4];
+	}
+	if (kec[6]) {
+		self.maxTurnLeft = kec[7];
+	}
+	if (kec[9]) {
+		self.maxPickBuzzer = kec[10];
+	}
+	if (kec[12]) {
+		self.maxLeaveBuzzer = kec[13];
+	}
+	if (kec[15]) {
+		self.maxKarelBuzzers = kec[16];
+	}
+	if (kec[18]) {
+		self.maxBuzzers = kec[19];
+	}
 	if (kec[21]) {
 		self.setDumps(World.DUMP_POSITION, true);
 	}
 	if (kec[24]) {
 		self.setDumps(World.DUMP_ORIENTATION, true);
 	}
-	// TODO(lhchavez): DUMP_BAG
 	var dumpcount = kec[27] ? kec[28] : 0;
 	if (dumpcount) {
 		self.setDumps(World.DUMP_WORLD, true);
@@ -1371,3 +1415,5 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 	exports.detectLanguage = detectLanguage;
 	exports.compile = compile;
 }
+
+// vim: set noexpandtab:ts=2:sw=2

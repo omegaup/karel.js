@@ -111,7 +111,7 @@ $(document).ready(function(){
     'WALL': 'Karel ha chocado con un muro!',
     'WORLDUNDERFLOW': 'Karel intentó tomar zumbadores en una posición donde no había!',
     'BAGUNDERFLOW': 'Karel intentó dejar un zumbador pero su mochila estaba vacía!',
-    'INSTRUCTION LIMIT': 'Karel ha superado el límite de instrucciones!',
+    'INSTRUCTION': 'Karel ha superado el límite de instrucciones!',
     'STACK': 'La pila de karel se ha desbordado!'
   };
 
@@ -467,18 +467,9 @@ $(document).ready(function(){
           $('#mensajes').trigger('success', {'mensaje': 'La validación fue exitosa' });
         }
         mundo.runtime.start();
-        var finished = false;
         mundo.runtime.disableStackEvents = true;
-        for (var i = 0; i < 1000000; i++) {
-          if (!mundo.runtime.step()) {
-            finished = true;
-            break;
-          }
-        }
+        while (mundo.runtime.step());
         mundo.runtime.disableStackEvents = false;
-        if (!finished) {
-          mundo.runtime.state.error = 'INSTRUCTION LIMIT';
-        }
         wRender.paint(mundo, world.width, world.height, { track_karel: true });
         if(mundo.runtime.state.error) {
           $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
@@ -511,18 +502,9 @@ $(document).ready(function(){
       mundo.reset();
       mundo.runtime.load(compiled);
       mundo.runtime.start();
-      var finished = false;
       mundo.runtime.disableStackEvents = true;
-      for (var i = 0; i < 1000000; i++) {
-        if (!mundo.runtime.step()) {
-          finished = true;
-          break;
-        }
-      }
+      while (mundo.runtime.step());
       mundo.runtime.disableStackEvents = false;
-      if (!finished) {
-        mundo.runtime.state.error = 'INSTRUCTION LIMIT';
-      }
       wRender.paint(mundo, world.width, world.height, { track_karel: true });
       if(mundo.runtime.state.error) {
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
