@@ -1,10 +1,10 @@
 {
   "name": "karel.js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Compilador y evaluador de Karel en javascript",
   "scripts": {
     "start": "electron index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
 
     "clean": "rm -rf ./dist",
     "clean:win": "rm -rf ./dist/win",
@@ -76,6 +76,7 @@
     "grunt-contrib-jshint": "~0.4.3",
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-jison": "~1.2.1",
-    "jison": "~0.4.13"
+    "jison": "~0.4.13",
+    "mocha": "~2.4.5"
   }
 }
