@@ -19,35 +19,26 @@ program
     }    
     
     var file = fs.readFileSync(sourcefile, {encoding: 'utf-8'});
-    var lang = karel.detectLanguage(file);   
-    var parser = null;
-  
-    switch (lang) {
-      case 'java':
-        parser = require('../js/kareljava.js').parse;
-        break;
-      case 'pascal':
-        parser = require('../js/karelpascal.js').parse;
-        break;
-      case 'ruby':
-        parser = require('../js/karelruby.js').parse;
-        break;
-    }
-
-    var compiled = parser(file);
+    var compiled = karel.compile(file);
   
     fs.writeFileSync(options.output, JSON.stringify(compiled));
   });
 
 program
-.command('run <compiledfile>')
+.command('run <filename>')
 .option('--debug','enables debug output')
 .description('runs file')
-.action(function(compiledfile,options){
-  var file = fs.readFileSync(compiledfile, {encoding: 'utf-8'});
-  var json = JSON.parse(file);
+.action(function(filename, options){
+  var file = fs.readFileSync(filename, {encoding: 'utf-8'});
+  var compiled = null;
+  if (filename.endsWith('.kx')) {
+  compiled = JSON.parse(file);
+  } else {
+  compiled = karel.compile(file);
+  }
   var DOMParser = require('xmldom').DOMParser;
-  var worldXml = new DOMParser().parseFromString(fs.readFileSync(process.stdin.fd, {encoding: 'utf-8'}), 'text/xml');
+  var worldXml = new DOMParser().parseFromString(
+      fs.readFileSync(process.stdin.fd, {encoding: 'utf-8'}), 'text/xml');
   var world = new karel.World(100, 100);
   world.load(worldXml);
   if (options.debug) {
@@ -56,9 +47,11 @@ program
       console.log(ev.debugType, ev.message);
     });
   }
-  world.runtime.load(json);
+  world.runtime.load(compiled);
   while (world.runtime.step());
   console.log(world.output());
 });
 
 program.parse(process.argv);
+
+// vim: set expandtab:ts=2:sw=2

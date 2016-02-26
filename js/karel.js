@@ -1340,10 +1340,34 @@ function detectLanguage(code) {
   }
 
   return 'none';
+}
 
+function compile(code) {
+	var lang = detectLanguage(code);
+	var parser = null;
+
+	switch (lang) {
+		case 'java':
+			parser = require('../js/kareljava.js').parse;
+			break;
+
+		case 'pascal':
+			parser = require('../js/karelpascal.js').parse;
+			break;
+
+		case 'ruby':
+			parser = require('../js/karelruby.js').parse;
+			break;
+
+		default:
+			return null;
+	}
+
+	return parser(code);
 }
 
 if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 	exports.World = World;
 	exports.detectLanguage = detectLanguage;
+	exports.compile = compile;
 }
