@@ -224,6 +224,7 @@ $(document).ready(function(){
   //Preparación del editor
   var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
       lineNumbers: true,
+      firstLineNumber: 1,
       styleActiveLine: true,
       viewportMargin: Infinity,
       mode: 'karelpascal',
@@ -307,7 +308,7 @@ $(document).ready(function(){
       editor.removeLineClass(linea_actual, 'background', 'karel-current-line');
     }
 
-    if (mundo.runtime.state.line >= 1) {
+    if (mundo.runtime.state.line >= 0) {
       linea_actual = mundo.runtime.state.line;
       editor.addLineClass(linea_actual, 'background', 'karel-current-line');
       editor.setCursor({line: linea_actual, ch: 0});
@@ -323,7 +324,7 @@ $(document).ready(function(){
     var markers = editor.lineInfo(linea_actual).gutterMarkers;
 
     if (markers && markers.breakpoints && interval) {
-      $('#mensajes').trigger('info', {'mensaje': 'Breakpoint en la línea '+(linea_actual + 1)});
+      $('#mensajes').trigger('info', {'mensaje': 'Breakpoint en la línea ' + (linea_actual + 1)});
       clearInterval(interval);
       interval = null;
       $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
@@ -355,6 +356,8 @@ $(document).ready(function(){
       highlightCurrentLine();
       // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
       $("#ejecutar").attr('disabled', 'disabled');
+      $("#paso").attr('disabled', 'disabled');
+      $("#futuro").attr('disabled', 'disabled');
       $("#worldclean").removeAttr('disabled');
     }
   }
@@ -456,7 +459,51 @@ $(document).ready(function(){
     compile();
     editor.focus();
   });
+
+  function futuro() {
+    $("#worldclean").attr('disabled', 'disabled');
+    $("#ejecutar").attr('disabled', 'disabled');
+    $("#paso").attr('disabled', 'disabled');
+    $("#futuro").attr('disabled', 'disabled');
+    mundo.runtime.disableStackEvents = true;
+    while (mundo.runtime.step()) {
+      var markers = editor.lineInfo(mundo.runtime.state.line).gutterMarkers;
+      if (markers && markers.breakpoints) {
+        $('#mensajes').trigger('info', {'mensaje': 'Breakpoint en la línea ' + (mundo.runtime.state.line + 1)});
+        $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
+        $('#worldclean').removeAttr('disabled');
+        $('#ejecutar').removeAttr('disabled');
+        $('#paso').removeAttr('disabled');
+        $('#futuro').removeAttr('disabled');
+        break;
+      }
+    }
+    highlightCurrentLine();
+    mundo.runtime.disableStackEvents = false;
+    wRender.paint(mundo, world.width, world.height, { track_karel: true });
+    if (mundo.runtime.state.error) {
+      $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
+    } else if (!mundo.runtime.state.running) {
+      $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
+      mundo.postValidate(validatorCallbacks).then(function (didValidation) {
+        if (didValidation) {
+          $('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
+        }
+      }, function(message) {
+        $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
+      });
+    }
+    // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
+    editor.focus();
+    $("#worldclean").removeAttr('disabled');
+  }
+
   $("#futuro").click(function(event){
+    if (!mundo_editable) {
+      futuro();
+      return;
+    }
+
     var compiled = compile();
     if (compiled != null) {
       $('#ejecutar').trigger('lock');
@@ -467,27 +514,8 @@ $(document).ready(function(){
           $('#mensajes').trigger('success', {'mensaje': 'La validación fue exitosa' });
         }
         mundo.runtime.start();
-        mundo.runtime.disableStackEvents = true;
-        while (mundo.runtime.step());
-        mundo.runtime.disableStackEvents = false;
-        wRender.paint(mundo, world.width, world.height, { track_karel: true });
-        if(mundo.runtime.state.error) {
-          $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
-        } else {
-          $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
-          mundo.postValidate(validatorCallbacks).then(function (didValidation) {
-            if (didValidation) {
-              $('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
-            }
-          }, function(message) {
-            $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
-          });
-        }
-        highlightCurrentLine();
-        // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
-        editor.focus();
-        $("#ejecutar").attr('disabled', 'disabled');
-        $("#worldclean").removeAttr('disabled');
+
+        futuro();
       }, function(message) {
         $('#mensajes').trigger('error', {'mensaje': 'La validación falló' + (message ? ': ' + message : '') });
         compiled = null;
@@ -533,6 +561,7 @@ $(document).ready(function(){
   $("#ejecutar").bind('lock', function(evt){
     //Bloquea los controles de ejecución y edición
     mundo_editable = false; //Previene ediciones del mundo
+    $("#compilar").attr('disabled', 'disabled');
     $("#futuro").attr('disabled', 'disabled');
     $("#quitar_zumbadores").attr('disabled', 'disabled');
     $("#mochila").attr('disabled', 'disabled');
@@ -548,6 +577,7 @@ $(document).ready(function(){
   $("#ejecutar").bind('unlock', function(evt){
     //Desbloquea los controles de ejecución
     mundo_editable = true; //Previene ediciones del mundo
+    $("#compilar").removeAttr('disabled');
     $("#ejecutar").removeAttr('disabled');
     $("#futuro").removeAttr('disabled');
     $("#quitar_zumbadores").removeAttr('disabled');
@@ -596,31 +626,31 @@ $(document).ready(function(){
     }
   });
   $('#paso').click(function(event){
-    if (mundo_editable) {
-      var compiled = compile();
-      if (compiled != null) {
-        $('#ejecutar').trigger('lock');
-
-        mundo.reset();
-        mundo.runtime.load(compiled);
-        mundo.preValidate(validatorCallbacks).then(function (didValidation) {
-          if (didValidation) {
-            $('#mensajes').trigger('success', {'mensaje': 'La validación fue exitosa' });
-          }
-          mundo.runtime.start();
-          step();
-          $('#paso').removeAttr('disabled');
-          $('#worldclean').removeAttr('disabled');
-          $('#futuro').removeAttr('disabled');
-          $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
-        }, function(message) {
-          $('#mensajes').trigger('error', {'mensaje': 'La validación falló' + (message ? ': ' + message : '') });
-          $('#ejecutar').trigger('unlock');
-          compiled = null;
-        });
-      }
-    } else {
+    if (!mundo_editable) {
       step();
+      return;
+    }
+    var compiled = compile();
+    if (compiled != null) {
+      $('#ejecutar').trigger('lock');
+
+      mundo.reset();
+      mundo.runtime.load(compiled);
+      mundo.preValidate(validatorCallbacks).then(function (didValidation) {
+        if (didValidation) {
+          $('#mensajes').trigger('success', {'mensaje': 'La validación fue exitosa' });
+        }
+        mundo.runtime.start();
+        $('#paso').removeAttr('disabled');
+        $('#worldclean').removeAttr('disabled');
+        $('#futuro').removeAttr('disabled');
+        $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
+        step();
+      }, function(message) {
+        $('#mensajes').trigger('error', {'mensaje': 'La validación falló' + (message ? ': ' + message : '') });
+        $('#ejecutar').trigger('unlock');
+        compiled = null;
+      });
     }
   });
   $("#rubysyntax").click(function(event){

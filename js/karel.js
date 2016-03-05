@@ -164,7 +164,7 @@ Runtime.prototype.reset = function() {
 		pc: 0,
 		sp: -1,
 		fp: -1,
-		line: 0,
+		line: -1,
 		ic: 0,
 		stack: new Int32Array(new ArrayBuffer(0xffff * 16 + 40)),
 		stackSize: 0,
@@ -194,12 +194,11 @@ Runtime.prototype.step = function() {
 
 	while (self.state.running) {
 		try {
-			self.next();
-
-			if (self.state.running && self.program[3*self.state.pc] == Runtime.LINE) {
-				self.state.line = self.program[3*self.state.pc+1];
+			if (self.program[3*self.state.pc] == Runtime.LINE) {
+				self.next();
 				break;
 			}
+			self.next();
 		} finally {
 			if (!self.state.running) {
 				self.fireEvent('stop', { target: self, world: self.world });
