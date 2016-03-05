@@ -21,10 +21,55 @@
     <script src="js/karelpascal.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" type="text/css" href="lib/CodeMirror/lib/codemirror.css" />
-    <link rel="stylesheet" type="text/css" href="css/karel.css" />
     <link rel="stylesheet" type="text/css" href="lib/CodeMirror/addon/fold/foldgutter.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css" />
+    <!-- Themes -->
+    <link rel="stylesheet" type="text/css" href="css/karel.css" />
+    <link rel="stylesheet" href="lib/CodeMirror/theme/3024-day.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/3024-night.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/abcdef.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/ambiance.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/base16-dark.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/bespin.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/base16-light.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/blackboard.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/cobalt.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/colorforth.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/dracula.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/eclipse.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/elegant.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/erlang-dark.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/hopscotch.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/icecoder.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/isotope.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/lesser-dark.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/liquibyte.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/material.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/mbo.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/mdn-like.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/midnight.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/monokai.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/neat.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/neo.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/night.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/paraiso-dark.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/paraiso-light.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/pastel-on-dark.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/railscasts.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/rubyblue.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/seti.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/solarized.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/the-matrix.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/tomorrow-night-bright.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/tomorrow-night-eighties.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/ttcn.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/twilight.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/vibrant-ink.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/xq-dark.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/xq-light.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/yeti.css">
+    <link rel="stylesheet" href="lib/CodeMirror/theme/zenburn.css">
     <style type="text/css" media="screen">
       body {
         overflow: hidden;
@@ -126,6 +171,12 @@
                   <li><a id="codeload"><i class="icon-folder-open"></i> Abrir</a></li>
                   <li class="divider"></li>
                   <li><a id="codesave"><i class="icon-download-alt"></i> Guardar</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Opciones <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a id="theme"><i class="icon-pencil"></i> Tema</a></li>
                 </ul>
               </li>
               <li class="dropdown">
@@ -280,14 +331,18 @@ finalizar-programa</textarea>
       </div>
       <div class="modal-body">
         <form>
-          <div class="form-group">
-            <label for="prompt_value"></label>
-            <input type="text" id="prompt_value" />
+          <div class="form-group group-value">
+            <label for="prompt-value"></label>
+            <input type="text" id="prompt-value" />
+          </div>
+          <div class="form-group group-select">
+            <label for="prompt-select"></label>
+            <select id="prompt-select"></select>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Colocar</button>
+        <button type="button" class="btn btn-primary">Aceptar</button>
       </div>
     </div>
     </div>

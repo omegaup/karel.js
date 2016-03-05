@@ -1,4 +1,35 @@
 $(document).ready(function(){
+  var codeMirrorThemes = [
+    'karel', '3024-day', '3024-night', 'abcdef', 'ambiance',
+    'ambiance-mobile', 'base16-dark', 'base16-light',
+    'bespin', 'blackboard', 'cobalt', 'colorforth',
+    'dracula', 'eclipse', 'elegant', 'erlang-dark',
+    'hopscotch', 'icecoder', 'isotope', 'lesser-dark',
+    'liquibyte', 'material', 'mbo', 'mdn-like',
+    'midnight', 'monokai', 'neat', 'neo', 'night',
+    'paraiso-dark', 'paraiso-light', 'pastel-on-dark',
+    'railscasts', 'rubyblue', 'seti', 'solarized',
+    'the-matrix', 'tomorrow-night-bright',
+    'tomorrow-night-eighties', 'ttcn', 'twilight',
+    'vibrant-ink', 'xq-dark', 'xq-light', 'yeti',
+    'zenburn',
+  ];
+
+  function getTheme() {
+    return (typeof(sessionStorage) !== 'undefined' &&
+            sessionStorage.getItem('karel.js:theme')) ||
+      'karel';
+  }
+
+  function setTheme(theme) {
+    if (codeMirrorThemes.indexOf(theme) === -1)
+      return;
+    editor.setOption('theme', theme);
+    if (typeof(sessionStorage) !== 'undefined') {
+      sessionStorage.setItem('karel.js:theme', theme);
+    }
+  }
+
   function getParser(str) {
     language = detectLanguage(str);
 
@@ -84,14 +115,35 @@ $(document).ready(function(){
     return s.replace(/</g, '&lt;').replace(/</g, '&gt;');
   }
 
-  function modalPrompt(label, value) {
+  function modalPrompt(label, value, options) {
     var dfd = jQuery.Deferred();
     $('#prompt_modal h4').html(label);
     $('#prompt_modal label').html(label);
-    $('#prompt_modal input[type="text"]').val(value);
+    $('#prompt_modal .form-group').hide();
+    if (options) {
+      $('#prompt_modal .group-select').show();
+      $('#prompt_modal select').empty();
+      for (var i = 0; i < options.length; i++) {
+        $('#prompt_modal select').append(
+          $('<option/>').text(options[i]).val(options[i])
+        );
+      }
+      $('#prompt_modal select')
+        .focus()
+        .val(value);
+    } else {
+      $('#prompt_modal .group-value').show();
+      $('#prompt_modal input[type="text"]')
+        .focus()
+        .val(value);
+    }
     $('#prompt_modal').modal('show');
     function resolve(e) {
-      dfd.resolve($('#prompt_value').val());
+      if (options) {
+        dfd.resolve($('#prompt-select').val());
+      } else {
+        dfd.resolve($('#prompt-value').val());
+      }
       $('#prompt_modal').modal('hide');
       return false;
     }
@@ -228,7 +280,7 @@ $(document).ready(function(){
       styleActiveLine: true,
       viewportMargin: Infinity,
       mode: 'karelpascal',
-      theme: 'karel',
+      theme: getTheme(),
       foldGutter: {
           rangeFinder: CodeMirror.fold.indent,
       },
@@ -283,11 +335,11 @@ $(document).ready(function(){
   });
   var src = null;
   if (sessionStorage) {
-    var restoredSource = sessionStorage.getItem('karelsource');
+    var restoredSource = sessionStorage.getItem('karel.js:karelsource');
     if (restoredSource) {
       editor.setValue(restoredSource);
     }
-    var restoredWorld = sessionStorage.getItem('karelworld');
+    var restoredWorld = sessionStorage.getItem('karel.js:karelworld');
     if (restoredWorld) {
       src = restoredWorld;
     }
@@ -364,8 +416,8 @@ $(document).ready(function(){
 
   function compile() {
     if (sessionStorage) {
-      sessionStorage.setItem('karelsource', editor.getValue());
-      sessionStorage.setItem('karelworld', mundo.save());
+      sessionStorage.setItem('karel.js:karelsource', editor.getValue());
+      sessionStorage.setItem('karel.js:karelworld', mundo.save());
     }
     var syntax = getSyntax(editor.getValue());
     $("#pila").html('');
@@ -831,6 +883,11 @@ $(document).ready(function(){
     if ($('#mochila_karel').hasClass('active')) {
       $('#mochila_karel').button('toggle');
     }
+  });
+  $('#theme').click(function() {
+    modalPrompt('tema', getTheme(), codeMirrorThemes).then(function(response) {
+      setTheme(response);
+    });
   });
   $("body").keyup(function(event){
     var repaint = false;
