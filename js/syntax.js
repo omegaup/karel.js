@@ -80,5 +80,79 @@ CodeMirror.defineMode("karelpascal", function() {
     },
   };
 });
-
 CodeMirror.defineMIME("text/x-karelpascal", "karelpascal");
+
+CodeMirror.defineMode("karel", function() {
+  function words(str) {
+    var obj = {}, words = str.split(" ");
+    for (var i = 0; i < words.length; ++i) obj[words[i]] = true;
+    return obj;
+  }
+  var keywords = words("si delocontrario entonces repite veces mientras comosigue saldeinstruccion saldeinstrucción definelainstruccion definelainstrucción");
+  var indent = words("haz");
+  var dedent = words("fin");
+  var builtin = words("recogeunzumbador dejaunzumbador giraizquierda avanza apagate apágate");
+  var operator = words("y e o u no escero elnumeroanteriora elnúmeroanteriora elnumerosiguientede elnúmerosiguientede");
+  var atoms = words("tieneselfrentelibre tengaselfrentelibre tieneslaizquierdalibre tengaslaizquierdalibre tienesladerechalibre tengasladerechalibre estasjuntoazumbador estásjuntoazumbador estesjuntoazumbador estésjuntoazumbador tieneszumbadoresenlamochila tengaszumbadoresenlamochila estasjuntoazumbador estásjuntoazumbador estesjuntoazumbador estésjuntoazumbador estasorientadoalnorte estásorientadoalnorte estesorientadoalnorte estésorientadoalnorte estasorientadoalsur estásorientadoalsur estesorientadoalsur estésorientadoalsur estasorientadoaleste estásorientadoaleste estesorientadoaleste estésorientadoaleste estasorientadoaloeste estásorientadoaloeste estesorientadoaloeste estésorientadoaloeste");
+
+  function tokenBase(stream, state) {
+    var ch = stream.next();
+    if (ch == "/" && stream.eat("/")) {
+			stream.skipToEnd();
+			return "comment";
+    }
+    if (ch == "/" && stream.eat("*")) {
+      state.tokenize = tokenComment;
+      return tokenComment(stream, state);
+    }
+    if (/[\(\)]/.test(ch)) {
+      return null;
+    }
+    if (/\d/.test(ch)) {
+      stream.eatWhile(/[\w\.]/);
+      return "number";
+    }
+    stream.eatWhile(/[\wÀ-ÖØ-öø-ÿ_-]/);
+    var cur = stream.current().toLowerCase();
+    var style = "variable";
+    if (keywords.propertyIsEnumerable(cur)) style = "keyword";
+    else if (builtin.propertyIsEnumerable(cur)) style = "builtin";
+    else if (operator.propertyIsEnumerable(cur)) style = "operator";
+    else if (atoms.propertyIsEnumerable(cur)) style = "atom";
+    else if (indent.propertyIsEnumerable(cur)) style = "indent";
+    else if (dedent.propertyIsEnumerable(cur)) style = "dedent";
+    else if (state.lastTok == 'definelainstruccion' || state.lastTok == 'definelainstrucción') style = "def";
+    state.lastTok = cur;
+    return style;
+  }
+
+  function tokenComment(stream, state) {
+    var maybeEnd = false, ch;
+    while (ch = stream.next()) {
+      if (ch == "/" && maybeEnd) {
+        state.tokenize = null;
+        break;
+      }
+      maybeEnd = (ch == "*");
+    }
+    return "comment";
+  }
+
+  // Interface
+
+  return {
+    startState: function() {
+      return {
+        tokenize: null,
+        lastTok: null
+      };
+    },
+
+    token: function(stream, state) {
+      if (stream.eatSpace()) return null;
+      return (state.tokenize || tokenBase)(stream, state);
+    },
+  };
+});
+
+CodeMirror.defineMIME("text/x-karel", "karel");

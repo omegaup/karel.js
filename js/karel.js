@@ -1355,8 +1355,8 @@ function detectLanguage(code) {
       /^(?:\/\*(?:[^*]|\*[^)])*\*\/)/,
       /^{[^}]*}/,
       /^\(\*([^*]|\*[^)])*\*\)/,
-      /^[^a-zA-Z0-9_-]+/,
-      /^[a-zA-Z0-9_-]+/
+      /^[^A-Za-zÀ-ÖØ-öø-ÿ0-9_-]+/,
+      /^[A-Za-zÀ-ÖØ-öø-ÿ0-9_-]+/
     ];
   var i = 0;
 
@@ -1366,9 +1366,13 @@ function detectLanguage(code) {
       if (m !== null) {
         if (j == rules.length - 1) {
           // el primer token de verdad.
-          if (m[0] == 'class') {
+          var firstToken = m[0].toLowerCase();
+          if (firstToken == 'definelainstruccion' ||
+              firstToken == 'definelainstrucción') {
+            return 'karel';
+          } else if (firstToken == 'class') {
             return 'java';
-          } else if (m[0].toLowerCase() == 'iniciar-programa') {
+          } else if (firstToken == 'iniciar-programa') {
             return 'pascal';
           } else {
             return 'ruby';
@@ -1390,6 +1394,10 @@ function compile(code) {
 	var parser = null;
 
 	switch (lang) {
+		case 'karel':
+			parser = require('../js/karellang.js').parse;
+			break;
+
 		case 'java':
 			parser = require('../js/kareljava.js').parse;
 			break;

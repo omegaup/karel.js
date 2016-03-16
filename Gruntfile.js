@@ -3,6 +3,15 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		jison: {
+			karel: {
+				options: {
+					moduleType: 'commonjs',
+					moduleName: 'karellang',
+				},
+				files: {
+					'js/karellang.js': 'gramaticas/karellang.jison',
+				}
+			},
 			karelPascal: {
 				options: {
 					moduleType: 'commonjs',

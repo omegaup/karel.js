@@ -44,7 +44,7 @@ $(document).ready(function(){
         return {parser: new karelruby.Parser(), name: 'ruby'};
         break;
       default:
-        return {parser: new kareljava.Parser(), name: 'pascal'};
+        return {parser: new karellang.Parser(), name: 'karel'};
         break;
     }
   }
@@ -168,6 +168,60 @@ $(document).ready(function(){
   };
 
   var ERROR_TOKENS = {
+    karel: {
+      BEGINPROG:'"iniciar-programa"',
+      BEGINEXEC:'"inicia-ejecución"',
+      ENDEXEC:'"termina-ejecución"',
+      ENDPROG:'"finalizar-programa"',
+      DEF:'"define-nueva-instrucción"',
+      PROTO:'"define-prototipo-instrucción"',
+      RET:'"sal-de-instrucción"',
+      AS:'"como"',
+      HALT:'"apágate"',
+      LEFT:'"gira-izquierda"',
+      FORWARD:'"avanza"',
+      PICKBUZZER:'"coge-zumbador"',
+      LEAVEBUZZER:'"deja-zumbador"',
+      BEGIN:'"inicio"',
+      END:'"fin"',
+      THEN:'"entonces"',
+      WHILE:'"mientras"',
+      DO:'"hacer"',
+      REPEAT:'"repetir"',
+      TIMES:'"veces"',
+      DEC:'"precede"',
+      INC:'"sucede"',
+      IFZ:'"si-es-cero"',
+      IFNFWALL:'"frente-libre"',
+      IFFWALL:'"frente-bloqueado"',
+      IFNLWALL:'"izquierda-libre"',
+      IFLWALL:'"izquierda-bloqueada"',
+      IFNRWALL:'"derecha-libre"',
+      IFRWALL:'"derecha-bloqueada"',
+      IFWBUZZER:'"junto-a-zumbador"',
+      IFNWBUZZER:'"no-junto-a-zumbador"',
+      IFBBUZZER:'"algún-zumbador-en-la-mochila"',
+      IFNBBUZZER:'"ningún-zumbador-en-la-mochila"',
+      IFN:'"orientado-al-norte"',
+      IFS:'"orientado-al-sur"',
+      IFE:'"orientado-al-este"',
+      IFW:'"orientado-al-oeste"',
+      IFNN:'"no-orientado-al-norte"',
+      IFNS:'"no-orientado-al-sur"',
+      IFNE:'"no-orientado-al-este"',
+      IFNW:'"no-orientado-al-oeste"',
+      ELSE:'"si-no"',
+      IF:'"si"',
+      NOT:'"no"',
+      OR:'"o"',
+      AND:'"y"',
+      '(':'"("',
+      ')':'")"',
+      ';':'";"',
+      NUM:'un número',
+      VAR:'un nombre',
+      EOF:'el final del programa'
+    },
     pascal: {
       BEGINPROG:'"iniciar-programa"',
       BEGINEXEC:'"inicia-ejecución"',
@@ -279,7 +333,7 @@ $(document).ready(function(){
       firstLineNumber: 1,
       styleActiveLine: true,
       viewportMargin: Infinity,
-      mode: 'karelpascal',
+      mode: 'karel',
       theme: getTheme(),
       foldGutter: {
           rangeFinder: CodeMirror.fold.indent,
