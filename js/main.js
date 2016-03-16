@@ -286,6 +286,7 @@ $(document).ready(function(){
       },
       gutters: ['CodeMirror-foldgutter', 'errors', 'breakpoints', 'CodeMirror-linenumbers'],
   });
+  editor.numBreakpoints = 0;
   editor.on('gutterClick', function(instance, line, gutter, clickEvent) {
       if (gutter == 'CodeMirror-foldgutter') return;
       function makeBreakpoint() {
@@ -295,7 +296,13 @@ $(document).ready(function(){
           return marker;
       }
       var markers = instance.lineInfo(line).gutterMarkers;
-      instance.setGutterMarker(line, 'breakpoints', (markers && markers.breakpoints) ? null : makeBreakpoint());
+      if (markers && markers.breakpoints) {
+        instance.setGutterMarker(line, 'breakpoints', null);
+        editor.numBreakpoints--;
+      } else {
+        instance.setGutterMarker(line, 'breakpoints', makeBreakpoint());
+        editor.numBreakpoints++;
+      }
   });
   function validatorCallbacks(message) {
     if (message.type == 'error') {
@@ -517,21 +524,25 @@ $(document).ready(function(){
     $("#ejecutar").attr('disabled', 'disabled');
     $("#paso").attr('disabled', 'disabled');
     $("#futuro").attr('disabled', 'disabled');
-    mundo.runtime.disableStackEvents = true;
-    while (mundo.runtime.step()) {
-      var markers = editor.lineInfo(mundo.runtime.state.line).gutterMarkers;
-      if (markers && markers.breakpoints) {
-        $('#mensajes').trigger('info', {'mensaje': 'Breakpoint en la línea ' + (mundo.runtime.state.line + 1)});
-        $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
-        $('#worldclean').removeAttr('disabled');
-        $('#ejecutar').removeAttr('disabled');
-        $('#paso').removeAttr('disabled');
-        $('#futuro').removeAttr('disabled');
-        break;
+    if (editor.numBreakpoints) {
+      while (mundo.runtime.step()) {
+        var markers = editor.lineInfo(mundo.runtime.state.line).gutterMarkers;
+        if (markers && markers.breakpoints) {
+          $('#mensajes').trigger('info', {'mensaje': 'Breakpoint en la línea ' + (mundo.runtime.state.line + 1)});
+          $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
+          $('#worldclean').removeAttr('disabled');
+          $('#ejecutar').removeAttr('disabled');
+          $('#paso').removeAttr('disabled');
+          $('#futuro').removeAttr('disabled');
+          break;
+        }
       }
+    } else {
+      mundo.runtime.disableStackEvents = true;
+      while (mundo.runtime.step());
+      mundo.runtime.disableStackEvents = false;
     }
     highlightCurrentLine();
-    mundo.runtime.disableStackEvents = false;
     wRender.paint(mundo, world.width, world.height, { track_karel: true });
     if (mundo.runtime.state.error) {
       $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
