@@ -259,7 +259,9 @@ Runtime.prototype.next = function() {
 					self.world.orientation = 3;
 				}
 				self.world.dirty = true;
-				if (++self.turnLeftCount >= self.world.maxTurnLeft) {
+				self.state.turnLeftCount++;
+				if (self.world.maxTurnLeft >= 0 &&
+				    self.state.turnLeftCount >= self.world.maxTurnLeft) {
 					self.state.running = false;
 					self.state.error = 'INSTRUCTION';
 				}
@@ -352,7 +354,9 @@ Runtime.prototype.next = function() {
 				self.world.i += di[self.world.orientation];
 				self.world.j += dj[self.world.orientation];
 				self.world.dirty = true;
-				if (++self.moveCount >= self.world.maxMove) {
+				self.state.moveCount++;
+				if (self.world.maxMove >= 0 &&
+				    self.state.moveCount >= self.world.maxMove) {
 					self.state.running = false;
 					self.state.error = 'INSTRUCTION';
 				}
@@ -372,7 +376,9 @@ Runtime.prototype.next = function() {
 			case Runtime.PICKBUZZER: {
 				self.state.ic++;
 				self.world.pickBuzzer(self.world.i, self.world.j);
-				if (++self.pickBuzzerCount >= self.world.maxPickBuzzer) {
+				self.state.pickBuzzerCount++;
+				if (self.world.maxPickBuzzer >= 0 &&
+				    self.state.pickBuzzerCount >= self.world.maxPickBuzzer) {
 					self.state.running = false;
 					self.state.error = 'INSTRUCTION';
 				}
@@ -382,7 +388,9 @@ Runtime.prototype.next = function() {
 			case Runtime.LEAVEBUZZER: {
 				self.state.ic++;
 				self.world.leaveBuzzer(self.world.i, self.world.j);
-				if (++self.leaveBuzzerCount >= self.world.maxLeaveBuzzer) {
+				self.state.leaveBuzzerCount++;
+				if (self.world.maxLeaveBuzzer >= 0 &&
+				    self.state.leaveBuzzerCount >= self.world.maxLeaveBuzzer) {
 					self.state.running = false;
 					self.state.error = 'INSTRUCTION';
 				}
