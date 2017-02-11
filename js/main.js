@@ -762,10 +762,22 @@ $(document).ready(function(){
       }
     }
   });
-  $("#mochila").blur(function(event){
-    mundo.setBagBuzzers($('#mochila').val());
+
+  function guardarMochila() {
+    var valor = parseInt($('#mochila').val(), 10);
+    if (Number.isNaN(valor) || valor < 0 || valor > 65534) {
+      return;
+    }
+    mundo.setBagBuzzers(valor);
     $("#xmlMundo").html(mundo.save());
-  });
+  }
+
+  $('#mochila')
+    .keyup(guardarMochila)
+    .blur(function() {
+      guardarMochila();
+      $('#mochila').val(mundo.bagBuzzers);
+    });
   $("#codeload").click(function(event){
     var file = document.createElement('input');
     file.type = 'file';
