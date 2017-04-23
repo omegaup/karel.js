@@ -1248,6 +1248,9 @@ World.prototype.rotate = function(orientation) {
 	var self = this;
 
 	var orientations = ['OESTE', 'NORTE', 'ESTE', 'SUR'];
+	if (!orientation) {
+		orientation = orientations[(self.orientation + 1) % 4];
+	}
 	self.orientation = self.startOrientation = Math.max(0, orientations.indexOf(orientation));
 	self.dirty = true;
 };

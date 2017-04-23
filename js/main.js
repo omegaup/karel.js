@@ -952,6 +952,9 @@ $(document).ready(function(){
         });
       } else if (currentCell && event.which == 68) { //D
         mundo.toggleDumpCell(currentCell.row, currentCell.column);
+      } else if (currentCell && (event.which == 75 || event.which == 105)) {//K
+        mundo.move(currentCell.row, currentCell.column);
+        mundo.rotate();
       } else {
         repaint = false;
       }
