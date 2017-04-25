@@ -635,7 +635,7 @@ $(document).ready(function(){
     $("#posicion_karel").attr('disabled', 'disabled');
     $("#orientacion_karel").attr('disabled', 'disabled');
     $("#mochila_karel").attr('disabled', 'disabled');
-    $("#universe").attr('disabled', 'disabled');
+    $("#universo").attr('disabled', 'disabled');
     editor.setOption('readOnly', true);
   });
   $("#ejecutar").bind('unlock', function(evt){
@@ -654,7 +654,7 @@ $(document).ready(function(){
     $("#posicion_karel").removeAttr('disabled');
     $("#orientacion_karel").removeAttr('disabled');
     $("#mochila_karel").removeAttr('disabled');
-    $("#universe").removeAttr('disabled');
+    $("#universo").removeAttr('disabled');
 
     editor.setOption('readOnly', false);
   });
@@ -886,8 +886,8 @@ $(document).ready(function(){
     if ($('#mochila_karel').hasClass('active') != mundo.getDumps(World.DUMP_BAG)) {
       $('#mochila_karel').button('toggle');
     }
-    if ($('#universe').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
-      $('#universe').button('toggle');
+    if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
+      $('#universo').button('toggle');
     }
 
   });
@@ -913,8 +913,8 @@ $(document).ready(function(){
     if ($('#mochila_karel').hasClass('active')) {
       $('#mochila_karel').button('toggle');
     }
-    if ($('#universe').hasClass('active')) {
-      $('#universe').button('toggle');
+    if ($('#universo').hasClass('active')) {
+      $('#universo').button('toggle');
     }
   });
   $('#theme').click(function() {
@@ -1174,7 +1174,7 @@ $(document).ready(function(){
     mundo.toggleDumps(World.DUMP_BAG);
     $("#xmlMundo").html(mundo.save());
   });
-  $("#universe").click(function(event){
+  $("#universo").click(function(event){
     mundo.toggleDumps(World.DUMP_ALL_BUZZERS);
     $("#xmlMundo").html(mundo.save());
   });
@@ -1261,8 +1261,8 @@ $(document).ready(function(){
             if ($('#mochila_karel').hasClass('active') != mundo.getDumps(World.DUMP_BAG)) {
               $('#mochila_karel').button('toggle');
             }
-            if ($('#universe').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
-              $('#universe').button('toggle');
+            if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
+              $('#universo').button('toggle');
             }
 
           };
