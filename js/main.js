@@ -1264,7 +1264,6 @@ $(document).ready(function(){
             if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
               $('#universo').button('toggle');
             }
-
           };
         })(kecReader, mdoReader.result);
         kecReader.readAsArrayBuffer(kec);
