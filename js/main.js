@@ -655,7 +655,6 @@ $(document).ready(function(){
     $("#orientacion_karel").removeAttr('disabled');
     $("#mochila_karel").removeAttr('disabled');
     $("#universo").removeAttr('disabled');
-
     editor.setOption('readOnly', false);
   });
   $("#ejecutar").click(function(event){
