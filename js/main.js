@@ -635,6 +635,7 @@ $(document).ready(function(){
     $("#posicion_karel").attr('disabled', 'disabled');
     $("#orientacion_karel").attr('disabled', 'disabled');
     $("#mochila_karel").attr('disabled', 'disabled');
+    $("#universo").attr('disabled', 'disabled');
     editor.setOption('readOnly', true);
   });
   $("#ejecutar").bind('unlock', function(evt){
@@ -653,6 +654,7 @@ $(document).ready(function(){
     $("#posicion_karel").removeAttr('disabled');
     $("#orientacion_karel").removeAttr('disabled');
     $("#mochila_karel").removeAttr('disabled');
+    $("#universo").removeAttr('disabled');
     editor.setOption('readOnly', false);
   });
   $("#ejecutar").click(function(event){
@@ -883,6 +885,9 @@ $(document).ready(function(){
     if ($('#mochila_karel').hasClass('active') != mundo.getDumps(World.DUMP_BAG)) {
       $('#mochila_karel').button('toggle');
     }
+    if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
+      $('#universo').button('toggle');
+    }
   });
   $("#newworld").click(function(event){
     if (linea_actual != null) {
@@ -905,6 +910,9 @@ $(document).ready(function(){
     }
     if ($('#mochila_karel').hasClass('active')) {
       $('#mochila_karel').button('toggle');
+    }
+    if ($('#universo').hasClass('active')) {
+      $('#universo').button('toggle');
     }
   });
   $('#theme').click(function() {
@@ -1164,6 +1172,10 @@ $(document).ready(function(){
     mundo.toggleDumps(World.DUMP_BAG);
     $("#xmlMundo").html(mundo.save());
   });
+  $("#universo").click(function(event){
+    mundo.toggleDumps(World.DUMP_ALL_BUZZERS);
+    $("#xmlMundo").html(mundo.save());
+  });
   $("#ctx_norte").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('NORTE');
@@ -1246,6 +1258,9 @@ $(document).ready(function(){
             }
             if ($('#mochila_karel').hasClass('active') != mundo.getDumps(World.DUMP_BAG)) {
               $('#mochila_karel').button('toggle');
+            }
+            if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
+              $('#universo').button('toggle');
             }
           };
         })(kecReader, mdoReader.result);
