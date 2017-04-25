@@ -609,6 +609,7 @@ World.DUMP_WORLD = 'mundo';
 World.DUMP_POSITION = 'posicion';
 World.DUMP_ORIENTATION = 'orientacion';
 World.DUMP_INSTRUCTIONS = 'instrucciones';
+World.DUMP_ALL_BUZZERS = 'universo'
 World.DUMP_BAG = 'mochila';
 World.ERROR_MAPPING = {
 	BAGUNDERFLOW: 'ZUMBADOR INVALIDO',
@@ -1161,7 +1162,7 @@ World.prototype.output = function() {
 
 	var result = {};
 
-	if (self.dumps[World.DUMP_WORLD]) {
+	if (self.dumps[World.DUMP_WORLD] || self.dumps[World.DUMP_ALL_BUZZERS]) {
 		result.mundos = {mundo: {'#attributes': {nombre: self.worldName}, linea: []}};
 
 		var dumpCells = {};
@@ -1177,7 +1178,7 @@ World.prototype.output = function() {
 			var line = '';
 
 			for (var j = 1; j <= self.w; j++) {
-				if (dumpCells[i] && dumpCells[i][j]) {
+				if ((dumpCells[i] && dumpCells[i][j]) || self.dumps[World.DUMP_ALL_BUZZERS])  {
 					if (self.buzzers(i, j) !== 0) {
 						if (printCoordinate) {
 							line += '(' + j + ') ';
