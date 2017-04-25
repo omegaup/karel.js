@@ -889,7 +889,6 @@ $(document).ready(function(){
     if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
       $('#universo').button('toggle');
     }
-
   });
   $("#newworld").click(function(event){
     if (linea_actual != null) {
