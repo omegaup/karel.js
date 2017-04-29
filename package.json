@@ -5,7 +5,6 @@
   "scripts": {
     "start": "electron index.js",
     "test": "mocha",
-
     "clean": "rm -rf ./dist",
     "clean:win": "rm -rf ./dist/win",
     "clean:osx": "rm -rf ./dist/osx",
@@ -14,35 +13,44 @@
     "pack:osx": "npm run clean:osx && electron-packager . \"karel.js\" --out=dist/osx --platform=darwin --arch=x64 --version=0.36.1 --icon=img/osx_icon.icns --ignore=dist --ignore=node_modules --ignore=Gruntfile.js",
     "pack:win": "npm run clean:win && electron-packager . \"karel.js\" --out=dist/win --platform=win32 --arch=ia32 --version=0.36.1 --icon=img/win_icon.ico --ignore=dist --ignore=node_modules --ignore=Gruntfile.js",
     "pack:linux": "npm run clean:linux && electron-packager . \"karel.js\" --out=dist/linux --platform=linux --arch=x64 --version=0.36.1 --icon=img/icon.png --ignore=dist --ignore=node_modules --ignore=Gruntfile.js",
-
-    "build": "npm run build:osx && npm run build:win",
+    "build": "npm run build:bundle && npm run build:osx && npm run build:win",
+    "build:bundle": "./node_modules/webpack/bin/webpack.js",
     "build:osx": "npm run pack:osx && electron-builder \"dist/osx/karel.js.app\" --platform=osx --out=\"dist/osx\"",
     "build:win": "npm run pack:win && electron-builder \"dist/win/karel.js-win32\" --platform=win --out=\"dist/win\"",
     "build:linux": "npm run pack:linux && electron-builder \"dist/linux/karel.js-linux\" --platform=linux --out=\"dist/linux\""
   },
   "builder": {
-    "osx" : {
+    "osx": {
       "title": "karel.js",
       "icon": "img/osx_icon.icns",
       "icon-size": 80,
       "contents": [
-        { "x": 438, "y": 344, "type": "link", "path": "/Applications" },
-        { "x": 192, "y": 344, "type": "file" }
+        {
+          "x": 438,
+          "y": 344,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 192,
+          "y": 344,
+          "type": "file"
+        }
       ]
     },
-    "win" : {
-      "title" : "karel.js",
-      "version" : "0.2.1",
+    "win": {
+      "title": "karel.js",
+      "version": "0.2.1",
       "publisher": "omegaUp",
-      "icon" : "img/win_icon.ico",
+      "icon": "img/win_icon.ico",
       "verbosity": 1
     },
-    "linux" : {
-      "arch" : 64,
-      "target" : "deb",
-      "version" : "0.2.1",
-      "title" : "karel.js",
-      "executable" : "kareljs",
+    "linux": {
+      "arch": 64,
+      "target": "deb",
+      "version": "0.2.1",
+      "title": "karel.js",
+      "executable": "kareljs",
       "comment": "kareljs",
       "maintainer": "lhchavez <lhchavez@omegaup.com>"
     }
@@ -77,6 +85,8 @@
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-jison": "~1.2.1",
     "jison": "~0.4.13",
-    "mocha": "~2.4.5"
+    "mocha": "~2.4.5",
+    "shebang-loader": "0.0.1",
+    "webpack": "^2.4.1"
   }
 }
