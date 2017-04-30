@@ -72,7 +72,7 @@ class KarelInput:
 			'direccion': self.direccion,
 			'despliega': self.despliega,
 		}.iteritems()))
-	
+
 	def zumbadores(self, x, y):
 		"""Regresa el número de zumbadores (o la cadena 'INFINITO') para la casilla en (x, y)"""
 		if (x, y) not in self._zumbadores:
@@ -93,7 +93,8 @@ class KarelOutput:
 		* x: la posición x final de Karel. None si no se encuentra en la salida.
 		* y: la posición y final de Karel. None si no se encuentra en la salida.
 		* direccion: La orientación inicial de Karel. Puede ser uno de ['NORTE', 'ESTE', 'SUR', 'OESTE'], o None si no se encuentra
-		* _zumbadores: Un diccionario donde cada llave (x, y) tiene como valor el número de zumbadores en esa casilla al final de la ejecución"""
+		* _zumbadores: Un diccionario donde cada llave (x, y) tiene como valor el número de zumbadores en esa casilla al final de la ejecución
+		* instrucciones: Un diccionario con el número de instrucciones que karel ejecutó"""
 
 	def __init__(self, string):
 		self.root = ET.fromstring(string)
@@ -121,6 +122,13 @@ class KarelOutput:
 			if 'direccion' in karel.attrib:
 				self.direccion = karel.attrib['direccion']
 
+		instrucciones = self.root.find('programas/programa/instrucciones')
+		self.instrucciones =   {'avanza': None, 'gira_izquierda': None, 'coge_zumbador': None, 'deja_zumbador': None}
+		if instrucciones is not None:
+			for k, v in self.instrucciones.items():
+				if k in instrucciones.attrib:
+					self.instrucciones[k] = int(instrucciones.attrib[k])
+
 	def __repr__(self):
 		"""Imprime una versión bonita del objeto"""
 		return '<libkarel.KarelOutput %s>' % ', '.join(map(lambda x: '%s=%r' % x, {
@@ -130,7 +138,7 @@ class KarelOutput:
 			'resultado': self.resultado,
 			'error': self.error,
 		}.iteritems()))
-	
+
 	def zumbadores(self, x, y):
 		"""Regresa el número de zumbadores (o la cadena 'INFINITO') para la casilla en (x, y)"""
 		if (x, y) not in self._zumbadores:

@@ -183,29 +183,29 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mundo <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a id="newworld"><i class="icon-star"></i> Nuevo</a></li>
-                  <li><a id="worldload"><i class="icon-folder-open"></i> Abrir .in</a></li>
+                  <li><a href="#" id="newworld"><i class="icon-star"></i> Nuevo</a></li>
+                  <li><a href="#" id="worldload"><i class="icon-folder-open"></i> Abrir .in</a></li>
                   <li><a href="#importar_modal" data-toggle="modal"><i class="icon-folder-open"></i> Importar MDO/KEC</a></li>
                   <li class="divider"></li>
-                  <li><a id="worldsave"><i class="icon-download-alt"></i> Guardar .in</a></li>
+                  <li><a href="#" id="worldsave"><i class="icon-download-alt"></i> Guardar .in</a></li>
                   <li><a href="#guardar_modal" data-toggle="modal" id="save_out"><i class="icon-download-alt"></i> Guardar .out</a></li>
                 </ul>
               </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Código <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a id="pascalsyntax"><i class="icon-star"></i> Nuevo (Pascal)</a></li>
-                  <li><a id="javasyntax"><i class="icon-star"></i> Nuevo (Java)</a></li>
-                  <li><a id="rubysyntax"><i class="icon-star"></i> Nuevo (Ruby)</a></li>
-                  <li><a id="codeload"><i class="icon-folder-open"></i> Abrir</a></li>
+                  <li><a href="#" id="pascalsyntax"><i class="icon-star"></i> Nuevo (Pascal)</a></li>
+                  <li><a href="#" id="javasyntax"><i class="icon-star"></i> Nuevo (Java)</a></li>
+                  <li><a href="#" id="rubysyntax"><i class="icon-star"></i> Nuevo (Ruby)</a></li>
+                  <li><a href="#" id="codeload"><i class="icon-folder-open"></i> Abrir</a></li>
                   <li class="divider"></li>
-                  <li><a id="codesave"><i class="icon-download-alt"></i> Guardar</a></li>
+                  <li><a href="#" id="codesave"><i class="icon-download-alt"></i> Guardar</a></li>
                 </ul>
               </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Opciones <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a id="theme"><i class="icon-pencil"></i> Tema</a></li>
+                  <li><a href="#" id="theme"><i class="icon-pencil"></i> Tema</a></li>
                 </ul>
               </li>
               <li class="dropdown">
@@ -238,12 +238,6 @@
             <button class="btn" data-toggle="tooltip" title="Ve a donde esté Karel" id="follow_karel"><i class="icon-arrow-up"></i></button>
             <button class="btn" data-toggle="tooltip" title="Quitar zumbadores" id="quitar_zumbadores"><i class="icon-minus-sign"></i></button>
           </div>
-          <div class="btn-group" data-toggle="buttons-checkbox">
-            <button class="btn button-primary" data-toggle="tooltip" title="La solución depende de la posición final de Karel" id="posicion_karel">Posición</button>
-            <button class="btn button-primary" data-toggle="tooltip" title="La solución depende de la orientación final de Karel" id="orientacion_karel">Orientación</button>
-            <button class="btn button-primary" data-toggle="tooltip" title="La solución depende del estado final de la mochila de Karel" id="mochila_karel">Mochila</button>
-            <button class="btn button-primary" data-toggle="tooltip" title="La solución depende de todos los zumbadores en el mundo" id="universo">Zumbadores</button>
-          </div>
           <div class="btn-group">
             <div class="input-prepend input-append">
               <span class="add-on" title="El número de zumbadores en la mochila con los que inicia Karel">Mochila</span>
@@ -258,7 +252,10 @@
               <button class="btn" id="retraso_minus"><i class="icon-minus-sign"></i></button>
               <button class="btn" id="retraso_plus"><i class="icon-plus-sign"></i></button>
             </div>
-           </div>
+          </div>
+          <div class="btn-group">
+            <button class="btn" data-toggle="tooltip" title="Modificar condiciones del evaluador" id="evaluacion"><span class="icon-ok"></span> Evaluador</button>
+          </div>
         </div>
       </div>
     </div>
@@ -333,9 +330,9 @@ finalizar-programa</textarea>
       </div>
       <div class="modal-body">
         <pre id="guardar_salida"></pre>
-        <a href="#" id="guardar_descargar">Descargar archivo</a>
       </div>
       <div class="modal-footer">
+        <a href="#" id="guardar_descargar">Descargar archivo</a>
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
       </div>
     </div>
@@ -346,16 +343,20 @@ finalizar-programa</textarea>
       </div>
       <div class="modal-body">
         <form id="importar">
-          MDO: <input type="file" id="importar_mdo" /><br/>
-          KEC: <input type="file" id="importar_kec" /><br/>
-          <input type="submit" class="btn" value="Importar" />
+          <div class="form-group">
+            <label >MDO: <input type="file" id="importar_mdo"></label>
+            <label >KEC: <input type="file" id="importar_kec"></label>
+          </div>
         </form>
+      </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn" value="Importar">
       </div>
     </div>
     <div id="prompt_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="importLabel" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 class="modal-title"></h4>
+        <h4 class="modal-title">Mensaje</h4>
       </div>
       <div class="modal-body">
         <form>
@@ -373,6 +374,32 @@ finalizar-programa</textarea>
         <button type="button" class="btn btn-primary">Aceptar</button>
       </div>
     </div>
+    <div id="evaluacion_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="importLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Evaluación</h4>
+      </div>
+      <div class="modal-body">
+        <fieldset>
+          <h4>Despliega</h4>
+          <div class="btn-group" data-toggle="buttons-checkbox">
+            <button class="btn" title="La solución depende de la posición final de Karel" id="posicion_karel">Posición</button>
+            <button class="btn" title="La solución depende de la orientación final de Karel" id="orientacion_karel">Orientación</button>
+            <button class="btn" title="La solución depende del estado final de la mochila de Karel" id="mochila_karel">Mochila</button>
+            <button class="btn" title="La solución va a hacer dump de todos los zumbadores del mundo" id="universo">Zumbadores</button>
+          </div>
+          <h4>Cuenta instrucciones</h4>
+          <div class="btn-group" data-toggle="buttons-checkbox">
+            <button class="btn" title="La solución depende del número de instrucciones avanza" id="dump_avanza">Avanza</button>
+            <button class="btn" title="La solución depende del número de instrucciones gira-izquierda" id="dump_gira_izquierda">Gira izquierda</button>
+            <button class="btn" title="La solución depende del número de instrucciones coge-zumbador" id="dump_coge_zumbador">Coge zumbador</button>
+            <button class="btn" title="La solución depende del número de instrucciones deja-zumbador" id="dump_deja_zumbador">Deja zumbador</button>
+          </div>
+        </fieldset>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+      </div>
     </div>
     <script type="application/x-karel-input" id="xmlMundo"><ejecucion>
   <condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000" />

@@ -167,6 +167,8 @@ $(document).ready(function(){
     'STACK': 'La pila de karel se ha desbordado!'
   };
 
+  var COMPILATION_ERROR = 'Error de compilación';
+
   var ERROR_TOKENS = {
     pascal: {
       BEGINPROG:'"iniciar-programa"',
@@ -390,6 +392,8 @@ $(document).ready(function(){
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
       $('#futuro').removeAttr('disabled');
+      $('#evaluacion').removeAttr('disabled');
+
     }
 
     if (mundo.dirty) {
@@ -400,24 +404,15 @@ $(document).ready(function(){
     if (!mundo.runtime.state.running) {
       clearInterval(interval);
       interval = null;
-      if(mundo.runtime.state.error) {
-        $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
-      } else {
-        $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
-        mundo.postValidate(validatorCallbacks).then(function (didValidation) {
-          if (didValidation) {
-            $('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
-          }
-        }, function(message) {
-          $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
-        });
-      }
+      mensaje_final();
       highlightCurrentLine();
       // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
       $("#ejecutar").attr('disabled', 'disabled');
       $("#paso").attr('disabled', 'disabled');
       $("#futuro").attr('disabled', 'disabled');
+      $("#evaluacion").attr('disabled', 'disabled');
       $("#worldclean").removeAttr('disabled');
+
     }
   }
 
@@ -524,6 +519,8 @@ $(document).ready(function(){
     $("#ejecutar").attr('disabled', 'disabled');
     $("#paso").attr('disabled', 'disabled');
     $("#futuro").attr('disabled', 'disabled');
+    $("#evaluacion").attr('disabled', 'disabled');
+
     if (editor.numBreakpoints) {
       while (mundo.runtime.step()) {
         var markers = editor.lineInfo(mundo.runtime.state.line).gutterMarkers;
@@ -534,6 +531,7 @@ $(document).ready(function(){
           $('#ejecutar').removeAttr('disabled');
           $('#paso').removeAttr('disabled');
           $('#futuro').removeAttr('disabled');
+          $('#evaluacion').removeAttr('disabled');
           break;
         }
       }
@@ -544,21 +542,36 @@ $(document).ready(function(){
     }
     highlightCurrentLine();
     wRender.paint(mundo, world.width, world.height, { track_karel: true });
-    if (mundo.runtime.state.error) {
-      $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
-    } else if (!mundo.runtime.state.running) {
-      $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
-      mundo.postValidate(validatorCallbacks).then(function (didValidation) {
-        if (didValidation) {
-          $('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
-        }
-      }, function(message) {
-        $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
-      });
-    }
+    mensaje_final();
     // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
     editor.focus();
     $("#worldclean").removeAttr('disabled');
+  }
+
+  function mensaje_final() {
+    if(mundo.runtime.state.error) {
+        $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
+        return;
+      }
+
+      conteo = '';
+      if(mundo.dumps[World.DUMP_MOVE]) conteo = conteo + ' avanza..........' + mundo.runtime.state.moveCount + '\n';
+      if(mundo.dumps[World.DUMP_LEFT]) conteo = conteo + ' gira-izquierda..' + mundo.runtime.state.turnLeftCount + '\n';
+      if(mundo.dumps[World.DUMP_PICK_BUZZER]) conteo = conteo + ' coge-zumbador...' + mundo.runtime.state.pickBuzzerCount + '\n';
+      if(mundo.dumps[World.DUMP_LEAVE_BUZZER]) conteo = conteo + ' deja-zumbador...' + mundo.runtime.state.leaveBuzzerCount;
+      if(conteo != '') conteo = '<pre> Instrucciones ejecutadas:\n' + conteo + '</pre>';
+
+      $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!' + conteo});
+
+      mensaje_validacion();
+  }
+
+  function mensaje_validacion() {
+    mundo.postValidate(validatorCallbacks).then(function (didValidation) {
+      if (didValidation) $('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
+    }, function(message) {
+      $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
+    });
   }
 
   $("#futuro").click(function(event){
@@ -588,44 +601,42 @@ $(document).ready(function(){
   });
   $("#save_out").click(function(event){
     var compiled = compile();
-    if (compiled != null) {
-      $('#ejecutar').trigger('lock');
-      mundo.reset();
-      mundo.runtime.load(compiled);
-      mundo.runtime.start();
-      mundo.runtime.disableStackEvents = true;
-      while (mundo.runtime.step());
-      mundo.runtime.disableStackEvents = false;
-      wRender.paint(mundo, world.width, world.height, { track_karel: true });
-      if(mundo.runtime.state.error) {
-        $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
-      } else {
-        $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
-        mundo.postValidate(validatorCallbacks).then(function (didValidation) {
-          if (didValidation) {
-            $('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
-          }
-        }, function(message) {
-          $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
-        });
-      }
-      highlightCurrentLine();
-      // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
-      editor.focus();
-      $("#ejecutar").attr('disabled', 'disabled');
-      $("#worldclean").removeAttr('disabled');
-      $('#guardar_salida').html(htmlEscape(mundo.output()));
-      var blob = new Blob([mundo.output()], {'type':'text/xml'});
-      $('#guardar_descargar')
-        .attr('href', window.URL.createObjectURL(blob))
-        .attr('download', 'mundo.out');
+    if (compiled == null) {
+      $('#guardar_salida').html(COMPILATION_ERROR);
+      return;
     }
+    $('#ejecutar').trigger('lock');
+    mundo.reset();
+    mundo.runtime.load(compiled);
+    mundo.runtime.start();
+    mundo.runtime.disableStackEvents = true;
+    while (mundo.runtime.step());
+    mundo.runtime.disableStackEvents = false;
+    wRender.paint(mundo, world.width, world.height, { track_karel: true });
+    if(mundo.runtime.state.error) {
+      $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
+      $('#guardar_salida').html(htmlEscape(ERROR_CODES[mundo.runtime.state.error]));
+    } else {
+      $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
+      mensaje_validacion()
+      $('#guardar_salida').html(htmlEscape(mundo.output()));
+    }
+    highlightCurrentLine();
+    // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
+    editor.focus();
+    $("#ejecutar").attr('disabled', 'disabled');
+    $("#worldclean").removeAttr('disabled');
+    var blob = new Blob([mundo.output()], {'type':'text/xml'});
+    $('#guardar_descargar')
+      .attr('href', window.URL.createObjectURL(blob))
+      .attr('download', 'mundo.out');
   });
   $("#ejecutar").bind('lock', function(evt){
     //Bloquea los controles de ejecución y edición
     mundo_editable = false; //Previene ediciones del mundo
     $("#compilar").attr('disabled', 'disabled');
     $("#futuro").attr('disabled', 'disabled');
+    $("#evaluacion").attr('disabled', 'disabled');
     $("#quitar_zumbadores").attr('disabled', 'disabled');
     $("#mochila").attr('disabled', 'disabled');
     $("#inf_zumbadores").attr('disabled', 'disabled');
@@ -636,6 +647,11 @@ $(document).ready(function(){
     $("#orientacion_karel").attr('disabled', 'disabled');
     $("#mochila_karel").attr('disabled', 'disabled');
     $("#universo").attr('disabled', 'disabled');
+    $("#dump_avanza").attr('disabled', 'disabled');
+    $("#dump_gira_izquierda").attr('disabled', 'disabled');
+    $("#dump_coge_zumbador").attr('disabled', 'disabled');
+    $("#dump_deja_zumbador").attr('disabled', 'disabled');
+
     editor.setOption('readOnly', true);
   });
   $("#ejecutar").bind('unlock', function(evt){
@@ -644,6 +660,7 @@ $(document).ready(function(){
     $("#compilar").removeAttr('disabled');
     $("#ejecutar").removeAttr('disabled');
     $("#futuro").removeAttr('disabled');
+    $("#evaluacion").removeAttr('disabled');
     $("#quitar_zumbadores").removeAttr('disabled');
     $("#mochila").removeAttr('disabled');
     $("#inf_zumbadores").removeAttr('disabled');
@@ -655,6 +672,12 @@ $(document).ready(function(){
     $("#orientacion_karel").removeAttr('disabled');
     $("#mochila_karel").removeAttr('disabled');
     $("#universo").removeAttr('disabled');
+    $("#dump_avanza").removeAttr('disabled');
+    $("#dump_gira_izquierda").removeAttr('disabled');
+    $("#dump_coge_zumbador").removeAttr('disabled');
+    $("#dump_deja_zumbador").removeAttr('disabled');
+
+
     editor.setOption('readOnly', false);
   });
   $("#ejecutar").click(function(event){
@@ -688,6 +711,7 @@ $(document).ready(function(){
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
       $('#futuro').removeAttr('disabled');
+      $('#evaluacion').removeAttr('disabled');
     }
   });
   $('#paso').click(function(event){
@@ -709,6 +733,7 @@ $(document).ready(function(){
         $('#paso').removeAttr('disabled');
         $('#worldclean').removeAttr('disabled');
         $('#futuro').removeAttr('disabled');
+        $('#evaluacion').removeAttr('disabled');
         $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
         step();
       }, function(message) {
@@ -888,6 +913,18 @@ $(document).ready(function(){
     if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
       $('#universo').button('toggle');
     }
+    if ($('#dump_avanza').hasClass('active') != mundo.getDumps(World.DUMP_MOVE)) {
+      $('#dump_avanza').button('toggle');
+    }
+    if ($('#dump_gira_izquierda').hasClass('active') != mundo.getDumps(World.DUMP_LEFT)) {
+      $('#dump_gira_izquierda').button('toggle');
+    }
+    if ($('#dump_coge_zumbador').hasClass('active') != mundo.getDumps(World.DUMP_PICK_BUZZER)) {
+      $('#dump_coge_zumbador').button('toggle');
+    }
+    if ($('#dump_deja_zumbador').hasClass('active') != mundo.getDumps(World.DUMP_LEAVE_BUZZER)) {
+      $('#dump_deja_zumbador').button('toggle');
+    }
   });
   $("#newworld").click(function(event){
     if (linea_actual != null) {
@@ -914,11 +951,26 @@ $(document).ready(function(){
     if ($('#universo').hasClass('active')) {
       $('#universo').button('toggle');
     }
+    if ($('#dump_avanza').hasClass('active')) {
+      $('#dump_avanza').button('toggle');
+    }
+    if ($('#dump_gira_izquierda').hasClass('active')) {
+      $('#dump_gira_izquierda').button('toggle');
+    }
+    if ($('#dump_coge_zumbador').hasClass('active')) {
+      $('#dump_coge_zumbador').button('toggle');
+    }
+    if ($('#dump_deja_zumbador').hasClass('active')) {
+      $('#dump_deja_zumbador').button('toggle');
+    }
   });
   $('#theme').click(function() {
     modalPrompt('tema', getTheme(), codeMirrorThemes).then(function(response) {
       setTheme(response);
     });
+  });
+  $("#evaluacion").click(function(event){
+    $('#evaluacion_modal').modal('show');
   });
   $("body").keyup(function(event){
     var repaint = false;
@@ -1176,6 +1228,22 @@ $(document).ready(function(){
     mundo.toggleDumps(World.DUMP_ALL_BUZZERS);
     $("#xmlMundo").html(mundo.save());
   });
+  $("#dump_avanza").click(function(event){
+    mundo.toggleDumps(World.DUMP_MOVE);
+    $("#xmlMundo").html(mundo.save());
+  });
+  $("#dump_gira_izquierda").click(function(event){
+    mundo.toggleDumps(World.DUMP_LEFT);
+    $("#xmlMundo").html(mundo.save());
+  });
+  $("#dump_coge_zumbador").click(function(event){
+    mundo.toggleDumps(World.DUMP_PICK_BUZZER);
+    $("#xmlMundo").html(mundo.save());
+  });
+  $("#dump_deja_zumbador").click(function(event){
+    mundo.toggleDumps(World.DUMP_LEAVE_BUZZER);
+    $("#xmlMundo").html(mundo.save());
+  });
   $("#ctx_norte").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('NORTE');
@@ -1262,6 +1330,19 @@ $(document).ready(function(){
             if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
               $('#universo').button('toggle');
             }
+            if ($('#dump_avanza').hasClass('active') != mundo.getDumps(World.DUMP_MOVE)) {
+              $('#dump_avanza').button('toggle');
+            }
+            if ($('#dump_gira_izquierda').hasClass('active') != mundo.getDumps(World.DUMP_LEFT)) {
+              $('#dump_gira_izquierda').button('toggle');
+            }
+            if ($('#dump_coge_zumbador').hasClass('active') != mundo.getDumps(World.DUMP_PICK_BUZZER)) {
+              $('#dump_coge_zumbador').button('toggle');
+            }
+            if ($('#dump_deja_zumbador').hasClass('active') != mundo.getDumps(World.DUMP_LEAVE_BUZZER)) {
+              $('#dump_deja_zumbador').button('toggle');
+            }
+
           };
         })(kecReader, mdoReader.result);
         kecReader.readAsArrayBuffer(kec);

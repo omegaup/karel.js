@@ -72,5 +72,26 @@ class TestLibKarelOutput(unittest.TestCase):
 	# API público
 	self.assertEqual(ko.zumbadores(1, 1), 0)
 
+	def test_instructions(self):
+		ko = libkarel.KarelOutput('''
+<resultados>
+	<programas>
+		<programa nombre="p1" resultadoEjecucion="FIN PROGRAMA">
+			<karel x="10" y="15"/>
+			<instrucciones avanza="42" gira_izquierda="1" coge_zumbador="0"/>
+		</programa>
+	</programas>
+</resultados>
+		''')
+		#karel
+		self.assertEqual(ko.x, 10)
+		self.assertEqual(ko.y, 15)
+
+		#instrucciones
+		self.assertEqual(ko._instrucciones['avanza'], 42)
+		self.assertEqual(ko._instrucciones['gira_izquierda'], 1)
+		self.assertEqual(ko._instrucciones['coge_zumbador'], 0)
+		self.assertEqual(ko._instrucciones['deja_zumbador'], None)
+
 if __name__ == '__main__':
     unittest.main()
