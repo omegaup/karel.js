@@ -1,4 +1,5 @@
 *.geany
+*.pyc
 dist/
 karel.js-*.tgz
 karel.js.zip

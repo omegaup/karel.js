@@ -4,3 +4,12 @@ sudo: false
 
 node_js:
   - "node"
+
+addons:
+  apt:
+    packages:
+      - python2.7
+
+script:
+  - npm test
+  - python2.7 libkarel/libkarel_test.py
