@@ -261,11 +261,11 @@
       <div id="splitter-left-pane" class="split split-horizontal">
         <div id="splitter-left-top-pane" class="split content">
           <textarea id="editor">iniciar-programa
-          inicia-ejecucion
-          { TODO poner codigo aqui }
-          apagate;
-          termina-ejecucion
-          finalizar-programa</textarea>
+  inicia-ejecucion
+    { TODO poner codigo aqui }
+    apagate;
+  termina-ejecucion
+finalizar-programa</textarea>
         </div>
         <div id="splitter-left-bottom-pane" class="split content tabbable">
           <!-- Only required for left/right tabs -->
@@ -342,13 +342,13 @@
       <div class="modal-body">
         <form id="importar">
           <div class="form-group">
-            <label >MDO: </label>
-            <input type="file" id="importar_mdo">
-            <label >KEC: </label>
-            <input type="file" id="importar_kec" />
+            <label >MDO: <input type="file" id="importar_mdo"></label>
+            <label >KEC: <input type="file" id="importar_kec" /></label>
           </div>
-          <input type="submit" class="btn" value="Importar">
         </form>
+      </div>
+      <div class="modal-footer">
+        <input type="submit" class="btn" value="Importar">
       </div>
     </div>
     <div id="prompt_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="importLabel" aria-hidden="true">
@@ -388,10 +388,10 @@
           </div>
           <h4>Cuenta instrucciones</h4>
           <div class="btn-group" data-toggle="buttons-checkbox">
-            <button class="btn" title="Contar avanza" id="dump_avanza">Avanza</button>
-            <button class="btn" title="Contar gira-izquierda" id="dump_gira_izquierda">Gira izquierda</button>
-            <button class="btn" title="Contar coge-zumbador" id="dump_coge_zumbador">Coge zumbador</button>
-            <button class="btn" title="Contar deja-zumbador" id="dump_deja_zumbador">Deja zumbador</button>
+            <button class="btn" title="La solución depende del número de instrucciones avanza" id="dump_avanza">Avanza</button>
+            <button class="btn" title="La solución depende del número de instrucciones gira-izquierda" id="dump_gira_izquierda">Gira izquierda</button>
+            <button class="btn" title="La solución depende del número de instrucciones coge-zumbador" id="dump_coge_zumbador">Coge zumbador</button>
+            <button class="btn" title="La solución depende del número de instrucciones deja-zumbador" id="dump_deja_zumbador">Deja zumbador</button>
           </div>
         </fieldset>
       </div>
@@ -400,17 +400,17 @@
       </div>
     </div>
     <script type="application/x-karel-input" id="xmlMundo"><ejecucion>
-      <condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000" />
-      <mundos>
-      <mundo nombre="mundo_0" ancho="100" alto="100">
-      </mundo>
-      </mundos>
-      <programas tipoEjecucion="CONTINUA" intruccionesCambioContexto="1" milisegundosParaPasoAutomatico="0">
-      <programa nombre="p1" ruta="{$2$}" mundoDeEjecucion="mundo_0" xKarel="1" yKarel="1" direccionKarel="NORTE" mochilaKarel="0" >
+  <condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000" />
+  <mundos>
+    <mundo nombre="mundo_0" ancho="100" alto="100">
+  </mundo>
+  </mundos>
+  <programas tipoEjecucion="CONTINUA" intruccionesCambioContexto="1" milisegundosParaPasoAutomatico="0">
+    <programa nombre="p1" ruta="{$2$}" mundoDeEjecucion="mundo_0" xKarel="1" yKarel="1" direccionKarel="NORTE" mochilaKarel="0" >
       <despliega tipo="MUNDO" />
-      </programa>
-      </programas>
-      </ejecucion>
+    </programa>
+  </programas>
+</ejecucion>
     </script>
   </body>
 </html>

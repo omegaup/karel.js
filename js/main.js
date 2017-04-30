@@ -167,6 +167,8 @@ $(document).ready(function(){
     'STACK': 'La pila de karel se ha desbordado!'
   };
 
+  var COMPILATION_ERROR = 'Error de compilación';
+
   var ERROR_TOKENS = {
     pascal: {
       BEGINPROG:'"iniciar-programa"',
@@ -621,7 +623,7 @@ $(document).ready(function(){
         .attr('href', window.URL.createObjectURL(blob))
         .attr('download', 'mundo.out');
     } else {
-      $('#guardar_salida').html('compilation error');
+      $('#guardar_salida').html(COMPILATION_ERROR);
     }
   });
   $("#ejecutar").bind('lock', function(evt){
