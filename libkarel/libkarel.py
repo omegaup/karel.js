@@ -94,7 +94,7 @@ class KarelOutput:
 		* y: la posición y final de Karel. None si no se encuentra en la salida.
 		* direccion: La orientación inicial de Karel. Puede ser uno de ['NORTE', 'ESTE', 'SUR', 'OESTE'], o None si no se encuentra
 		* _zumbadores: Un diccionario donde cada llave (x, y) tiene como valor el número de zumbadores en esa casilla al final de la ejecución
-		* _instrucciones: Un diccionario con el número de instrucciones que karel ejecutó""" 
+		* instrucciones: Un diccionario con el número de instrucciones que karel ejecutó""" 
 
 	def __init__(self, string):
 		self.root = ET.fromstring(string)
@@ -123,11 +123,11 @@ class KarelOutput:
 				self.direccion = karel.attrib['direccion']
 
 		instrucciones = self.root.find('programas/programa/instrucciones')
-		self._instrucciones =   {'avanza': None, 'gira_izquierda': None, 'coge_zumbador': None, 'deja_zumbador': None}
+		self.instrucciones =   {'avanza': None, 'gira_izquierda': None, 'coge_zumbador': None, 'deja_zumbador': None}
 		if instrucciones is not None:
-			for k, v in self._instrucciones.items():
+			for k, v in self.instrucciones.items():
 				if k in instrucciones.attrib:
-					self._instrucciones[k] = int(instrucciones.attrib[k])
+					self.instrucciones[k] = int(instrucciones.attrib[k])
 
 	def __repr__(self):
 		"""Imprime una versión bonita del objeto"""
