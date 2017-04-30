@@ -1,5 +1,2 @@
-[MESSAGES CONTROL]
-disable = invalid-name
-
 [DESIGN]
-max-attributes = 20
+max-attributes=20

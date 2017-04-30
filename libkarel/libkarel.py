@@ -50,22 +50,22 @@ class KarelInput(object):
         self.__dump = set((x['x'], x['y']) for x in lista_dump)
 
     @property
-    def x(self):
+    def x(self):  # pylint: disable=C0103
         """La posición x inicial de Karel."""
         return self.__x
 
     @property
-    def y(self):
+    def y(self):  # pylint: disable=C0103
         """La posición y inicial de Karel."""
         return self.__y
 
     @property
-    def w(self):
+    def w(self):  # pylint: disable=C0103
         """El ancho del mundo."""
         return self.__w
 
     @property
-    def h(self):
+    def h(self):  # pylint: disable=C0103
         """"El alto del mundo."""
         return self.__h
 
@@ -122,27 +122,27 @@ class KarelInput(object):
         """
         return self.__zumbadores
 
-    def zumbadores(self, x, y):
+    def zumbadores(self, casilla_x, casilla_y):
         """Regresa el número de zumbadores para la casilla en (x, y).
 
         Si hay una cantidad infinita de zumbadores, regresa la cadena
         'INFINITO'.
         """
-        if (x, y) not in self.__zumbadores:
+        if (casilla_x, casilla_y) not in self.__zumbadores:
             return 0
-        z = self.__zumbadores[(x, y)]
-        if z == 'INFINITO':
-            return z
-        return int(z)
+        zumbadores = self.__zumbadores[(casilla_x, casilla_y)]
+        if zumbadores == 'INFINITO':
+            return zumbadores
+        return int(zumbadores)
 
     @property
     def lista_dump(self):
         """El conjunto de casillas marcadas para generar una salida."""
         return self.__dump
 
-    def dump(self, x, y):
+    def dump(self, casilla_x, casilla_y):
         """Regresa True si la casilla está marcada para generar una salida."""
-        return (x, y) in self.__dump
+        return (casilla_x, casilla_y) in self.__dump
 
     def __repr__(self):
         """Imprime una versión bonita del objeto."""
@@ -162,14 +162,14 @@ class KarelOutput(object):
         self.root = ET.fromstring(string)
         self.__zumbadores = {}
         for linea in self.root.findall('mundos/mundo/linea'):
-            y = int(linea.attrib['fila'])
-            x = 0
+            pos_y = int(linea.attrib['fila'])
+            pos_x = 0
             for token in linea.text.strip().split():
                 if token[0] == '(':
-                    x = int(token[1:-1])
+                    pos_x = int(token[1:-1])
                 else:
-                    self.__zumbadores[(x, y)] = token
-                    x += 1
+                    self.__zumbadores[(pos_x, pos_y)] = token
+                    pos_x += 1
 
         programa = self.root.find('programas/programa')
         self.__resultado = programa.attrib['resultadoEjecucion']
@@ -197,12 +197,12 @@ class KarelOutput(object):
                     self.__instrucciones[k] = int(instrucciones.attrib[k])
 
     @property
-    def x(self):
+    def x(self):  # pylint: disable=C0103
         """La posición x final de Karel. None si no se hizo dump posición."""
         return self.__x
 
     @property
-    def y(self):
+    def y(self):  # pylint: disable=C0103
         """La posición y final de Karel. None si no se hizo dump posición."""
         return self.__y
 
@@ -241,18 +241,18 @@ class KarelOutput(object):
         """Un diccionario con el número de instrucciones que karel ejecutó"""
         return self.__instrucciones
 
-    def zumbadores(self, x, y):
+    def zumbadores(self, casilla_x, casilla_y):
         """Regresa el número de zumbadores para la casilla en (x, y)
 
         Si hay una cantidad infinita de zumbadores, regresa la cadena
         'INFINITO'.
         """
-        if (x, y) not in self.__zumbadores:
+        if (casilla_x, casilla_y) not in self.__zumbadores:
             return 0
-        z = self.__zumbadores[(x, y)]
-        if z == 'INFINITO':
-            return z
-        return int(z)
+        zumbadores = self.__zumbadores[(casilla_x, casilla_y)]
+        if zumbadores == 'INFINITO':
+            return zumbadores
+        return int(zumbadores)
 
     def __repr__(self):
         """Imprime una versión bonita del objeto"""
