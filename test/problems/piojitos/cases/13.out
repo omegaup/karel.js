@@ -1,0 +1,9 @@
+<resultados>
+	<programas>
+		<programa nombre="p1" resultadoEjecucion="FIN PROGRAMA">
+			<karel x="13" y="6"/>
+			<instrucciones avanza="119" gira_izquierda="33" coge_zumbador="0" deja_zumbador="0"/>
+		</programa>
+	</programas>
+</resultados>
+

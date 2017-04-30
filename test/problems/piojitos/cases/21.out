@@ -1,0 +1,12 @@
+<resultados>
+	<mundos>
+		<mundo nombre="mundo_0"/>
+	</mundos>
+	<programas>
+		<programa nombre="p1" resultadoEjecucion="FIN PROGRAMA">
+			<karel x="21" y="10"/>
+			<instrucciones avanza="217" gira_izquierda="39" coge_zumbador="0" deja_zumbador="0"/>
+		</programa>
+	</programas>
+</resultados>
+

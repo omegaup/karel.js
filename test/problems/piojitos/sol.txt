@@ -1,0 +1,67 @@
+class program {
+
+	void norte() {
+    	while(!facingNorth) turnleft();
+    }
+    void sur() {
+    	while(!facingSouth) turnleft();
+    }
+    void este() {
+    	while(!facingEast) turnleft();
+    }
+    void oeste() {
+    	while(!facingWest) turnleft();
+    }
+    void gira(a) {
+    	iterate(a) turnleft();
+    }
+
+	void jump(x) {
+    	if(!iszero(x) && frontIsClear) {
+        	move();
+            jump(pred(x));
+        } else {
+        	if(!iszero(x)) gira(2);
+            else norte();
+        }
+    }
+
+	void salta(x) {
+        jump(x);
+        if(facingNorth) {
+            while(!nextToABeeper && frontIsClear) move();
+            sur();
+            if(!nextToABeeper) {                
+                while(frontIsClear) move();
+                este();
+            } else {
+            	if(iszero(pred(x))) turnoff();
+                while(frontIsClear) move();
+                oeste();
+            }
+        }
+    }
+
+    program () {  
+    	este();
+        salta(50);
+        salta(25);
+        salta(13);
+        salta(6);
+        salta(3);
+        salta(2);
+        salta(1);
+        move();
+        norte();
+        while(!nextToABeeper && frontIsClear) move();
+        if(notNextToABeeper) {
+        	sur();
+            while(frontIsClear) move();
+            este();
+            move();
+            norte();
+            while(!nextToABeeper && frontIsClear) move();
+        }
+        turnoff();
+    }
+}
