@@ -9,7 +9,11 @@ addons:
   apt:
     packages:
       - python2.7
+      - pylint
+      - pep8
 
 script:
   - npm test
   - python2.7 libkarel/libkarel_test.py
+  - pylint --rcfile=libkarel/.pylintrc libkarel/libkarel.py libkarel/libkarel_test.py
+  - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py

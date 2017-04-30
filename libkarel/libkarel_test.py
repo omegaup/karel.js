@@ -1,12 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import libkarel
+"""Pruebas unitarias de libkarel."""
+
 import unittest
 
-class TestLibKarel(unittest.TestCase):
+import libkarel
+
+
+class TestLibKarelInput(unittest.TestCase):
+    """Prueba libkarel.KarelInput."""
+
     def test_basic(self):
-        ki = libkarel.KarelInput('''
+        """Prueba básica."""
+        karel_in = libkarel.KarelInput('''
 <ejecucion>
   <condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000" />
   <mundos>
@@ -20,78 +27,87 @@ class TestLibKarel(unittest.TestCase):
   </programas>
 </ejecucion>
         ''')
-	# Dimensiones del mundo
-	self.assertEqual(ki.w, 100)
-	self.assertEqual(ki.h, 100)
+        # Dimensiones del mundo
+        self.assertEqual(karel_in.w, 100)
+        self.assertEqual(karel_in.h, 100)
 
-	# Estado inicial de Karel
-	self.assertEqual(ki.x, 1)
-	self.assertEqual(ki.y, 1)
-	self.assertEqual(ki.mochila, 0)
-	self.assertEqual(ki.direccion, 'NORTE')
+        # Estado inicial de Karel
+        self.assertEqual(karel_in.x, 1)
+        self.assertEqual(karel_in.y, 1)
+        self.assertEqual(karel_in.mochila, 0)
+        self.assertEqual(karel_in.direccion, 'NORTE')
 
-	# Despliegas
-	self.assertEqual(ki.despliega, ['MUNDO'])
-	self.assertEqual(ki.despliega_orientacion, False)
-	self.assertEqual(ki.despliega_mundo, True)
-	self.assertEqual(ki.despliega_posicion, False)
-	self.assertEqual(ki.despliega_instrucciones, False)
+        # Despliegas
+        self.assertEqual(karel_in.despliega, ['MUNDO'])
+        self.assertEqual(karel_in.despliega_orientacion, False)
+        self.assertEqual(karel_in.despliega_mundo, True)
+        self.assertEqual(karel_in.despliega_posicion, False)
+        self.assertEqual(karel_in.despliega_instrucciones, False)
 
-	# Estado interno
-	self.assertEqual(ki._lista_zumbadores, [])
-	self.assertEqual(ki._zumbadores, {})
-	self.assertEqual(ki._lista_dump, [])
-	self.assertEqual(ki._dump, {})
+        # Listas
+        self.assertEqual(karel_in.lista_zumbadores, {})
+        self.assertEqual(karel_in.lista_dump, set())
 
-	# API público
-	self.assertEqual(ki.zumbadores(1, 1), 0)
-	self.assertEqual(ki.dump(1, 1), False)
+        # API público
+        self.assertEqual(karel_in.zumbadores(1, 1), 0)
+        self.assertEqual(karel_in.dump(1, 1), False)
+
 
 class TestLibKarelOutput(unittest.TestCase):
+    """Prueba libkarel.KarelOutput"""
+
     def test_basic(self):
-        ko = libkarel.KarelOutput('''
+        """Prueba básica."""
+
+        karel_out = libkarel.KarelOutput('''
 <resultados>
-	<mundos>
-		<mundo nombre="mundo_0"/>
-	</mundos>
-	<programas>
-		<programa nombre="p1" resultadoEjecucion="FIN PROGRAMA"/>
-	</programas>
+        <mundos>
+                <mundo nombre="mundo_0"/>
+        </mundos>
+        <programas>
+                <programa nombre="p1" resultadoEjecucion="FIN PROGRAMA"/>
+        </programas>
 </resultados>
         ''')
 
-	# Estado de la ejecución
-	self.assertEqual(ko.resultado, 'FIN PROGRAMA')
-	self.assertEqual(ko.error, False)
+        # Estado de la ejecución
+        self.assertEqual(karel_out.resultado, 'FIN PROGRAMA')
+        self.assertEqual(karel_out.error, False)
 
-	# Despliegas
-	self.assertEqual(ko.x, None)
-	self.assertEqual(ko.y, None)
-	self.assertEqual(ko.direccion, None)
+        # Despliegas
+        self.assertEqual(karel_out.x, None)
+        self.assertEqual(karel_out.y, None)
+        self.assertEqual(karel_out.direccion, None)
 
-	# API público
-	self.assertEqual(ko.zumbadores(1, 1), 0)
+        # API público
+        self.assertEqual(karel_out.zumbadores(1, 1), 0)
 
-	def test_instructions(self):
-		ko = libkarel.KarelOutput('''
+    def test_instructions(self):
+        """Prueba del dump de instrucciones."""
+
+        karel_out = libkarel.KarelOutput('''
 <resultados>
-	<programas>
-		<programa nombre="p1" resultadoEjecucion="FIN PROGRAMA">
-			<karel x="10" y="15"/>
-			<instrucciones avanza="42" gira_izquierda="1" coge_zumbador="0"/>
-		</programa>
-	</programas>
+    <programas>
+        <programa nombre="p1" resultadoEjecucion="FIN PROGRAMA">
+            <karel x="10" y="15"/>
+            <instrucciones avanza="42" gira_izquierda="1" coge_zumbador="0"/>
+        </programa>
+    </programas>
 </resultados>
-		''')
-		#karel
-		self.assertEqual(ko.x, 10)
-		self.assertEqual(ko.y, 15)
+        ''')
 
-		#instrucciones
-		self.assertEqual(ko._instrucciones['avanza'], 42)
-		self.assertEqual(ko._instrucciones['gira_izquierda'], 1)
-		self.assertEqual(ko._instrucciones['coge_zumbador'], 0)
-		self.assertEqual(ko._instrucciones['deja_zumbador'], None)
+        # Estado de la ejecución.
+        self.assertEqual(karel_out.x, 10)
+        self.assertEqual(karel_out.y, 15)
+
+        # Instrucciones.
+        self.assertEqual(karel_out.instrucciones['avanza'], 42)
+        self.assertEqual(karel_out.instrucciones['gira_izquierda'], 1)
+        self.assertEqual(karel_out.instrucciones['coge_zumbador'], 0)
+        self.assertEqual(karel_out.instrucciones['deja_zumbador'], None)
+
 
 if __name__ == '__main__':
     unittest.main()
+
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
