@@ -1,14 +1,12 @@
 const assert = require('assert');
-const extract = require('extract-zip')
+const extract = require('extract-zip');
 const fs = require('fs');
 const tmp = require('tmp');
 
 describe('extract-zip', function() {
   var dir = null;
 
-  beforeEach(function() {
-    dir = tmp.dirSync({unsafeCleanup: true});
-  });
+  beforeEach(function() { dir = tmp.dirSync({unsafeCleanup: true}); });
 
   afterEach(function() {
     dir.removeCallback();

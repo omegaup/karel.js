@@ -7,13 +7,23 @@ node_js:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.7
     packages:
-      - python2.7
-      - pylint
+      - clang-format-3.7
       - pep8
+      - pylint
+      - python2.7
+      - python3
+
+before_install:
+  - pip install --user six
+  - pip install --user https://github.com/google/closure-linter/zipball/master
 
 script:
   - npm test
   - python2.7 libkarel/libkarel_test.py
   - pylint --rcfile=libkarel/.pylintrc libkarel/libkarel.py libkarel/libkarel_test.py
   - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py
+  - hook_tools/lint.py validate --all

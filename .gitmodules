@@ -4,3 +4,6 @@
 [submodule "lib/Split.js"]
 	path = lib/Split.js
 	url = https://github.com/nathancahill/Split.js.git
+[submodule "hook_tools"]
+	path = hook_tools
+	url = https://github.com/omegaup/hook_tools.git
