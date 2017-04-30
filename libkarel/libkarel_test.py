@@ -56,7 +56,6 @@ class TestLibKarelOutput(unittest.TestCase):
 	</mundos>
 	<programas>
 		<programa nombre="p1" resultadoEjecucion="FIN PROGRAMA"/>
-		<instrucciones avanza="42" gira_izquierda="1" coge_zumbador="0"/>
 	</programas>
 </resultados>
 			''')
