@@ -392,7 +392,7 @@ $(document).ready(function(){
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
       $('#futuro').removeAttr('disabled');
-      $('#evaluation').removeAttr('disabled');
+      $('#evaluacion').removeAttr('disabled');
 
     }
 
@@ -410,7 +410,7 @@ $(document).ready(function(){
       $("#ejecutar").attr('disabled', 'disabled');
       $("#paso").attr('disabled', 'disabled');
       $("#futuro").attr('disabled', 'disabled');
-      $("#evaluation").attr('disabled', 'disabled');
+      $("#evaluacion").attr('disabled', 'disabled');
       $("#worldclean").removeAttr('disabled');
 
     }
@@ -519,7 +519,7 @@ $(document).ready(function(){
     $("#ejecutar").attr('disabled', 'disabled');
     $("#paso").attr('disabled', 'disabled');
     $("#futuro").attr('disabled', 'disabled');
-    $("#evaluation").attr('disabled', 'disabled');
+    $("#evaluacion").attr('disabled', 'disabled');
 
     if (editor.numBreakpoints) {
       while (mundo.runtime.step()) {
@@ -531,7 +531,7 @@ $(document).ready(function(){
           $('#ejecutar').removeAttr('disabled');
           $('#paso').removeAttr('disabled');
           $('#futuro').removeAttr('disabled');
-          $('#evaluation').removeAttr('disabled');
+          $('#evaluacion').removeAttr('disabled');
           break;
         }
       }
@@ -648,7 +648,7 @@ $(document).ready(function(){
     mundo_editable = false; //Previene ediciones del mundo
     $("#compilar").attr('disabled', 'disabled');
     $("#futuro").attr('disabled', 'disabled');
-    $("#evaluation").attr('disabled', 'disabled');
+    $("#evaluacion").attr('disabled', 'disabled');
     $("#quitar_zumbadores").attr('disabled', 'disabled');
     $("#mochila").attr('disabled', 'disabled');
     $("#inf_zumbadores").attr('disabled', 'disabled');
@@ -672,7 +672,7 @@ $(document).ready(function(){
     $("#compilar").removeAttr('disabled');
     $("#ejecutar").removeAttr('disabled');
     $("#futuro").removeAttr('disabled');
-    $("#evaluation").removeAttr('disabled');
+    $("#evaluacion").removeAttr('disabled');
     $("#quitar_zumbadores").removeAttr('disabled');
     $("#mochila").removeAttr('disabled');
     $("#inf_zumbadores").removeAttr('disabled');
@@ -723,7 +723,7 @@ $(document).ready(function(){
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
       $('#futuro').removeAttr('disabled');
-      $('#evaluation').removeAttr('disabled');
+      $('#evaluacion').removeAttr('disabled');
     }
   });
   $('#paso').click(function(event){
@@ -745,7 +745,7 @@ $(document).ready(function(){
         $('#paso').removeAttr('disabled');
         $('#worldclean').removeAttr('disabled');
         $('#futuro').removeAttr('disabled');
-        $('#evaluation').removeAttr('disabled');
+        $('#evaluacion').removeAttr('disabled');
         $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
         step();
       }, function(message) {
@@ -981,8 +981,8 @@ $(document).ready(function(){
       setTheme(response);
     });
   });
-  $("#evaluation").click(function(event){
-    $('#evaluation_modal').modal('show');
+  $("#evaluacion").click(function(event){
+    $('#evaluacion_modal').modal('show');
   });
   $("body").keyup(function(event){
     var repaint = false;
