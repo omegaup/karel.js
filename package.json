@@ -1,6 +1,6 @@
 {
   "name": "karel.js",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Compilador y evaluador de Karel en javascript",
   "scripts": {
     "start": "electron index.js",
@@ -10,48 +10,25 @@
     "clean:osx": "rm -rf ./dist/osx",
     "clean:linux": "rm -rf ./dist/linux",
     "pack": "npm run clean && npm run pack:osx && npm run pack:win",
-    "pack:osx": "npm run clean:osx && electron-packager . \"karel.js\" --out=dist/osx --platform=darwin --arch=x64 --version=0.36.1 --icon=img/osx_icon.icns --ignore=dist --ignore=node_modules --ignore=Gruntfile.js",
-    "pack:win": "npm run clean:win && electron-packager . \"karel.js\" --out=dist/win --platform=win32 --arch=ia32 --version=0.36.1 --icon=img/win_icon.ico --ignore=dist --ignore=node_modules --ignore=Gruntfile.js",
-    "pack:linux": "npm run clean:linux && electron-packager . \"karel.js\" --out=dist/linux --platform=linux --arch=x64 --version=0.36.1 --icon=img/icon.png --ignore=dist --ignore=node_modules --ignore=Gruntfile.js",
+    "pack:osx": "npm run clean:osx && ./node_modules/electron-packager/cli.js . --out=dist/osx --platform=darwin --arch=x64 --electron-version=1.3.15 --icon=img/osx_icon.icns --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
+    "pack:win": "npm run clean:win && ./node_modules/electron-packager/cli.js . \"karel.js\" --out=dist/win --platform=win32 --arch=ia32 --electron-version=1.3.15 --icon=img/win_icon.ico --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
+    "pack:linux": "npm run clean:linux && ./node_modules/electron-packager/cli.js . --out=dist/linux --platform=linux --arch=x64 --electron-version=1.3.15 --icon=img --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
     "build": "npm run build:bundle && npm run build:osx && npm run build:win",
     "build:bundle": "./node_modules/webpack/bin/webpack.js",
-    "build:osx": "npm run pack:osx && electron-builder \"dist/osx/karel.js.app\" --platform=osx --out=\"dist/osx\"",
-    "build:win": "npm run pack:win && electron-builder \"dist/win/karel.js-win32\" --platform=win --out=\"dist/win\"",
-    "build:linux": "npm run pack:linux && electron-builder \"dist/linux/karel.js-linux\" --platform=linux --out=\"dist/linux\""
+    "build:osx": "npm run pack:osx && ./node_modules/electron-builder/out/cli/build-cli.js --platform=mac",
+    "build:win": "npm run pack:win && ./node_modules/electron-builder/out/cli/build-cli.js --platform=win",
+    "build:linux": "npm run pack:linux && ./node_modules/electron-builder/out/cli/build-cli.js --platform=linux"
   },
-  "builder": {
-    "osx": {
-      "title": "karel.js",
-      "icon": "img/osx_icon.icns",
-      "icon-size": 80,
-      "contents": [
-        {
-          "x": 438,
-          "y": 344,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 192,
-          "y": 344,
-          "type": "file"
-        }
-      ]
+  "build": {
+    "electronVersion": "1.3.15",
+    "mac": {
+      "icon": "img/osx_icon.icns"
     },
     "win": {
-      "title": "karel.js",
-      "version": "0.2.1",
-      "publisher": "omegaUp",
-      "icon": "img/win_icon.ico",
-      "verbosity": 1
+      "icon": "img/win_icon.ico"
     },
     "linux": {
-      "arch": 64,
-      "target": "deb",
-      "version": "0.2.1",
-      "title": "karel.js",
-      "executable": "kareljs",
-      "comment": "kareljs",
+      "icon": "img",
       "maintainer": "lhchavez <lhchavez@omegaup.com>"
     }
   },
@@ -70,15 +47,15 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "commander": "^2.9.0",
-    "xmldom": "^0.1.22"
+    "xmldom": "^0.1.27"
   },
   "keywords": [
     "karel"
   ],
   "devDependencies": {
-    "electron-builder": "^2.7.2",
-    "electron-packager": "^4.0.2",
-    "electron-prebuilt": "^0.36.7",
+    "electron-builder": "^17.1.1",
+    "electron-packager": "^8.6.0",
+    "extract-zip": "1.6.0",
     "grunt": "^1.0.1",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-jshint": "^1.1.0",
