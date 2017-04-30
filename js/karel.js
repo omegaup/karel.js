@@ -611,6 +611,11 @@ World.DUMP_ORIENTATION = 'orientacion';
 World.DUMP_INSTRUCTIONS = 'instrucciones';
 World.DUMP_ALL_BUZZERS = 'universo'
 World.DUMP_BAG = 'mochila';
+World.DUMP_MOVE = 'avanza';
+World.DUMP_LEFT = 'gira_izquierda';
+World.DUMP_PICK_BUZZER = 'coge_zumbador';
+World.DUMP_LEAVE_BUZZER = 'deja_zumbador';
+
 World.ERROR_MAPPING = {
 	BAGUNDERFLOW: 'ZUMBADOR INVALIDO',
 	WALL: 'MOVIMIENTO INVALIDO',
@@ -1223,6 +1228,34 @@ World.prototype.output = function() {
 			result.programas.programa.karel || {'#attributes':{}};
 		result.programas.programa.karel['#attributes'].mochila =
 			self.bagBuzzers == -1 ? 'INFINITO' : self.bagBuzzers;
+	}
+
+	if (self.dumps[World.DUMP_MOVE]) {
+		result.programas.programa.instrucciones =
+			result.programas.programa.instrucciones || {'#attributes':{}};
+		result.programas.programa.instrucciones['#attributes'].avanza =
+			self.runtime.state.moveCount;	
+	}
+
+	if (self.dumps[World.DUMP_LEFT]) {
+		result.programas.programa.instrucciones =
+			result.programas.programa.instrucciones || {'#attributes':{}};
+		result.programas.programa.instrucciones['#attributes'].gira_izquierda =
+			self.runtime.state.turnLeftCount;	
+	}
+
+	if (self.dumps[World.DUMP_PICK_BUZZER]) {
+		result.programas.programa.instrucciones =
+			result.programas.programa.instrucciones || {'#attributes':{}};
+		result.programas.programa.instrucciones['#attributes'].coge_zumbador =
+			self.runtime.state.pickBuzzerCount;	
+	}
+
+	if (self.dumps[World.DUMP_LEAVE_BUZZER]) {
+		result.programas.programa.instrucciones =
+			result.programas.programa.instrucciones || {'#attributes':{}};
+		result.programas.programa.instrucciones['#attributes'].deja_zumbador =
+			self.runtime.state.leaveBuzzerCount;	
 	}
 
 	return self.serialize(result, 'resultados', 0);

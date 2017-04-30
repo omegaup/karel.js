@@ -599,6 +599,7 @@ $(document).ready(function(){
       wRender.paint(mundo, world.width, world.height, { track_karel: true });
       if(mundo.runtime.state.error) {
         $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
+        $('#guardar_salida').html(htmlEscape(ERROR_CODES[mundo.runtime.state.error]));
       } else {
         $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
         mundo.postValidate(validatorCallbacks).then(function (didValidation) {
@@ -608,17 +609,19 @@ $(document).ready(function(){
         }, function(message) {
           $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
         });
+        $('#guardar_salida').html(htmlEscape(mundo.output()));
       }
       highlightCurrentLine();
       // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
       editor.focus();
       $("#ejecutar").attr('disabled', 'disabled');
       $("#worldclean").removeAttr('disabled');
-      $('#guardar_salida').html(htmlEscape(mundo.output()));
       var blob = new Blob([mundo.output()], {'type':'text/xml'});
       $('#guardar_descargar')
         .attr('href', window.URL.createObjectURL(blob))
         .attr('download', 'mundo.out');
+    } else {
+      $('#guardar_salida').html('compilation error');
     }
   });
   $("#ejecutar").bind('lock', function(evt){
@@ -636,6 +639,11 @@ $(document).ready(function(){
     $("#orientacion_karel").attr('disabled', 'disabled');
     $("#mochila_karel").attr('disabled', 'disabled');
     $("#universo").attr('disabled', 'disabled');
+    $("#dump_avanza").attr('disabled', 'disabled');
+    $("#dump_gira_izquierda").attr('disabled', 'disabled');
+    $("#dump_coge_zumbador").attr('disabled', 'disabled');
+    $("#dump_deja_zumbador").attr('disabled', 'disabled');
+
     editor.setOption('readOnly', true);
   });
   $("#ejecutar").bind('unlock', function(evt){
@@ -655,6 +663,12 @@ $(document).ready(function(){
     $("#orientacion_karel").removeAttr('disabled');
     $("#mochila_karel").removeAttr('disabled');
     $("#universo").removeAttr('disabled');
+    $("#dump_avanza").removeAttr('disabled');
+    $("#dump_gira_izquierda").removeAttr('disabled');
+    $("#dump_coge_zumbador").removeAttr('disabled');
+    $("#dump_deja_zumbador").removeAttr('disabled');
+
+
     editor.setOption('readOnly', false);
   });
   $("#ejecutar").click(function(event){
@@ -888,6 +902,18 @@ $(document).ready(function(){
     if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
       $('#universo').button('toggle');
     }
+    if ($('#dump_avanza').hasClass('active') != mundo.getDumps(World.DUMP_MOVE)) {
+      $('#dump_avanza').button('toggle');
+    }
+    if ($('#dump_gira_izquierda').hasClass('active') != mundo.getDumps(World.DUMP_LEFT)) {
+      $('#dump_gira_izquierda').button('toggle');
+    }
+    if ($('#dump_coge_zumbador').hasClass('active') != mundo.getDumps(World.DUMP_PICK_BUZZER)) {
+      $('#dump_coge_zumbador').button('toggle');
+    }
+    if ($('#dump_deja_zumbador').hasClass('active') != mundo.getDumps(World.DUMP_LEAVE_BUZZER)) {
+      $('#dump_deja_zumbador').button('toggle');
+    }
   });
   $("#newworld").click(function(event){
     if (linea_actual != null) {
@@ -914,11 +940,26 @@ $(document).ready(function(){
     if ($('#universo').hasClass('active')) {
       $('#universo').button('toggle');
     }
+    if ($('#dump_avanza').hasClass('active')) {
+      $('#dump_avanza').button('toggle');
+    }
+    if ($('#dump_gira_izquierda').hasClass('active')) {
+      $('#dump_gira_izquierda').button('toggle');
+    }
+    if ($('#dump_coge_zumbador').hasClass('active')) {
+      $('#dump_coge_zumbador').button('toggle');
+    }
+    if ($('#dump_deja_zumbador').hasClass('active')) {
+      $('#dump_deja_zumbador').button('toggle');
+    }
   });
   $('#theme').click(function() {
     modalPrompt('tema', getTheme(), codeMirrorThemes).then(function(response) {
       setTheme(response);
     });
+  });
+  $("#evaluation").click(function(event){
+    $('#evaluation_modal').modal('show');
   });
   $("body").keyup(function(event){
     var repaint = false;
@@ -1176,6 +1217,22 @@ $(document).ready(function(){
     mundo.toggleDumps(World.DUMP_ALL_BUZZERS);
     $("#xmlMundo").html(mundo.save());
   });
+  $("#dump_avanza").click(function(event){
+    mundo.toggleDumps(World.DUMP_MOVE);
+    $("#xmlMundo").html(mundo.save());
+  });
+  $("#dump_gira_izquierda").click(function(event){
+    mundo.toggleDumps(World.DUMP_LEFT);
+    $("#xmlMundo").html(mundo.save());
+  });
+  $("#dump_coge_zumbador").click(function(event){
+    mundo.toggleDumps(World.DUMP_PICK_BUZZER);
+    $("#xmlMundo").html(mundo.save());
+  });
+  $("#dump_deja_zumbador").click(function(event){
+    mundo.toggleDumps(World.DUMP_LEAVE_BUZZER);
+    $("#xmlMundo").html(mundo.save());
+  });
   $("#ctx_norte").click(function(event){
     mundo.move(fila_evento, columna_evento);
     mundo.rotate('NORTE');
@@ -1262,6 +1319,19 @@ $(document).ready(function(){
             if ($('#universo').hasClass('active') != mundo.getDumps(World.DUMP_ALL_BUZZERS)) {
               $('#universo').button('toggle');
             }
+            if ($('#dump_avanza').hasClass('active') != mundo.getDumps(World.DUMP_MOVE)) {
+              $('#dump_avanza').button('toggle');
+            }
+            if ($('#dump_gira_izquierda').hasClass('active') != mundo.getDumps(World.DUMP_LEFT)) {
+              $('#dump_gira_izquierda').button('toggle');
+            }
+            if ($('#dump_coge_zumbador').hasClass('active') != mundo.getDumps(World.DUMP_PICK_BUZZER)) {
+              $('#dump_coge_zumbador').button('toggle');
+            }
+            if ($('#dump_deja_zumbador').hasClass('active') != mundo.getDumps(World.DUMP_LEAVE_BUZZER)) {
+              $('#dump_deja_zumbador').button('toggle');
+            }
+
           };
         })(kecReader, mdoReader.result);
         kecReader.readAsArrayBuffer(kec);
