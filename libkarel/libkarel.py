@@ -72,7 +72,7 @@ class KarelInput:
 			'direccion': self.direccion,
 			'despliega': self.despliega,
 		}.iteritems()))
-	
+
 	def zumbadores(self, x, y):
 		"""Regresa el número de zumbadores (o la cadena 'INFINITO') para la casilla en (x, y)"""
 		if (x, y) not in self._zumbadores:
@@ -94,7 +94,7 @@ class KarelOutput:
 		* y: la posición y final de Karel. None si no se encuentra en la salida.
 		* direccion: La orientación inicial de Karel. Puede ser uno de ['NORTE', 'ESTE', 'SUR', 'OESTE'], o None si no se encuentra
 		* _zumbadores: Un diccionario donde cada llave (x, y) tiene como valor el número de zumbadores en esa casilla al final de la ejecución
-		* instrucciones: Un diccionario con el número de instrucciones que karel ejecutó""" 
+		* instrucciones: Un diccionario con el número de instrucciones que karel ejecutó"""
 
 	def __init__(self, string):
 		self.root = ET.fromstring(string)

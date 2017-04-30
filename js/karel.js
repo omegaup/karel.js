@@ -1234,28 +1234,28 @@ World.prototype.output = function() {
 		result.programas.programa.instrucciones =
 			result.programas.programa.instrucciones || {'#attributes':{}};
 		result.programas.programa.instrucciones['#attributes'].avanza =
-			self.runtime.state.moveCount;	
+			self.runtime.state.moveCount;
 	}
 
 	if (self.dumps[World.DUMP_LEFT]) {
 		result.programas.programa.instrucciones =
 			result.programas.programa.instrucciones || {'#attributes':{}};
 		result.programas.programa.instrucciones['#attributes'].gira_izquierda =
-			self.runtime.state.turnLeftCount;	
+			self.runtime.state.turnLeftCount;
 	}
 
 	if (self.dumps[World.DUMP_PICK_BUZZER]) {
 		result.programas.programa.instrucciones =
 			result.programas.programa.instrucciones || {'#attributes':{}};
 		result.programas.programa.instrucciones['#attributes'].coge_zumbador =
-			self.runtime.state.pickBuzzerCount;	
+			self.runtime.state.pickBuzzerCount;
 	}
 
 	if (self.dumps[World.DUMP_LEAVE_BUZZER]) {
 		result.programas.programa.instrucciones =
 			result.programas.programa.instrucciones || {'#attributes':{}};
 		result.programas.programa.instrucciones['#attributes'].deja_zumbador =
-			self.runtime.state.leaveBuzzerCount;	
+			self.runtime.state.leaveBuzzerCount;
 	}
 
 	return self.serialize(result, 'resultados', 0);

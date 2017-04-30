@@ -555,9 +555,9 @@ $(document).ready(function(){
       }
 
       conteo = '';
-      if(mundo.dumps[World.DUMP_MOVE]) conteo = conteo + ' avanza..........' + mundo.runtime.state.moveCount + '\n'
-      if(mundo.dumps[World.DUMP_LEFT]) conteo = conteo + ' gira-izquierda..' + mundo.runtime.state.turnLeftCount + '\n'
-      if(mundo.dumps[World.DUMP_PICK_BUZZER]) conteo = conteo + ' coge-zumbador...' + mundo.runtime.state.pickBuzzerCount + '\n'
+      if(mundo.dumps[World.DUMP_MOVE]) conteo = conteo + ' avanza..........' + mundo.runtime.state.moveCount + '\n';
+      if(mundo.dumps[World.DUMP_LEFT]) conteo = conteo + ' gira-izquierda..' + mundo.runtime.state.turnLeftCount + '\n';
+      if(mundo.dumps[World.DUMP_PICK_BUZZER]) conteo = conteo + ' coge-zumbador...' + mundo.runtime.state.pickBuzzerCount + '\n';
       if(mundo.dumps[World.DUMP_LEAVE_BUZZER]) conteo = conteo + ' deja-zumbador...' + mundo.runtime.state.leaveBuzzerCount;
       if(conteo != '') conteo = '<pre> Instrucciones ejecutadas:\n' + conteo + '</pre>';
 

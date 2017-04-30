@@ -74,95 +74,97 @@
     <link rel="stylesheet" href="lib/CodeMirror/theme/zenburn.css">
     <style type="text/css" media="screen">
       body {
-      overflow: hidden;
+        overflow: hidden;
       }
       #splitter-container {
-      position: absolute;
-      top: 100px;
-      bottom: 0px;
-      left: 0px;
-      right: 0px;
-      z-index: 1;
+        position: absolute;
+        top: 100px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        z-index: 1;
       }
       #editor, .CodeMirror {
-      margin: 0px;
-      width: 100%;
-      height: 100%;
-      font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro, monospace;
-      font-size: 12px;
-      line-height: 15px;
+        margin: 0px;
+        width: 100%;
+        height: 100%;
+        font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro, monospace;
+        font-size: 12px;
+        line-height: 15px;
       }
       .breakpoints { width: .8em; font-size: .5em; }
       .breakpoint { color: #822; font-size: .4em; }
       .cm-tab {
-      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
-      background-position: right;
-      background-repeat: no-repeat;
+         background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
+         background-position: right;
+         background-repeat: no-repeat;
       }
       .input-prepend {
-      margin-top: 10px;
+        margin-top: 10px;
       }
       #mensajes {
-      overflow-y: scroll;
-      padding: 0 10px 10px 10px;
+        overflow-y: scroll;
+        padding: 0 10px 10px 10px;
       }
       #pila {
-      overflow-y: scroll;
-      padding: 0 10px 10px 10px;
+        overflow-y: scroll;
+        padding: 0 10px 10px 10px;
       }
       pre.error-popup {
-      display: none;
-      position: absolute;
-      left: 3em;
-      top: 1em;
-      border: 1px solid #000;
-      background: #ff8;
-      width: 30em;
-      z-index: 10;
-      padding: 5px;
-      white-space: normal;
+        display: none;
+        position: absolute;
+        left: 3em;
+        top: 1em;
+        border: 1px solid #000;
+        background: #ff8;
+        width: 30em;
+        z-index: 10;
+        padding: 5px;
+        white-space: normal;
       }
       .error:hover .error-popup {
-      display: block;
+          display: block;
       }
       .parse-error {
-      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QsEBjIX8OiuEwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAgSURBVAjXPcixAQAwDMMgnP9/VrcyIgqVcGrIBh38rD25RQ/6x3pUhQAAAABJRU5ErkJggg==);
-      background-repeat: repeat-x;
-      background-position: 0 100%;
+          background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QsEBjIX8OiuEwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAgSURBVAjXPcixAQAwDMMgnP9/VrcyIgqVcGrIBh38rD25RQ/6x3pUhQAAAABJRU5ErkJggg==);
+          background-repeat: repeat-x;
+          background-position: 0 100%;
       }
       .karel-current-line {
-      background: rgba(255, 255, 0, 0.8);
+        background: rgba(255, 255, 0, 0.8);
       }
       .ace_gutter-cell.ace_breakpoint {
-      border-radius: 20px 0px 0px 20px;
-      box-shadow: 0px 0px 1px 1px red inset;
-      }
+        border-radius: 20px 0px 0px 20px;
+        box-shadow: 0px 0px 1px 1px red inset;
+      } 
       .dropdown {
-      z-index: 1000;
+        z-index: 1000;
       }
+
       .gutter {
-      background-color: #eee;
-      background-repeat: no-repeat;
-      background-position: 50%;
+        background-color: #eee;
+        background-repeat: no-repeat;
+        background-position: 50%;
       }
       .gutter.gutter-horizontal {
-      background-image: url('lib/Split.js/grips/vertical.png');
-      cursor: col-resize;
+        background-image: url('lib/Split.js/grips/vertical.png');
+        cursor: col-resize;
       }
       .gutter.gutter-vertical {
-      background-image: url('lib/Split.js/grips/horizontal.png');
-      cursor: row-resize;
+        background-image: url('lib/Split.js/grips/horizontal.png');
+        cursor: row-resize;
       }
       .split {
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      overflow-y: auto;
-      overflow-x: hidden;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+
+        overflow-y: auto;
+        overflow-x: hidden;
       }
       .split.split-horizontal, .gutter.gutter-horizontal {
-      height: 100%;
-      float: left;
+        height: 100%;
+        float: left;
       }
     </style>
   </head>
@@ -171,9 +173,9 @@
       <div class="navbar-inner">
         <div class="container">
           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
           </button>
           <a class="brand" href="#">Karel.js</a>
           <div class="nav-collapse collapse">
@@ -261,14 +263,13 @@
       <div id="splitter-left-pane" class="split split-horizontal">
         <div id="splitter-left-top-pane" class="split content">
           <textarea id="editor">iniciar-programa
-  inicia-ejecucion
-    { TODO poner codigo aqui }
-    apagate;
-  termina-ejecucion
+    inicia-ejecucion
+        { TODO poner codigo aqui }
+        apagate;
+    termina-ejecucion
 finalizar-programa</textarea>
         </div>
-        <div id="splitter-left-bottom-pane" class="split content tabbable">
-          <!-- Only required for left/right tabs -->
+        <div id="splitter-left-bottom-pane" class="split content tabbable"> <!-- Only required for left/right tabs -->
           <ul class="nav nav-tabs">
             <li><a href="#pila" data-toggle="tab">Pila</a></li>
             <li class="active"><a href="#mensajes" data-toggle="tab">Mensajes <span id="mensajes_cuenta"></span></a></li>
@@ -308,7 +309,7 @@ finalizar-programa</textarea>
       </div>
       <div class="modal-body">
         <p><i>Karel escrito en javascript</i></p>
-        <p>Desarrollado por:</p>
+        <p>Desarrollado por:
         <ul>
           <li>alanboy</li>
           <li>joemmanuel</li>
@@ -316,6 +317,7 @@ finalizar-programa</textarea>
           <li><a href="https://twitter.com/categulario" target="_blank">Categulario</a></li>
           <li><a href="https://twitter.com/pacharrin" target="_blank">Pacha</a></li>
         </ul>
+        </p>
       </div>
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
@@ -327,7 +329,7 @@ finalizar-programa</textarea>
         <h3 id="guardarLabel">Guardar archivo</h3>
       </div>
       <div class="modal-body">
-        <pre id="guardar_salida"> </pre>
+        <pre id="guardar_salida"></pre>
       </div>
       <div class="modal-footer">
         <a href="#" id="guardar_descargar">Descargar archivo</a>
@@ -343,7 +345,7 @@ finalizar-programa</textarea>
         <form id="importar">
           <div class="form-group">
             <label >MDO: <input type="file" id="importar_mdo"></label>
-            <label >KEC: <input type="file" id="importar_kec" /></label>
+            <label >KEC: <input type="file" id="importar_kec"></label>
           </div>
         </form>
       </div>
@@ -403,14 +405,13 @@ finalizar-programa</textarea>
   <condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000" />
   <mundos>
     <mundo nombre="mundo_0" ancho="100" alto="100">
-  </mundo>
+    </mundo>
   </mundos>
   <programas tipoEjecucion="CONTINUA" intruccionesCambioContexto="1" milisegundosParaPasoAutomatico="0">
     <programa nombre="p1" ruta="{$2$}" mundoDeEjecucion="mundo_0" xKarel="1" yKarel="1" direccionKarel="NORTE" mochilaKarel="0" >
       <despliega tipo="MUNDO" />
     </programa>
   </programas>
-</ejecucion>
-    </script>
+</ejecucion></script>
   </body>
 </html>
