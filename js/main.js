@@ -392,6 +392,8 @@ $(document).ready(function(){
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
       $('#futuro').removeAttr('disabled');
+      $('#evaluation').removeAttr('disabled');
+
     }
 
     if (mundo.dirty) {
@@ -402,24 +404,15 @@ $(document).ready(function(){
     if (!mundo.runtime.state.running) {
       clearInterval(interval);
       interval = null;
-      if(mundo.runtime.state.error) {
-        $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
-      } else {
-        $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
-        mundo.postValidate(validatorCallbacks).then(function (didValidation) {
-          if (didValidation) {
-            $('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
-          }
-        }, function(message) {
-          $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
-        });
-      }
+      mensaje_final();
       highlightCurrentLine();
       // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
       $("#ejecutar").attr('disabled', 'disabled');
       $("#paso").attr('disabled', 'disabled');
       $("#futuro").attr('disabled', 'disabled');
+      $("#evaluation").attr('disabled', 'disabled');
       $("#worldclean").removeAttr('disabled');
+
     }
   }
 
@@ -526,6 +519,8 @@ $(document).ready(function(){
     $("#ejecutar").attr('disabled', 'disabled');
     $("#paso").attr('disabled', 'disabled');
     $("#futuro").attr('disabled', 'disabled');
+    $("#evaluation").attr('disabled', 'disabled');
+
     if (editor.numBreakpoints) {
       while (mundo.runtime.step()) {
         var markers = editor.lineInfo(mundo.runtime.state.line).gutterMarkers;
@@ -536,6 +531,7 @@ $(document).ready(function(){
           $('#ejecutar').removeAttr('disabled');
           $('#paso').removeAttr('disabled');
           $('#futuro').removeAttr('disabled');
+          $('#evaluation').removeAttr('disabled');
           break;
         }
       }
@@ -546,21 +542,42 @@ $(document).ready(function(){
     }
     highlightCurrentLine();
     wRender.paint(mundo, world.width, world.height, { track_karel: true });
-    if (mundo.runtime.state.error) {
-      $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
-    } else if (!mundo.runtime.state.running) {
-      $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!'});
-      mundo.postValidate(validatorCallbacks).then(function (didValidation) {
-        if (didValidation) {
-          $('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
-        }
-      }, function(message) {
-        $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
-      });
-    }
+    mensaje_final();
     // Aún no se permite editar el mundo, pero se podrá si se regresa a su estado original.
     editor.focus();
     $("#worldclean").removeAttr('disabled');
+  }
+
+  function mensaje_final() {
+    if(mundo.runtime.state.error) {
+        $("#mensajes").trigger('error', {mensaje: ERROR_CODES[mundo.runtime.state.error]});
+      } else {
+        conteo = '';
+        if(mundo.dumps[World.DUMP_MOVE]) {
+          conteo = conteo + ' avanza..........' + mundo.runtime.state.moveCount + '\n'
+        }
+        if(mundo.dumps[World.DUMP_LEFT]) {
+          conteo = conteo + ' gira-izquierda..' + mundo.runtime.state.turnLeftCount + '\n'
+        }
+        if(mundo.dumps[World.DUMP_PICK_BUZZER]) {
+          conteo = conteo + ' coge-zumbador...' + mundo.runtime.state.pickBuzzerCount + '\n'
+        }
+        if(mundo.dumps[World.DUMP_LEAVE_BUZZER]) {
+          conteo = conteo + ' deja-zumbador...' + mundo.runtime.state.leaveBuzzerCount;
+        }
+        if(conteo != '') {
+          conteo = '<pre> Instrucciones ejecutadas:\n' + conteo + '</pre>'
+        }
+
+        $("#mensajes").trigger('success', {mensaje: 'Ejecución terminada!' + conteo});
+        mundo.postValidate(validatorCallbacks).then(function (didValidation) {
+          if (didValidation) {
+            $('#mensajes').trigger('success', {'mensaje': 'La solución es correcta' });
+          }
+        }, function(message) {
+          $('#mensajes').trigger('error', {'mensaje': 'La solución es incorrecta' + (message ? ': ' + message : '') });
+        });
+      }
   }
 
   $("#futuro").click(function(event){
@@ -631,6 +648,7 @@ $(document).ready(function(){
     mundo_editable = false; //Previene ediciones del mundo
     $("#compilar").attr('disabled', 'disabled');
     $("#futuro").attr('disabled', 'disabled');
+    $("#evaluation").attr('disabled', 'disabled');
     $("#quitar_zumbadores").attr('disabled', 'disabled');
     $("#mochila").attr('disabled', 'disabled');
     $("#inf_zumbadores").attr('disabled', 'disabled');
@@ -654,6 +672,7 @@ $(document).ready(function(){
     $("#compilar").removeAttr('disabled');
     $("#ejecutar").removeAttr('disabled');
     $("#futuro").removeAttr('disabled');
+    $("#evaluation").removeAttr('disabled');
     $("#quitar_zumbadores").removeAttr('disabled');
     $("#mochila").removeAttr('disabled');
     $("#inf_zumbadores").removeAttr('disabled');
@@ -704,6 +723,7 @@ $(document).ready(function(){
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
       $('#futuro').removeAttr('disabled');
+      $('#evaluation').removeAttr('disabled');
     }
   });
   $('#paso').click(function(event){
@@ -725,6 +745,7 @@ $(document).ready(function(){
         $('#paso').removeAttr('disabled');
         $('#worldclean').removeAttr('disabled');
         $('#futuro').removeAttr('disabled');
+        $('#evaluation').removeAttr('disabled');
         $("#ejecutar i").removeClass('icon-pause').addClass('icon-play');
         step();
       }, function(message) {
