@@ -1,17 +1,21 @@
-<html xmlns:v="urn:schemas-microsoft-com:vml"
-xmlns:o="urn:schemas-microsoft-com:office:office"
-xmlns:w="urn:schemas-microsoft-com:office:word"
-xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
-xmlns="http://www.w3.org/TR/REC-html40">
-
+<!DOCTYPE html>
+<html xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
+      xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:w="urn:schemas-microsoft-com:office:word">
 <head>
-<meta http-equiv=Content-Type content="text/html; charset=us-ascii">
-<meta name=ProgId content=Word.Document>
-<meta name=Generator content="Microsoft Word 12">
-<meta name=Originator content="Microsoft Word 12">
-<link rel=File-List href="JarelSyntax_archivos/filelist.xml">
-<link rel=Edit-Time-Data href="JarelSyntax_archivos/editdata.mso">
-<!--[if !mso]>
+  <meta content="text/html; charset=utf-8"
+        http-equiv="Content-Type">
+  <meta content="Word.Document"
+        name="ProgId">
+  <meta content="Microsoft Word 12"
+        name="Generator">
+  <meta content="Microsoft Word 12"
+        name="Originator">
+  <link href="JarelSyntax_archivos/filelist.xml"
+        rel="File-List">
+  <link href="JarelSyntax_archivos/editdata.mso"
+        rel="Edit-Time-Data"><!--[if !mso]>
 <style>
 v\:* {behavior:url(#default#VML);}
 o\:* {behavior:url(#default#VML);}
@@ -19,8 +23,7 @@ w\:* {behavior:url(#default#VML);}
 .shape {behavior:url(#default#VML);}
 </style>
 <![endif]-->
-<title> BNF for Karel: Java Syntax </title>
-<!--[if gte mso 9]><xml>
+  <title>BNF for Karel: Java Syntax</title><!--[if gte mso 9]><xml>
  <o:DocumentProperties>
   <o:Author>Cesar Cepeda</o:Author>
   <o:LastAuthor>Cesar Cepeda</o:LastAuthor>
@@ -38,9 +41,10 @@ w\:* {behavior:url(#default#VML);}
   <o:Version>12.00</o:Version>
  </o:DocumentProperties>
 </xml><![endif]-->
-<link rel=themeData href="JarelSyntax_archivos/themedata.thmx">
-<link rel=colorSchemeMapping href="JarelSyntax_archivos/colorschememapping.xml">
-<!--[if gte mso 9]><xml>
+  <link href="JarelSyntax_archivos/themedata.thmx"
+        rel="themeData">
+  <link href="JarelSyntax_archivos/colorschememapping.xml"
+        rel="colorSchemeMapping"><!--[if gte mso 9]><xml>
  <w:WordDocument>
   <w:SpellingState>Clean</w:SpellingState>
   <w:GrammarState>Clean</w:GrammarState>
@@ -72,7 +76,7 @@ w\:* {behavior:url(#default#VML);}
   <m:mathPr>
    <m:mathFont m:val="Cambria Math"/>
    <m:brkBin m:val="before"/>
-   <m:brkBinSub m:val="--"/>
+   <m:brkBinSub m:val="=="/>
    <m:smallFrac m:val="off"/>
    <m:dispDef/>
    <m:lMargin m:val="0"/>
@@ -341,209 +345,209 @@ w\:* {behavior:url(#default#VML);}
   <w:LsdException Locked="false" Priority="39" QFormat="true" Name="TOC Heading"/>
  </w:LatentStyles>
 </xml><![endif]-->
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:Wingdings;
-	panose-1:5 0 0 0 0 0 0 0 0 0;
-	mso-font-charset:2;
-	mso-generic-font-family:auto;
-	mso-font-pitch:variable;
-	mso-font-signature:0 268435456 0 0 -2147483648 0;}
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;
-	mso-font-charset:1;
-	mso-generic-font-family:roman;
-	mso-font-format:other;
-	mso-font-pitch:variable;
-	mso-font-signature:0 0 0 0 0 0;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-parent:"";
-	margin:0cm;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman","serif";
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-h1
-	{mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-link:"T\00EDtulo 1 Car";
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	mso-outline-level:1;
-	font-size:24.0pt;
-	font-family:"Times New Roman","serif";
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;
-	font-weight:bold;}
-h2
-	{mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-link:"T\00EDtulo 2 Car";
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	mso-outline-level:2;
-	font-size:18.0pt;
-	font-family:"Times New Roman","serif";
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;
-	font-weight:bold;}
-h3
-	{mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-link:"T\00EDtulo 3 Car";
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	mso-outline-level:3;
-	font-size:13.5pt;
-	font-family:"Times New Roman","serif";
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;
-	font-weight:bold;}
-p
-	{mso-style-priority:99;
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman","serif";
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-span.Ttulo2Car
-	{mso-style-name:"T\00EDtulo 2 Car";
-	mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-locked:yes;
-	mso-style-link:"T\00EDtulo 2";
-	mso-ansi-font-size:13.0pt;
-	mso-bidi-font-size:13.0pt;
-	font-family:"Cambria","serif";
-	mso-ascii-font-family:Cambria;
-	mso-ascii-theme-font:major-latin;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:major-fareast;
-	mso-hansi-font-family:Cambria;
-	mso-hansi-theme-font:major-latin;
-	mso-bidi-font-family:"Times New Roman";
-	mso-bidi-theme-font:major-bidi;
-	color:#4F81BD;
-	mso-themecolor:accent1;
-	font-weight:bold;}
-span.Ttulo3Car
-	{mso-style-name:"T\00EDtulo 3 Car";
-	mso-style-noshow:yes;
-	mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-locked:yes;
-	mso-style-link:"T\00EDtulo 3";
-	mso-ansi-font-size:12.0pt;
-	mso-bidi-font-size:12.0pt;
-	font-family:"Cambria","serif";
-	mso-ascii-font-family:Cambria;
-	mso-ascii-theme-font:major-latin;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:major-fareast;
-	mso-hansi-font-family:Cambria;
-	mso-hansi-theme-font:major-latin;
-	mso-bidi-font-family:"Times New Roman";
-	mso-bidi-theme-font:major-bidi;
-	color:#4F81BD;
-	mso-themecolor:accent1;
-	font-weight:bold;}
-span.Ttulo1Car
-	{mso-style-name:"T\00EDtulo 1 Car";
-	mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-locked:yes;
-	mso-style-link:"T\00EDtulo 1";
-	mso-ansi-font-size:14.0pt;
-	mso-bidi-font-size:14.0pt;
-	font-family:"Cambria","serif";
-	mso-ascii-font-family:Cambria;
-	mso-ascii-theme-font:major-latin;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:major-fareast;
-	mso-hansi-font-family:Cambria;
-	mso-hansi-theme-font:major-latin;
-	mso-bidi-font-family:"Times New Roman";
-	mso-bidi-theme-font:major-bidi;
-	color:#365F91;
-	mso-themecolor:accent1;
-	mso-themeshade:191;
-	font-weight:bold;}
-span.SpellE
-	{mso-style-name:"";
-	mso-spl-e:yes;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	mso-default-props:yes;
-	font-size:10.0pt;
-	mso-ansi-font-size:10.0pt;
-	mso-bidi-font-size:10.0pt;}
-@page Section1
-	{size:612.0pt 792.0pt;
-	margin:70.85pt 3.0cm 70.85pt 3.0cm;
-	mso-header-margin:35.4pt;
-	mso-footer-margin:35.4pt;
-	mso-paper-source:0;}
-div.Section1
-	{page:Section1;}
- /* List Definitions */
- @list l0
-	{mso-list-id:1243832032;
-	mso-list-template-ids:-1958322938;}
-@list l0:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
-ol
-	{margin-bottom:0cm;}
-ul
-	{margin-bottom:0cm;}
--->
-</style>
-<!--[if gte mso 10]>
+
+  <style>
+  <!--
+  /* Font Definitions */
+  @font-face
+        {font-family:Wingdings;
+        panose-1:5 0 0 0 0 0 0 0 0 0;
+        mso-font-charset:2;
+        mso-generic-font-family:auto;
+        mso-font-pitch:variable;
+        mso-font-signature:0 268435456 0 0 -2147483648 0;}
+  @font-face
+        {font-family:"Cambria Math";
+        panose-1:2 4 5 3 5 4 6 3 2 4;
+        mso-font-charset:1;
+        mso-generic-font-family:roman;
+        mso-font-format:other;
+        mso-font-pitch:variable;
+        mso-font-signature:0 0 0 0 0 0;}
+  /* Style Definitions */
+  p.MsoNormal, li.MsoNormal, div.MsoNormal
+        {mso-style-unhide:no;
+        mso-style-qformat:yes;
+        mso-style-parent:"";
+        margin:0cm;
+        margin-bottom:.0001pt;
+        mso-pagination:widow-orphan;
+        font-size:12.0pt;
+        font-family:"Times New Roman","serif";
+        mso-fareast-font-family:"Times New Roman";
+        mso-fareast-theme-font:minor-fareast;}
+  h1
+        {mso-style-priority:9;
+        mso-style-unhide:no;
+        mso-style-qformat:yes;
+        mso-style-link:"T\00EDtulo 1 Car";
+        mso-margin-top-alt:auto;
+        margin-right:0cm;
+        mso-margin-bottom-alt:auto;
+        margin-left:0cm;
+        mso-pagination:widow-orphan;
+        mso-outline-level:1;
+        font-size:24.0pt;
+        font-family:"Times New Roman","serif";
+        mso-fareast-font-family:"Times New Roman";
+        mso-fareast-theme-font:minor-fareast;
+        font-weight:bold;}
+  h2
+        {mso-style-priority:9;
+        mso-style-unhide:no;
+        mso-style-qformat:yes;
+        mso-style-link:"T\00EDtulo 2 Car";
+        mso-margin-top-alt:auto;
+        margin-right:0cm;
+        mso-margin-bottom-alt:auto;
+        margin-left:0cm;
+        mso-pagination:widow-orphan;
+        mso-outline-level:2;
+        font-size:18.0pt;
+        font-family:"Times New Roman","serif";
+        mso-fareast-font-family:"Times New Roman";
+        mso-fareast-theme-font:minor-fareast;
+        font-weight:bold;}
+  h3
+        {mso-style-priority:9;
+        mso-style-unhide:no;
+        mso-style-qformat:yes;
+        mso-style-link:"T\00EDtulo 3 Car";
+        mso-margin-top-alt:auto;
+        margin-right:0cm;
+        mso-margin-bottom-alt:auto;
+        margin-left:0cm;
+        mso-pagination:widow-orphan;
+        mso-outline-level:3;
+        font-size:13.5pt;
+        font-family:"Times New Roman","serif";
+        mso-fareast-font-family:"Times New Roman";
+        mso-fareast-theme-font:minor-fareast;
+        font-weight:bold;}
+  p
+        {mso-style-priority:99;
+        mso-margin-top-alt:auto;
+        margin-right:0cm;
+        mso-margin-bottom-alt:auto;
+        margin-left:0cm;
+        mso-pagination:widow-orphan;
+        font-size:12.0pt;
+        font-family:"Times New Roman","serif";
+        mso-fareast-font-family:"Times New Roman";
+        mso-fareast-theme-font:minor-fareast;}
+  span.Ttulo2Car
+        {mso-style-name:"T\00EDtulo 2 Car";
+        mso-style-priority:9;
+        mso-style-unhide:no;
+        mso-style-locked:yes;
+        mso-style-link:"T\00EDtulo 2";
+        mso-ansi-font-size:13.0pt;
+        mso-bidi-font-size:13.0pt;
+        font-family:"Cambria","serif";
+        mso-ascii-font-family:Cambria;
+        mso-ascii-theme-font:major-latin;
+        mso-fareast-font-family:"Times New Roman";
+        mso-fareast-theme-font:major-fareast;
+        mso-hansi-font-family:Cambria;
+        mso-hansi-theme-font:major-latin;
+        mso-bidi-font-family:"Times New Roman";
+        mso-bidi-theme-font:major-bidi;
+        color:#4F81BD;
+        mso-themecolor:accent1;
+        font-weight:bold;}
+  span.Ttulo3Car
+        {mso-style-name:"T\00EDtulo 3 Car";
+        mso-style-noshow:yes;
+        mso-style-priority:9;
+        mso-style-unhide:no;
+        mso-style-locked:yes;
+        mso-style-link:"T\00EDtulo 3";
+        mso-ansi-font-size:12.0pt;
+        mso-bidi-font-size:12.0pt;
+        font-family:"Cambria","serif";
+        mso-ascii-font-family:Cambria;
+        mso-ascii-theme-font:major-latin;
+        mso-fareast-font-family:"Times New Roman";
+        mso-fareast-theme-font:major-fareast;
+        mso-hansi-font-family:Cambria;
+        mso-hansi-theme-font:major-latin;
+        mso-bidi-font-family:"Times New Roman";
+        mso-bidi-theme-font:major-bidi;
+        color:#4F81BD;
+        mso-themecolor:accent1;
+        font-weight:bold;}
+  span.Ttulo1Car
+        {mso-style-name:"T\00EDtulo 1 Car";
+        mso-style-priority:9;
+        mso-style-unhide:no;
+        mso-style-locked:yes;
+        mso-style-link:"T\00EDtulo 1";
+        mso-ansi-font-size:14.0pt;
+        mso-bidi-font-size:14.0pt;
+        font-family:"Cambria","serif";
+        mso-ascii-font-family:Cambria;
+        mso-ascii-theme-font:major-latin;
+        mso-fareast-font-family:"Times New Roman";
+        mso-fareast-theme-font:major-fareast;
+        mso-hansi-font-family:Cambria;
+        mso-hansi-theme-font:major-latin;
+        mso-bidi-font-family:"Times New Roman";
+        mso-bidi-theme-font:major-bidi;
+        color:#365F91;
+        mso-themecolor:accent1;
+        mso-themeshade:191;
+        font-weight:bold;}
+  span.SpellE
+        {mso-style-name:"";
+        mso-spl-e:yes;}
+  .MsoChpDefault
+        {mso-style-type:export-only;
+        mso-default-props:yes;
+        font-size:10.0pt;
+        mso-ansi-font-size:10.0pt;
+        mso-bidi-font-size:10.0pt;}
+  @page Section1
+        {size:612.0pt 792.0pt;
+        margin:70.85pt 3.0cm 70.85pt 3.0cm;
+        mso-header-margin:35.4pt;
+        mso-footer-margin:35.4pt;
+        mso-paper-source:0;}
+  div.Section1
+        {page:Section1;}
+  /* List Definitions */
+  @list l0
+        {mso-list-id:1243832032;
+        mso-list-template-ids:-1958322938;}
+  @list l0:level1
+        {mso-level-number-format:bullet;
+        mso-level-text:\F0B7;
+        mso-level-tab-stop:36.0pt;
+        mso-level-number-position:left;
+        text-indent:-18.0pt;
+        mso-ansi-font-size:10.0pt;
+        font-family:Symbol;}
+  ol
+        {margin-bottom:0cm;}
+  ul
+        {margin-bottom:0cm;}
+  -->
+  </style><!--[if gte mso 10]>
 <style>
  /* Style Definitions */
  table.MsoNormalTable
-	{mso-style-name:"Tabla normal";
-	mso-tstyle-rowband-size:0;
-	mso-tstyle-colband-size:0;
-	mso-style-noshow:yes;
-	mso-style-priority:99;
-	mso-style-qformat:yes;
-	mso-style-parent:"";
-	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
-	mso-para-margin:0cm;
-	mso-para-margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:10.0pt;
-	font-family:"Times New Roman","serif";}
+        {mso-style-name:"Tabla normal";
+        mso-tstyle-rowband-size:0;
+        mso-tstyle-colband-size:0;
+        mso-style-noshow:yes;
+        mso-style-priority:99;
+        mso-style-qformat:yes;
+        mso-style-parent:"";
+        mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+        mso-para-margin:0cm;
+        mso-para-margin-bottom:.0001pt;
+        mso-pagination:widow-orphan;
+        font-size:10.0pt;
+        font-family:"Times New Roman","serif";}
 </style>
 <![endif]--><!--[if gte mso 9]><xml>
  <o:shapedefaults v:ext="edit" spidmax="2050"/>
@@ -552,680 +556,959 @@ ul
   <o:idmap v:ext="edit" data="1"/>
  </o:shapelayout></xml><![endif]-->
 </head>
-
-<body bgcolor=white background="../Common/workbook2.gif" lang=ES-MX link=blue
-vlink=purple style='tab-interval:35.4pt'>
-
-<div class=Section1>
-
-<h2 align=center style='text-align:center'><span style='mso-fareast-font-family:
-"Times New Roman"'>KAREL OMI Versi&oacute;n 2.0 por Cesar Cepeda<br>
-Para comentarios escriba a cesar@auronix.com<o:p></o:p></span></h2>
-
-<h3 align=center style='text-align:center'><span style='mso-fareast-font-family:
-"Times New Roman"'>Revisado por Eduardo <span class=SpellE>Urias</span>
-Barrientos AKA <span class=SpellE>Wero</span> <span class=SpellE>Shinoda</span><o:p></o:p></span></h3>
-
-<h1 align=center style='text-align:center'><span style='mso-fareast-font-family:
-"Times New Roman"'>&nbsp;<a href="KarelJAVA.html">TUTORIAL DE KAREL</a><o:p></o:p></span></h1>
-
-<h1 align=center style='text-align:center'><span style='mso-fareast-font-family:
-"Times New Roman"'>BNF para <span class=SpellE>Karel</span>: <span
-class=SpellE>S&iacute;ntaxis</span> de Java<o:p></o:p></span></h1>
-
-<div align=center>
-
-<table class=MsoNormalTable border=0 cellpadding=0 style='mso-cellspacing:1.5pt;
- mso-yfti-tbllook:1184;mso-padding-alt:7.5pt 7.5pt 7.5pt 7.5pt'>
- <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod2
-  id=prod2><span style='mso-fareast-font-family:"Times New Roman"'>Declaraci&oacute;n
-  de programa </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td width=22 valign=top style='width:16.5pt;padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p>&quot;<span class=SpellE>class</span> <span class=SpellE>program</span> {
-  &quot;<br>
-  &nbsp; &nbsp; &nbsp;[ <a href="#prod4">Declaraci&oacute;n de M&eacute;todo</a>]
-  ...<br>
-  &nbsp; &nbsp; &nbsp;&quot;<span class=SpellE>program</span> () &quot;<br>
-  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<a href="#prod11">Bloque</a><br>
-  &quot;}&quot;<br>
-  &nbsp;<a href="#EOF">EOF</a></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:1'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod4
-  id=prod4><span style='mso-fareast-font-family:"Times New Roman"'>Declaraci&oacute;n
-  de m&eacute;todo </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><a
-  href="#prod9">Tipo</a> &nbsp; <a href="#prod10">Firma de m&eacute;todo </a><br>
-  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<a href="#prod11">Bloque</a><o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:2'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'></td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'></td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'></td>
- </tr>
- <tr style='mso-yfti-irow:3'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod10
-  id=prod10><span style='mso-fareast-font-family:"Times New Roman"'>Firma de
-  m&eacute;todo </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><a
-  href="#Identifier">Identificador</a> &nbsp;<a href="#prod12">Par&aacute;metro
-  opcional </a><o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:4'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod12
-  id=prod12><span style='mso-fareast-font-family:"Times New Roman"'>Par&aacute;metro</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'> opcional <o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;(&quot;
-  [ <a href="#Identifier">Identificador</a> ] &quot;)&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:5'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod9
-  id=prod9><span style='mso-fareast-font-family:"Times New Roman"'>Tipo</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>{
-  &quot;<span class=SpellE>void</span>&quot; | &quot;define&quot; }f <o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:6'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod14
-  id=prod14><span style='mso-fareast-font-family:"Times New Roman"'>Argumento
-  vac&iacute;o </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;(&quot;
-  &quot;)&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:7'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod15
-  id=prod15><span style='mso-fareast-font-family:"Times New Roman"'>Argumento
-  opcional </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;(&quot;
-  [ <a href="#prod16"><span class=SpellE>Expresion</span> entera </a>]
-  &quot;)&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:8'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod8
-  id=prod8><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>( <a
-  href="#prod11">Bloque</a> <br>
-  | <a href="#prod17">Expresi&oacute;n vac&iacute;a</a> <br>
-  | <a href="#prod18">Expresi&oacute;n <span class=SpellE>if</span> </a><br>
-  | <a href="#prod19">Expresi&oacute;n <span class=SpellE>while</span> </a><br>
-  | <a href="#prod20">Expresi&oacute;n <span class=SpellE>iterate</span> </a><br>
-  | <a href="#prod21">Expresi&oacute;n <span class=SpellE>turnoff</span> </a><br>
-  | <a href="#prod22">Expresi&oacute;n <span class=SpellE>turnleft</span></a><br>
-  | <a href="#prod23">Expresi&oacute;n <span class=SpellE>move</span> </a><br>
-  | <a href="#prod24">Expresi&oacute;n <span class=SpellE>pickbeeper</span> </a><br>
-  | <a href="#prod25">Expresi&oacute;n <span class=SpellE>putbeeper</span> </a><br>
-  | <a href="#prod125">Expresi&oacute;n <span class=SpellE>return</span> </a><br>
-  | <a href="#prod26">Expresi&oacute;n de llamada </a>)<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:9'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod11
-  id=prod11><span style='mso-fareast-font-family:"Times New Roman"'>Bloque</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;{&quot;
-  [ <a href="#prod8">Expresi&oacute;n</a> ] ... &quot;}&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:10'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod17
-  id=prod17><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  vac&iacute;a </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;;&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:11'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod26
-  id=prod26><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  de llamada </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><a
-  href="#Identifier">Identificador</a> &nbsp; <a href="#prod15">Argumento
-  opcional </a>&quot;;&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:12'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod16
-  id=prod16><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  entera </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>{ <a
-  href="#Decimal_">Decimal</a>&nbsp;<br>
-  | <a href="#Identifier">Identificador</a> <br>
-  | &quot;<span class=SpellE>pred</span>&quot; &quot;(&quot; <a href="#prod16">Expresi&oacute;n
-  entera </a>&quot;)&quot;<br>
-  | &quot;<span class=SpellE>succ</span>&quot; &quot;(&quot; <a href="#prod16">Expresi&oacute;n
-  entera </a>&quot;)&quot; }<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:13'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod27
-  id=prod27><span style='mso-fareast-font-family:"Times New Roman"'>T&eacute;rmino</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><a
-  href="#prod28">Cl&aacute;usula Y</a> [ &quot;||&quot; <a href="#prod28">Cl&aacute;usula
-  Y</a> ] ...<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:14'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod28
-  id=prod28><span style='mso-fareast-font-family:"Times New Roman"'>Cl&aacute;usula
-  Y </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><a
-  href="#prod29">Cl&aacute;usula No </a>[ &quot;&amp;&amp;&quot; <a
-  href="#prod29">Cl&aacute;usula No </a>] ...<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:15'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod29
-  id=prod29><span style='mso-fareast-font-family:"Times New Roman"'>Cl&aacute;usula
-  No </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>[
-  &quot;!&quot; ] <a href="#prod30">Cl&aacute;usula At&oacute;mica </a><o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:16'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod30
-  id=prod30><span style='mso-fareast-font-family:"Times New Roman"'>Cl&aacute;usula
-  at&oacute;mica </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>{
-  &quot;<span class=SpellE>iszero</span>&quot; &quot;(&quot; <a href="#prod16">Expresi&oacute;n
-  entera </a>&quot;)&quot;<br>
-  | <a href="#BooleanFunction">Funci&oacute;n Booleana<br>
-  </a>| <a href="#prod14">Argumento vac&iacute;o </a><br>
-  | &quot;(&quot; <a href="#prod27">T&eacute;rmino</a> &quot;)&quot; }<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:17'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod18
-  id=prod18><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  </span></a><span class=SpellE><span style='mso-bookmark:prod18'><span
-  style='mso-fareast-font-family:"Times New Roman"'>if</span></span></span><span
-  style='mso-bookmark:prod18'><span style='mso-fareast-font-family:"Times New Roman"'>
-  </span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;<span
-  class=SpellE>if</span>&quot; &quot;(&quot; <a href="#prod27">T&eacute;rmino</a>
-  &quot;)&quot; <a href="#prod8">Expresi&oacute;n</a> [&quot;<span
-  class=SpellE>else</span>&quot; <a href="#prod8">Expresi&oacute;n</a> ]<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:18'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod19
-  id=prod19><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  </span></a><span class=SpellE><span style='mso-bookmark:prod19'><span
-  style='mso-fareast-font-family:"Times New Roman"'>while</span></span></span><span
-  style='mso-bookmark:prod19'><span style='mso-fareast-font-family:"Times New Roman"'>
-  </span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;<span
-  class=SpellE>while</span>&quot; &quot;(&quot; <a href="#prod27">T&eacute;rmino</a>
-  &quot;)&quot; <a href="#prod8">Expresi&oacute;n</a><o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:19'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod20
-  id=prod20><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  </span></a><span class=SpellE><span style='mso-bookmark:prod20'><span
-  style='mso-fareast-font-family:"Times New Roman"'>iterate</span></span></span><span
-  style='mso-bookmark:prod20'><span style='mso-fareast-font-family:"Times New Roman"'>
-  </span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;<span
-  class=SpellE>iterate</span>&quot; &quot;(&quot; <a href="#prod16">Expresi&oacute;n
-  entera </a>&quot;)&quot; <a href="#prod8">Expresi&oacute;n</a><o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:20'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod21
-  id=prod21><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  </span></a><span class=SpellE><span style='mso-bookmark:prod21'><span
-  style='mso-fareast-font-family:"Times New Roman"'>turnoff</span></span></span><span
-  style='mso-bookmark:prod21'><span style='mso-fareast-font-family:"Times New Roman"'>
-  </span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;<span
-  class=SpellE>turnoff</span>&quot; <a href="#prod14">Argumento <span
-  class=SpellE>vaci&iacute;o</span></a> &quot;;&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:21'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod22
-  id=prod22><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  </span></a><span class=SpellE><span style='mso-bookmark:prod22'><span
-  style='mso-fareast-font-family:"Times New Roman"'>turnleft</span></span></span><span
-  style='mso-bookmark:prod22'><span style='mso-fareast-font-family:"Times New Roman"'>
-  </span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;<span
-  class=SpellE>turnleft</span>&quot; <a href="#prod14">Argumento vac&iacute;o</a>
-  &quot;;&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:22'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod23
-  id=prod23><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  </span></a><span class=SpellE><span style='mso-bookmark:prod23'><span
-  style='mso-fareast-font-family:"Times New Roman"'>move</span></span></span><span
-  style='mso-bookmark:prod23'><span style='mso-fareast-font-family:"Times New Roman"'>
-  </span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;<span
-  class=SpellE>move</span>&quot; <a href="#prod14">Argumento vac&iacute;o </a>&quot;;&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:23'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod24
-  id=prod24><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  </span></a><span class=SpellE><span style='mso-bookmark:prod24'><span
-  style='mso-fareast-font-family:"Times New Roman"'>pickbeeper</span></span></span><span
-  style='mso-bookmark:prod24'><span style='mso-fareast-font-family:"Times New Roman"'>
-  </span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;<span
-  class=SpellE>pickbeeper</span>&quot; <a href="#prod14">Argumento vac&iacute;o</a>
-  &quot;;&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:24'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod25
-  id=prod25><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  </span></a><span class=SpellE><span style='mso-bookmark:prod25'><span
-  style='mso-fareast-font-family:"Times New Roman"'>putbeeper</span></span></span><span
-  style='mso-bookmark:prod25'><span style='mso-fareast-font-family:"Times New Roman"'>
-  </span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;<span
-  class=SpellE>putbeeper</span>&quot; <a href="#prod14">Argumento vac&iacute;o </a>&quot;;&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:25'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod125
-  id=prod125><span style='mso-fareast-font-family:"Times New Roman"'>Expresi&oacute;n
-  </span></a><span class=SpellE><span style='mso-bookmark:prod125'><span
-  style='mso-fareast-font-family:"Times New Roman"'>return</span></span></span><span
-  style='mso-bookmark:prod125'><span style='mso-fareast-font-family:"Times New Roman"'>
-  </span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>&quot;<span
-  class=SpellE>return</span>&quot; <a href="#prod14">Argumento vac&iacute;o </a>&quot;;&quot;<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:26'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=Identifier
-  id=Identifier><span style='mso-fareast-font-family:"Times New Roman"'>Identificador</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><a
-  href="#Letter">Letra</a> [ <a href="#Letter">Letra</a> | <a href="#Digit">D&iacute;gito</a>
-  | &quot;-&quot; ] ...<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:27'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=Decimal
-  id=Decimal><span style='mso-fareast-font-family:"Times New Roman"'>Decimal</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>{
-  {&quot;1&quot;|&quot;2&quot;|&quot;3&quot;|&quot;4&quot;|&quot;5&quot;|&quot;6&quot;|&quot;7&quot;|&quot;8&quot;|&quot;9&quot;}
-  [ <a href="#Digit">D&iacute;gito</a> ] ...<br>
-  | &quot;0&quot; }<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:28'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=String
-  id=String><span style='mso-fareast-font-family:"Times New Roman"'>Cadena</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>Cualquier
-  cosa entre comillas en una &uacute;nica l&iacute;nea <o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:29'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a
-  name=BooleanFunction id=BooleanFunction><span style='mso-fareast-font-family:
-  "Times New Roman"'>Funci&oacute;n Booleana </span></a><span style='mso-fareast-font-family:
-  "Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>{&quot;<span
-  class=SpellE>frontIsClear</span>&quot;<br>
-  | &quot;<span class=SpellE>frontIsBlocked</span>&quot;<br>
-  | &quot;<span class=SpellE>leftIsClear</span>&quot;<br>
-  | &quot;<span class=SpellE>leftIsBlocked</span>&quot;<br>
-  | &quot;<span class=SpellE>rightIsClear</span>&quot;<br>
-  | &quot;<span class=SpellE>rightIsBlocked</span>&quot;<br>
-  | &quot;<span class=SpellE>nextToABeeper</span>&quot;<br>
-  | &quot;<span class=SpellE>notNextToABeeper</span>&quot;<br>
-  | &quot;<span class=SpellE>anyBeepersInBeeperBag</span>&quot;<br>
-  | &quot;<span class=SpellE>noBeepersInBeeperBag</span>&quot;<br>
-  | &quot;<span class=SpellE>facingNorth</span>&quot;<br>
-  | &quot;<span class=SpellE>facingSouth</span>&quot;<br>
-  | &quot;<span class=SpellE>facingEast</span>&quot;<br>
-  | &quot;<span class=SpellE>facingWest</span>&quot;<br>
-  | &quot;<span class=SpellE>notFacingNorth</span>&quot;<br>
-  | &quot;<span class=SpellE>notFacingSouth</span>&quot;<br>
-  | &quot;<span class=SpellE>notFacingEast</span>&quot;<br>
-  | &quot;<span class=SpellE>notFacingWest</span>&quot;}<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:30'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=Digit
-  id=Digit><span style='mso-fareast-font-family:"Times New Roman"'>D&iacute;gito</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>{&quot;0&quot;|&quot;1&quot;|&quot;2&quot;|&quot;3&quot;|&quot;4&quot;|&quot;5&quot;|&quot;6&quot;|&quot;7&quot;|&quot;8&quot;|&quot;9&quot;}<o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:31'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=Letter
-  id=Letter><span style='mso-fareast-font-family:"Times New Roman"'>Letra</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>Una
-  letra del alfabeto <o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:32'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=EOF id=EOF><span
-  style='mso-fareast-font-family:"Times New Roman"'>EOF</span></a><span
-  style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>Marca
-  el final del fichero <o:p></o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:33'>
-  <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'></td>
-  <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'></td>
-  <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'></td>
- </tr>
- <tr style='mso-yfti-irow:34'>
-  <td colspan=3 valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <h2 align=center style='text-align:center'><span style='mso-fareast-font-family:
-  "Times New Roman"'>Definici&oacute;n del panel instant&aacute;neo <o:p></o:p></span></h2>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:35;mso-yfti-lastrow:yes'>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=right style='text-align:right'><a name=prod7
-  id=prod7><span style='mso-fareast-font-family:"Times New Roman"'>Programa
-  instant&aacute;neo </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal align=center style='text-align:center'><span
-  style='mso-fareast-font-family:"Times New Roman"'>::=<o:p></o:p></span></p>
-  </td>
-  <td valign=top style='padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>[ <a
-  href="#prod4">Declaraci&oacute;n de m&eacute;todo<br>
-  </a>| Declaraci&oacute;n de enlace <br>
-  | <a href="#prod8">Expresi&oacute;n</a>&nbsp;] ... <br>
-  &nbsp;<a href="#EOF">EOF</a><o:p></o:p></span></p>
-  </td>
- </tr>
-</table>
-
-</div>
-
-<h2 align=center style='text-align:center'><span style='mso-fareast-font-family:
-"Times New Roman"'><br>
-Comentarios<o:p></o:p></span></h2>
-
-<div align=center>
-
-<table class=MsoNormalTable border=0 cellpadding=0 style='mso-cellspacing:1.5pt;
- mso-yfti-tbllook:1184;mso-padding-alt:7.5pt 7.5pt 7.5pt 7.5pt'>
- <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes'>
-  <td width=396 style='width:297.0pt;padding:7.5pt 7.5pt 7.5pt 7.5pt'>
-  <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>Est&aacute;n
-  soportados los dos tipos de comentario de JAVA/C++: <o:p></o:p></span></p>
-  <ul type=disc>
-   <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-       auto;mso-list:l0 level1 lfo1;tab-stops:list 36.0pt'><span
-       style='mso-fareast-font-family:"Times New Roman"'>/* Comentario en la
-       misma l&iacute;nea*/ <o:p></o:p></span></li>
-   <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-       auto;mso-list:l0 level1 lfo1;tab-stops:list 36.0pt'><span
-       style='mso-fareast-font-family:"Times New Roman"'>// Comentario para el
-       resto de la l&iacute;nea <o:p></o:p></span></li>
-  </ul>
-  </td>
- </tr>
-</table>
-
-</div>
-
-<div class=MsoNormal align=center style='text-align:center'><span
-style='mso-fareast-font-family:"Times New Roman"'>
-
-<hr size=2 width="100%" align=center>
-
-</span></div>
-
-<p align=center style='text-align:center'>Fin-de-p&aacute;gina </p>
-
-<div class=MsoNormal align=center style='text-align:center'><span
-style='mso-fareast-font-family:"Times New Roman"'>
-
-<hr size=2 width="100%" align=center>
-
-</span></div>
-
-</div>
-
+<body background="../Common/workbook2.gif"
+      bgcolor="white"
+      lang="ES-MX"
+      link="blue"
+      style='tab-interval:35.4pt'
+      vlink="purple">
+  <div class="Section1">
+    <h2 align="center"
+        style='text-align:center'><span style='mso-fareast-font-family: "Times New Roman"'>KAREL
+        OMI Versión 2.0 por Cesar Cepeda<br>
+    Para comentarios escriba a cesar@auronix.com</span></h2>
+    <h3 align="center"
+        style='text-align:center'><span style='mso-fareast-font-family: "Times New Roman"'>Revisado
+        por Eduardo <span class="SpellE">Urias</span> Barrientos AKA <span class=
+        "SpellE">Wero</span> <span class="SpellE">Shinoda</span></span></h3>
+    <h1 align="center"
+        style='text-align:center'><span style=
+        'mso-fareast-font-family: "Times New Roman"'>&nbsp;<a href="KarelJAVA.html">TUTORIAL DE
+        KAREL</a></span></h1>
+    <h1 align="center"
+        style='text-align:center'><span style='mso-fareast-font-family: "Times New Roman"'>BNF para
+        <span class="SpellE">Karel</span>: <span class="SpellE">Síntaxis</span> de Java</span></h1>
+    <div align="center">
+      <table border="0"
+             cellpadding="0"
+             class="MsoNormalTable"
+             style=
+             'mso-cellspacing:1.5pt; mso-yfti-tbllook:1184;mso-padding-alt:7.5pt 7.5pt 7.5pt 7.5pt'>
+             
+        <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod2"
+               name="prod2"><span style='mso-fareast-font-family:"Times New Roman"'>Declaración de
+               programa</span></a> <span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='width:16.5pt;padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top"
+              width="22">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p>"<span class="SpellE">class</span> <span class="SpellE">program</span> { "<br>
+            &nbsp; &nbsp; &nbsp;[ <a href="#prod4">Declaración de Método</a>] ...<br>
+            &nbsp; &nbsp; &nbsp;"<span class="SpellE">program</span> () "<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<a href="#prod11">Bloque</a><br>
+            "}"<br>
+            &nbsp;<a href="#EOF">EOF</a></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:1'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod4"
+               name="prod4"><span style='mso-fareast-font-family:"Times New Roman"'>Declaración de
+               método</span></a> <span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'><a href=
+            "#prod9">Tipo</a> &nbsp; <a href="#prod10">Firma de método</a><br>
+            &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<a href="#prod11">Bloque</a></span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:2'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top"></td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top"></td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top"></td>
+        </tr>
+        <tr style='mso-yfti-irow:3'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod10"
+               name="prod10"><span style='mso-fareast-font-family:"Times New Roman"'>Firma de
+               método</span></a> <span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'><a href=
+            "#Identifier">Identificador</a> &nbsp;<a href="#prod12">Parámetro
+            opcional</a></span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:4'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod12"
+               name="prod12"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Parámetro</span></a> <span style=
+               'mso-fareast-font-family:"Times New Roman"'>opcional</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>"(" [
+            <a href="#Identifier">Identificador</a> ] ")"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:5'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod9"
+               name="prod9"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Tipo</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>{
+            "<span class="SpellE">void</span>" | "define" }f</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:6'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod14"
+               name="prod14"><span style='mso-fareast-font-family:"Times New Roman"'>Argumento
+               vacío</span></a> <span style='mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>"("
+            ")"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:7'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod15"
+               name="prod15"><span style='mso-fareast-font-family:"Times New Roman"'>Argumento
+               opcional</span></a> <span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>"(" [
+            <a href="#prod16"><span class="SpellE">Expresion</span> entera</a> ] ")"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:8'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod8"
+               name="prod8"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>( <a href=
+            "#prod11">Bloque</a><br>
+            | <a href="#prod17">Expresión vacía</a><br>
+            | <a href="#prod18">Expresión <span class="SpellE">if</span></a><br>
+            | <a href="#prod19">Expresión <span class="SpellE">while</span></a><br>
+            | <a href="#prod20">Expresión <span class="SpellE">iterate</span></a><br>
+            | <a href="#prod21">Expresión <span class="SpellE">turnoff</span></a><br>
+            | <a href="#prod22">Expresión <span class="SpellE">turnleft</span></a><br>
+            | <a href="#prod23">Expresión <span class="SpellE">move</span></a><br>
+            | <a href="#prod24">Expresión <span class="SpellE">pickbeeper</span></a><br>
+            | <a href="#prod25">Expresión <span class="SpellE">putbeeper</span></a><br>
+            | <a href="#prod125">Expresión <span class="SpellE">return</span></a><br>
+            | <a href="#prod26">Expresión de llamada</a> )</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:9'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod11"
+               name="prod11"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Bloque</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>"{" [
+            <a href="#prod8">Expresión</a> ] ... "}"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:10'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod17"
+               name="prod17"><span style='mso-fareast-font-family:"Times New Roman"'>Expresión
+               vacía</span></a> <span style='mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>";"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:11'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod26"
+               name="prod26"><span style='mso-fareast-font-family:"Times New Roman"'>Expresión de
+               llamada</span></a> <span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'><a href=
+            "#Identifier">Identificador</a> &nbsp; <a href="#prod15">Argumento opcional</a>
+            ";"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:12'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod16"
+               name="prod16"><span style='mso-fareast-font-family:"Times New Roman"'>Expresión
+               entera</span></a> <span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>{ <a href=
+            "#Decimal_">Decimal</a>&nbsp;<br>
+            | <a href="#Identifier">Identificador</a><br>
+            | "<span class="SpellE">pred</span>" "(" <a href="#prod16">Expresión entera</a> ")"<br>
+            | "<span class="SpellE">succ</span>" "(" <a href="#prod16">Expresión entera</a> ")"
+            }</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:13'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod27"
+               name="prod27"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Término</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'><a href=
+            "#prod28">Cláusula Y</a> [ "||" <a href="#prod28">Cláusula Y</a> ] ...</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:14'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod28"
+               name="prod28"><span style='mso-fareast-font-family:"Times New Roman"'>Cláusula
+               Y</span></a> <span style='mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'><a href=
+            "#prod29">Cláusula No</a> [ "&amp;&amp;" <a href="#prod29">Cláusula No</a> ]
+            ...</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:15'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod29"
+               name="prod29"><span style='mso-fareast-font-family:"Times New Roman"'>Cláusula
+               No</span></a> <span style='mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>[ "!" ]
+            <a href="#prod30">Cláusula Atómica</a></span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:16'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod30"
+               name="prod30"><span style='mso-fareast-font-family:"Times New Roman"'>Cláusula
+               atómica</span></a> <span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>{
+            "<span class="SpellE">iszero</span>" "(" <a href="#prod16">Expresión entera</a> ")"<br>
+            | <a href="#BooleanFunction">Función Booleana<br></a> | <a href="#prod14">Argumento
+            vacío</a><br>
+            | "(" <a href="#prod27">Término</a> ")" }</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:17'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod18"
+               name="prod18"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a> <span class=
+               "SpellE"><span style='mso-bookmark:prod18'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>if</span></span></span> <span style=
+               'mso-bookmark:prod18'><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></span><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>"<span class="SpellE">if</span>" "("
+            <a href="#prod27">Término</a> ")" <a href="#prod8">Expresión</a> ["<span class=
+            "SpellE">else</span>" <a href="#prod8">Expresión</a> ]</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:18'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod19"
+               name="prod19"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a> <span class=
+               "SpellE"><span style='mso-bookmark:prod19'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>while</span></span></span> <span style=
+               'mso-bookmark:prod19'><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></span><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>"<span class="SpellE">while</span>" "("
+            <a href="#prod27">Término</a> ")" <a href="#prod8">Expresión</a></span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:19'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod20"
+               name="prod20"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a> <span class=
+               "SpellE"><span style='mso-bookmark:prod20'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>iterate</span></span></span> <span style=
+               'mso-bookmark:prod20'><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></span><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>"<span class="SpellE">iterate</span>" "("
+            <a href="#prod16">Expresión entera</a> ")" <a href="#prod8">Expresión</a></span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:20'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod21"
+               name="prod21"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a> <span class=
+               "SpellE"><span style='mso-bookmark:prod21'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>turnoff</span></span></span> <span style=
+               'mso-bookmark:prod21'><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></span><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>"<span class="SpellE">turnoff</span>"
+            <a href="#prod14">Argumento <span class="SpellE">vaciío</span></a> ";"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:21'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod22"
+               name="prod22"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a> <span class=
+               "SpellE"><span style='mso-bookmark:prod22'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>turnleft</span></span></span>
+               <span style='mso-bookmark:prod22'><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></span><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>"<span class="SpellE">turnleft</span>"
+            <a href="#prod14">Argumento vacío</a> ";"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:22'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod23"
+               name="prod23"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a> <span class=
+               "SpellE"><span style='mso-bookmark:prod23'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>move</span></span></span> <span style=
+               'mso-bookmark:prod23'><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></span><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>"<span class="SpellE">move</span>" <a href=
+            "#prod14">Argumento vacío</a> ";"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:23'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod24"
+               name="prod24"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a> <span class=
+               "SpellE"><span style='mso-bookmark:prod24'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>pickbeeper</span></span></span>
+               <span style='mso-bookmark:prod24'><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></span><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>"<span class="SpellE">pickbeeper</span>"
+            <a href="#prod14">Argumento vacío</a> ";"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:24'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod25"
+               name="prod25"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a> <span class=
+               "SpellE"><span style='mso-bookmark:prod25'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>putbeeper</span></span></span>
+               <span style='mso-bookmark:prod25'><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></span><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>"<span class="SpellE">putbeeper</span>"
+            <a href="#prod14">Argumento vacío</a> ";"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:25'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod125"
+               name="prod125"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Expresión</span></a> <span class=
+               "SpellE"><span style='mso-bookmark:prod125'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>return</span></span></span> <span style=
+               'mso-bookmark:prod125'><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></span><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>"<span class="SpellE">return</span>"
+            <a href="#prod14">Argumento vacío</a> ";"</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:26'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="Identifier"
+               name="Identifier"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Identificador</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'><a href=
+            "#Letter">Letra</a> [ <a href="#Letter">Letra</a> | <a href="#Digit">Dígito</a> | "-" ]
+            ...</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:27'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="Decimal"
+               name="Decimal"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Decimal</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>{
+            {"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"} [ <a href="#Digit">Dígito</a> ] ...<br>
+            | "0" }</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:28'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="String"
+               name="String"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Cadena</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>Cualquier
+            cosa entre comillas en una única línea</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:29'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="BooleanFunction"
+               name="BooleanFunction"><span style=
+               'mso-fareast-font-family: "Times New Roman"'>Función Booleana</span></a> <span style=
+               'mso-fareast-font-family: "Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>{"<span class=
+            "SpellE">frontIsClear</span>"<br>
+            | "<span class="SpellE">frontIsBlocked</span>"<br>
+            | "<span class="SpellE">leftIsClear</span>"<br>
+            | "<span class="SpellE">leftIsBlocked</span>"<br>
+            | "<span class="SpellE">rightIsClear</span>"<br>
+            | "<span class="SpellE">rightIsBlocked</span>"<br>
+            | "<span class="SpellE">nextToABeeper</span>"<br>
+            | "<span class="SpellE">notNextToABeeper</span>"<br>
+            | "<span class="SpellE">anyBeepersInBeeperBag</span>"<br>
+            | "<span class="SpellE">noBeepersInBeeperBag</span>"<br>
+            | "<span class="SpellE">facingNorth</span>"<br>
+            | "<span class="SpellE">facingSouth</span>"<br>
+            | "<span class="SpellE">facingEast</span>"<br>
+            | "<span class="SpellE">facingWest</span>"<br>
+            | "<span class="SpellE">notFacingNorth</span>"<br>
+            | "<span class="SpellE">notFacingSouth</span>"<br>
+            | "<span class="SpellE">notFacingEast</span>"<br>
+            | "<span class="SpellE">notFacingWest</span>"}</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:30'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="Digit"
+               name="Digit"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Dígito</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style=
+            'mso-fareast-font-family:"Times New Roman"'>{"0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"}</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:31'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="Letter"
+               name="Letter"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>Letra</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>Una letra
+            del alfabeto</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:32'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="EOF"
+               name="EOF"><span style=
+               'mso-fareast-font-family:"Times New Roman"'>EOF</span></a><span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>Marca el
+            final del fichero</span></p>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:33'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'></td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'></td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'></td>
+        </tr>
+        <tr style='mso-yfti-irow:34'>
+          <td colspan="3"
+              style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <h2 align="center"
+                style='text-align:center'><span style=
+                'mso-fareast-font-family: "Times New Roman"'>Definición del panel
+                instantáneo</span></h2>
+          </td>
+        </tr>
+        <tr style='mso-yfti-irow:35;mso-yfti-lastrow:yes'>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="right"
+               class="MsoNormal"
+               style='text-align:right'><a id="prod7"
+               name="prod7"><span style='mso-fareast-font-family:"Times New Roman"'>Programa
+               instantáneo</span></a> <span style=
+               'mso-fareast-font-family:"Times New Roman"'></span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p align="center"
+               class="MsoNormal"
+               style='text-align:center'><span style=
+               'mso-fareast-font-family:"Times New Roman"'>::=</span></p>
+          </td>
+          <td style='padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              valign="top">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>[ <a href=
+            "#prod4">Declaración de método<br></a> | Declaración de enlace<br>
+            | <a href="#prod8">Expresión</a>&nbsp;] ...<br>
+            &nbsp;<a href="#EOF">EOF</a></span></p>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <h2 align="center"
+        style='text-align:center'><span style='mso-fareast-font-family: "Times New Roman"'><br>
+    Comentarios</span></h2>
+    <div align="center">
+      <table border="0"
+             cellpadding="0"
+             class="MsoNormalTable"
+             style=
+             'mso-cellspacing:1.5pt; mso-yfti-tbllook:1184;mso-padding-alt:7.5pt 7.5pt 7.5pt 7.5pt'>
+             
+        <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes'>
+          <td style='width:297.0pt;padding:7.5pt 7.5pt 7.5pt 7.5pt'
+              width="396">
+            <p class="MsoNormal"><span style='mso-fareast-font-family:"Times New Roman"'>Están
+            soportados los dos tipos de comentario de JAVA/C++:</span></p>
+            <ul type="disc">
+              <li class="MsoNormal"
+                  style=
+                  'mso-margin-top-alt:auto;mso-margin-bottom-alt: auto;mso-list:l0 level1 lfo1;tab-stops:list 36.0pt'>
+              <span style='mso-fareast-font-family:"Times New Roman"'>/* Comentario en la misma
+              línea*/</span></li>
+              <li class="MsoNormal"
+                  style=
+                  'mso-margin-top-alt:auto;mso-margin-bottom-alt: auto;mso-list:l0 level1 lfo1;tab-stops:list 36.0pt'>
+              <span style='mso-fareast-font-family:"Times New Roman"'>// Comentario para el resto
+              de la línea</span></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div align="center"
+         class="MsoNormal"
+         style='text-align:center'>
+      <span style='mso-fareast-font-family:"Times New Roman"'>
+      <hr align="center"
+          size="2"
+          width="100%"></span>
+    </div>
+    <p align="center"
+       style='text-align:center'>Fin-de-página</p>
+    <div align="center"
+         class="MsoNormal"
+         style='text-align:center'>
+      <span style='mso-fareast-font-family:"Times New Roman"'>
+      <hr align="center"
+          size="2"
+          width="100%"></span>
+    </div>
+  </div>
 </body>
-
 </html>

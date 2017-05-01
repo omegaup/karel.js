@@ -15,8 +15,7 @@
 				".*\\.html$"
 			],
 			"blacklist": [
-				"^test/problems/.*",
-				"^manual/.*"
+				"^test/problems/.*"
 			]
 		}
 	}

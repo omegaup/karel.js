@@ -1,38 +1,53 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title> La sentencia   define-nueva-instruccion/como �</title>
+  <title>La sentencia define-nueva-instruccion/como &nbsp;</title>
 </head>
-
 <body style="background-image: url(./workbook.gif);">
-<center>
-  <h2>Las funciones sucede y precede </h2>
-</center>
-<p>Ahora ya sabemos como mandarle un n&uacute;mero a un procedimiento, y probablemente ya habr&aacute;s intentado poner operaciones como suma, resta o multiplicaci&oacute;n, sin embargo lamanto decirte que ninguna de estas operaciones est&aacute;n soportadas en Karel. </p>
-<p>Por otro lado, existen dos funciones que nos permiten sumarle 1 a un n&uacute;mero y restarle 1. </p>
-<p>Pero... &iquest;qu&eacute; es una funci&oacute;n? Una funci&oacute;n es una instrucci&oacute;n que devuelve un valor, es decir, reciben un  par&aacute;metro (o m&aacute;s) que luego procesa, para al final regresar un valor; por ejemplo, la funci&oacute;n booleana junto-a-zumbador devuelve verdadero si Karel est&aacute; parado junto a un zumbador y falso si no lo est&aacute;. En Karel no se pueden declarar funciones nuevas, pero se pueden usar las que ya existen. </p>
-<p>Las funciones sucede y precede son dos instrucciones que reciben un par&aacute;metro, posteriormente, devuelven un n&uacute;mero m&aacute;s y un n&uacute;mero menos (respectivamente) que el que le enviamos.</p>
-<p>La funci&oacute;n sucede se escribe as&iacute;:</p>
-<p>...</p>
-<p>sucede(xxx);</p>
-<p>...</p>
-<p>donde xxx es un n&uacute;mero o un par&aacute;metro, y la funci&oacute;n precede se escribe as&iacute;:</p>
-<p>...</p>
-<p>precede(xxx);</p>
-<p>...</p>
-<p>donde xxx es un n&uacute;mero o un par&aacute;metro.</p>
-<p>Debido a que devuelven un n&uacute;mero, solo nos pueden servir poniendolas en alguna instrucci&oacute;n o sentencia que reciba un n&uacute;mero, como repetir/veces, otro sucede o precede o una instrucci&oacute;n personal que reciba un par&aacute;metro. </p>
-<p>Por ejemplo, el siguiente trozo de c&oacute;digo pone n + 1 zumbadores en donde Karel se encuentra:</p>
-<p>...</p>
-<p>repetir sucede(n) veces inicio</p>
-<p>&nbsp;&nbsp;&nbsp;deja-zumbador;</p>
-<p>fin;</p>
-<p>...</p>
-<p>nota que n se &quot;incrementa&quot; (se le suma uno). Si en vez de sucede, pusieramos precede, Karel dejar&iacute;a n - 1 zumbadores, porque la n se &quot;decrementa&quot; (se le quita uno) cuando se pone dentro de una funci&oacute;n precede. </p>
-<p><strong>Ejercicio 10</strong>: Escribe una nueva instrucci&oacute;n que reciba un n&uacute;mero n y mueva a Karel n + 2 veces (validando el choque contra paredes), y posteriormente, coloque n - 2 zumbadores en la posici&oacute;n en donde est&aacute;. PISTA: Usa un repetir/veces para mover a Karel y otro para colocar los zumbadores. NO se vale colocar instrucciones fuera de los ciclos repetir/veces. </p>
-<CENTER>
-  <H2>Las funciones sucede y precede  </H2>
-  <H2 align="left"><a href="Karel.html">Regresar</a> </H2>
-</CENTER>
+  <center>
+    <h2>Las funciones sucede y precede</h2>
+  </center>
+  <p>Ahora ya sabemos como mandarle un número a un procedimiento, y probablemente ya habrás
+  intentado poner operaciones como suma, resta o multiplicación, sin embargo lamanto decirte que
+  ninguna de estas operaciones están soportadas en Karel.</p>
+  <p>Por otro lado, existen dos funciones que nos permiten sumarle 1 a un número y restarle 1.</p>
+  <p>Pero... ¿qué es una función? Una función es una instrucción que devuelve un valor, es decir,
+  reciben un parámetro (o más) que luego procesa, para al final regresar un valor; por ejemplo, la
+  función booleana junto-a-zumbador devuelve verdadero si Karel está parado junto a un zumbador y
+  falso si no lo está. En Karel no se pueden declarar funciones nuevas, pero se pueden usar las que
+  ya existen.</p>
+  <p>Las funciones sucede y precede son dos instrucciones que reciben un parámetro, posteriormente,
+  devuelven un número más y un número menos (respectivamente) que el que le enviamos.</p>
+  <p>La función sucede se escribe así:</p>
+  <p>...</p>
+  <p>sucede(xxx);</p>
+  <p>...</p>
+  <p>donde xxx es un número o un parámetro, y la función precede se escribe así:</p>
+  <p>...</p>
+  <p>precede(xxx);</p>
+  <p>...</p>
+  <p>donde xxx es un número o un parámetro.</p>
+  <p>Debido a que devuelven un número, solo nos pueden servir poniendolas en alguna instrucción o
+  sentencia que reciba un número, como repetir/veces, otro sucede o precede o una instrucción
+  personal que reciba un parámetro.</p>
+  <p>Por ejemplo, el siguiente trozo de código pone n + 1 zumbadores en donde Karel se
+  encuentra:</p>
+  <p>...</p>
+  <p>repetir sucede(n) veces inicio</p>
+  <p>&nbsp;&nbsp;&nbsp;deja-zumbador;</p>
+  <p>fin;</p>
+  <p>...</p>
+  <p>nota que n se "incrementa" (se le suma uno). Si en vez de sucede, pusieramos precede, Karel
+  dejaría n - 1 zumbadores, porque la n se "decrementa" (se le quita uno) cuando se pone dentro de
+  una función precede.</p>
+  <p><strong>Ejercicio 10</strong>: Escribe una nueva instrucción que reciba un número n y mueva a
+  Karel n + 2 veces (validando el choque contra paredes), y posteriormente, coloque n - 2
+  zumbadores en la posición en donde está. PISTA: Usa un repetir/veces para mover a Karel y otro
+  para colocar los zumbadores. NO se vale colocar instrucciones fuera de los ciclos
+  repetir/veces.</p>
+  <center>
+    <h2>Las funciones sucede y precede</h2>
+    <h2 align="left"><a href="Karel.html">Regresar</a></h2>
+  </center>
 </body>
 </html>

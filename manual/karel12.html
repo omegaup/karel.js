@@ -1,45 +1,63 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title> La sentencia   define-nueva-instruccion/como </title>
+  <title>La sentencia define-nueva-instruccion/como</title>
 </head>
-
 <body style="background-image: url(./workbook.gif);">
-<center>
-  <h2>Par&aacute;metros en funciones �  
-</h2>
-</center>
-<p>Hemos visto ya la sentencia <strong>repetir/veces</strong> que nos ayuda a iterar un bloque de c&oacute;digo un determinado n&uacute;mero de veces, pero siempre ten&iacute;amos que colocar un n&uacute;mero fijo en la sentencia, &iquest;te has puesto a pensar que pasar&iacute;a si por ejemplo necesitara una instrucci&oacute;n que volteara a Karel 180&deg;? Pues la respuesta natural ser&iacute;a &quot;haz una instrucci&oacute;n que haga que Karel gire dos veces&quot;. Pero... &iquest;crees que ser&iacute;a posible usar la instrucci&oacute;n que hicimos anteriormente <strong>gira-derecha</strong>? Si existiese alguna forma de que en vez de poner 3 en la sentencia <strong>repetir/veces </strong>pusiesemos un n&uacute;mero variable, podr&iacute;amos usar la instrucci&oacute;n tanto para girar a la derecha como para dar media vuelta.</p>
-<p>&iexcl;Pues si existe! Primero retomemos el c&oacute;digo para girar a la derecha:</p>
-<p>...</p>
-<p>define-nueva-instruccion gira-derecha como inicio</p>
-<p>&nbsp;&nbsp;&nbsp;repetir 3 veces inicio</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gira-izquieda;</p>
-<p>&nbsp;&nbsp;&nbsp;fin;</p>
-<p>fin;</p>
-<p>...</p>
-<p>Ahora, todas las nuevas instrucciones declaradas pueden adem&aacute;s llevar un par&aacute;metro, &iquest;pero que es un par&aacute;metro?, pues es un numerito que le podemos mandar a la instrucci&oacute;n cuando la llamamos, y como cuando declaramos la instrucci&oacute;n no sabemos  con que n&uacute;mero la vamos a llamar, reemplazamos el n&uacute;mero por una palabra. &iquest;Alguna vez has o&iacute;do la frase &quot;los primeros n n&uacute;meros&quot;?, pues precisamente eso son los par&aacute;metros. Podemos en vez de n poner 1, 2 &oacute; 3, quedando &quot;los primeros 3 n&uacute;meros&quot; por ejemplo. Este par&aacute;metro puede tener el nombre que sea, siempre y cuando la primer letra no sea un n&uacute;mero y el nombre del par&aacute;metro no sea el mismo que una palabra del lenguaje, por ejemplo no se puede llamar si, repetir, avanza, etc.</p>
-<p>Este par&aacute;metro se puede usar en cualquier lugar dentro de la definici&oacute;n de la instrucci&oacute;n, en cualquier sentencia o instrucci&oacute;n que necesite un n&uacute;mero (justo como la sentencia repetir/veces). Redefinamos ahora la instrucci&oacute;n gira-derecha como la instruccion gira:</p>
-<p>...</p>
-<p>define-nueva-instruccion gira (n) como inicio</p>
-<p> &nbsp;&nbsp;&nbsp;repetir n veces inicio</p>
-<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gira-izquieda;</p>
-<p>&nbsp;&nbsp;&nbsp;fin;</p>
-<p>fin;</p>
-<p>...</p>
-<p>De esta forma si escribimos en nuestro c&oacute;digo &quot;gira(3);&quot; Karel girar&aacute; a la derecha, si escribimos &quot;gira(2);&quot; dar&aacute; media vuelta, si escribimos &quot;gira(1);&quot; girar&aacute; a la izquierda y si escribimos &quot;gira(0);&quot; no har&aacute; nada.</p>
-<p>Aqui puedes ver como se escribe una instrucci&oacute;n con un par&aacute;metro en general:</p>
-<p>...</p>
-<p>define-nueva-instruccion xxx (yyy) como inicio</p>
-<p>&nbsp;&nbsp;&nbsp;zzz</p>
-<p>fin;</p>
-<p>...</p>
-<p>donde xxx es el nombre de la instrucci&oacute;n, yyy es el nombre del par&aacute;metro y zzz es cualquier n&uacute;mero de instrucciones.</p>
-<p><strong>Ejercicio 9: </strong> Escribe una nueva instrucci&oacute;n que avance a Karel el n&uacute;mero de veces que se le mande como par&aacute;metro. Debes de evitar que Karel choque con alguna pared. </p>
-<p>&iquest;Tienes dudas? Usa como base el c&oacute;digo de la instrucci&oacute;n gira. </p>
-<CENTER>
-  <H2>Par&aacute;metros en funciones � </H2>
-  <H2 align="left"><a href="Karel.html">Regresar</a> </H2>
-</CENTER>
+  <center>
+    <h2>Parámetros en funciones &nbsp;</h2>
+  </center>
+  <p>Hemos visto ya la sentencia <strong>repetir/veces</strong> que nos ayuda a iterar un bloque de
+  código un determinado número de veces, pero siempre teníamos que colocar un número fijo en la
+  sentencia, ¿te has puesto a pensar que pasaría si por ejemplo necesitara una instrucción que
+  volteara a Karel 180°? Pues la respuesta natural sería "haz una instrucción que haga que Karel
+  gire dos veces". Pero... ¿crees que sería posible usar la instrucción que hicimos anteriormente
+  <strong>gira-derecha</strong>? Si existiese alguna forma de que en vez de poner 3 en la sentencia
+  <strong>repetir/veces</strong> pusiesemos un número variable, podríamos usar la instrucción tanto
+  para girar a la derecha como para dar media vuelta.</p>
+  <p>¡Pues si existe! Primero retomemos el código para girar a la derecha:</p>
+  <p>...</p>
+  <p>define-nueva-instruccion gira-derecha como inicio</p>
+  <p>&nbsp;&nbsp;&nbsp;repetir 3 veces inicio</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gira-izquieda;</p>
+  <p>&nbsp;&nbsp;&nbsp;fin;</p>
+  <p>fin;</p>
+  <p>...</p>
+  <p>Ahora, todas las nuevas instrucciones declaradas pueden además llevar un parámetro, ¿pero que
+  es un parámetro?, pues es un numerito que le podemos mandar a la instrucción cuando la llamamos,
+  y como cuando declaramos la instrucción no sabemos con que número la vamos a llamar, reemplazamos
+  el número por una palabra. ¿Alguna vez has oído la frase "los primeros n números"?, pues
+  precisamente eso son los parámetros. Podemos en vez de n poner 1, 2 ó 3, quedando "los primeros 3
+  números" por ejemplo. Este parámetro puede tener el nombre que sea, siempre y cuando la primer
+  letra no sea un número y el nombre del parámetro no sea el mismo que una palabra del lenguaje,
+  por ejemplo no se puede llamar si, repetir, avanza, etc.</p>
+  <p>Este parámetro se puede usar en cualquier lugar dentro de la definición de la instrucción, en
+  cualquier sentencia o instrucción que necesite un número (justo como la sentencia repetir/veces).
+  Redefinamos ahora la instrucción gira-derecha como la instruccion gira:</p>
+  <p>...</p>
+  <p>define-nueva-instruccion gira (n) como inicio</p>
+  <p>&nbsp;&nbsp;&nbsp;repetir n veces inicio</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gira-izquieda;</p>
+  <p>&nbsp;&nbsp;&nbsp;fin;</p>
+  <p>fin;</p>
+  <p>...</p>
+  <p>De esta forma si escribimos en nuestro código "gira(3);" Karel girará a la derecha, si
+  escribimos "gira(2);" dará media vuelta, si escribimos "gira(1);" girará a la izquierda y si
+  escribimos "gira(0);" no hará nada.</p>
+  <p>Aqui puedes ver como se escribe una instrucción con un parámetro en general:</p>
+  <p>...</p>
+  <p>define-nueva-instruccion xxx (yyy) como inicio</p>
+  <p>&nbsp;&nbsp;&nbsp;zzz</p>
+  <p>fin;</p>
+  <p>...</p>
+  <p>donde xxx es el nombre de la instrucción, yyy es el nombre del parámetro y zzz es cualquier
+  número de instrucciones.</p>
+  <p><strong>Ejercicio 9:</strong> Escribe una nueva instrucción que avance a Karel el número de
+  veces que se le mande como parámetro. Debes de evitar que Karel choque con alguna pared.</p>
+  <p>¿Tienes dudas? Usa como base el código de la instrucción gira.</p>
+  <center>
+    <h2>Parámetros en funciones &nbsp;</h2>
+    <h2 align="left"><a href="Karel.html">Regresar</a></h2>
+  </center>
 </body>
 </html>
