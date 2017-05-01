@@ -429,7 +429,7 @@ $(document)
                   {'mensaje': 'Breakpoint en la línea ' + (linea_actual + 1)});
           clearInterval(interval);
           interval = null;
-          $('#ejecutar i').removeClass('icon-pause').addClass('icon-play');
+          $('#ejecutar em').removeClass('icon-pause').addClass('icon-play');
           $('#worldclean').removeAttr('disabled');
           $('#paso').removeAttr('disabled');
           $('#futuro').removeAttr('disabled');
@@ -601,7 +601,7 @@ $(document)
                     'mensaje': 'Breakpoint en la línea ' +
                                    (mundo.runtime.state.line + 1)
                   });
-              $('#ejecutar i').removeClass('icon-pause').addClass('icon-play');
+              $('#ejecutar em').removeClass('icon-pause').addClass('icon-play');
               $('#worldclean').removeAttr('disabled');
               $('#ejecutar').removeAttr('disabled');
               $('#paso').removeAttr('disabled');
@@ -761,7 +761,7 @@ $(document)
             $('#inf_zumbadores').attr('disabled', 'disabled');
             $('#paso').attr('disabled', 'disabled');
             $('#worldclean').attr('disabled', 'disabled');
-            $('#ejecutar i').removeClass('icon-play').addClass('icon-pause');
+            $('#ejecutar em').removeClass('icon-play').addClass('icon-pause');
             $('#posicion_karel').attr('disabled', 'disabled');
             $('#orientacion_karel').attr('disabled', 'disabled');
             $('#mochila_karel').attr('disabled', 'disabled');
@@ -787,7 +787,7 @@ $(document)
             $('#paso').removeAttr('disabled');
             $('#worldclean').removeAttr('disabled');
             $('#ejecutar').removeAttr('disabled');
-            $('#ejecutar i').removeClass('icon-pause').addClass('icon-play');
+            $('#ejecutar em').removeClass('icon-pause').addClass('icon-play');
             $('#posicion_karel').removeAttr('disabled');
             $('#orientacion_karel').removeAttr('disabled');
             $('#mochila_karel').removeAttr('disabled');
@@ -801,7 +801,7 @@ $(document)
           });
       $('#ejecutar')
           .click(function(event) {
-            if ($('#ejecutar i').hasClass('icon-play')) {
+            if ($('#ejecutar em').hasClass('icon-play')) {
               if (mundo_editable) {
                 var compiled = compile();
                 if (compiled != null) {
@@ -838,7 +838,7 @@ $(document)
               }
             } else {
               clearInterval(interval);
-              $('#ejecutar i').removeClass('icon-pause').addClass('icon-play');
+              $('#ejecutar em').removeClass('icon-pause').addClass('icon-play');
               $('#worldclean').removeAttr('disabled');
               $('#paso').removeAttr('disabled');
               $('#futuro').removeAttr('disabled');
@@ -871,7 +871,7 @@ $(document)
                         $('#worldclean').removeAttr('disabled');
                         $('#futuro').removeAttr('disabled');
                         $('#evaluacion').removeAttr('disabled');
-                        $('#ejecutar i')
+                        $('#ejecutar em')
                             .removeClass('icon-pause')
                             .addClass('icon-play');
                         step();
