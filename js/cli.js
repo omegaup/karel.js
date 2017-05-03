@@ -67,7 +67,28 @@ if (opts['0'] == 'compile') {
     parser = require('./karelruby.js').parse;
   }
 
-  var program = parser(file);
+  var program = null;
+  try {
+    program = parser(file);
+  } catch (e) {
+    console.log(e.message);
+    if (!e.hash || !e.hash.line || !e.hash.text) {
+      process.exit(1);
+    }
+    var lines = file.split('\n');
+    if (e.hash.line < 1 || e.hash.line > lines.length) {
+      process.exit(1);
+    }
+    var errorLine = lines[e.hash.line].replace(/\t/g, '        ');
+    var idx = errorLine.indexOf(e.hash.text);
+    if (idx < 0) {
+      process.exit(1);
+    }
+    var lineNumberPrefix = e.hash.line.toString(10) + ': ';
+    console.log('\n' + lineNumberPrefix + errorLine);
+    console.log(' '.repeat(idx + lineNumberPrefix.length) + '^'.repeat(e.hash.text.length));
+    process.exit(1);
+  }
 
   var output = opts.output;
   if (!output) {
