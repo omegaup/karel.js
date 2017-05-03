@@ -71,7 +71,7 @@ if (opts['0'] == 'compile') {
   try {
     program = parser(file);
   } catch (e) {
-    console.log(e.message);
+    console.error(e.message);
     if (!e.hash || !e.hash.line || !e.hash.text) {
       process.exit(1);
     }
@@ -85,8 +85,8 @@ if (opts['0'] == 'compile') {
       process.exit(1);
     }
     var lineNumberPrefix = e.hash.line.toString(10) + ': ';
-    console.log('\n' + lineNumberPrefix + errorLine);
-    console.log(' '.repeat(idx + lineNumberPrefix.length) + '^'.repeat(e.hash.text.length));
+    console.error('\n' + lineNumberPrefix + errorLine);
+    console.error(' '.repeat(idx + lineNumberPrefix.length) + '^'.repeat(e.hash.text.length));
     process.exit(1);
   }
 
