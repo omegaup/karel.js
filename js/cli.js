@@ -86,7 +86,8 @@ if (opts['0'] == 'compile') {
     }
     var lineNumberPrefix = e.hash.line.toString(10) + ': ';
     console.error('\n' + lineNumberPrefix + errorLine);
-    console.error(' '.repeat(idx + lineNumberPrefix.length) + '^'.repeat(e.hash.text.length));
+    console.error(' '.repeat(idx + lineNumberPrefix.length) +
+                  '^'.repeat(e.hash.text.length));
     process.exit(1);
   }
 
