@@ -92,7 +92,6 @@ function validate(function_list, program, yy) {
 			prototypes[function_list[i][0]] = function_list[i][2];
 		} else {
 			if (functions[function_list[i][0]]) {
-				console.log(yy);
 				yy.parser.parseError("Function redefinition: " + function_list[i][0], {
 					text: function_list[i][0],
 					line: function_list[i][3]
@@ -108,15 +107,18 @@ function validate(function_list, program, yy) {
 
 			prototypes[function_list[i][0]] = function_list[i][2];
 			functions[function_list[i][0]] = program.length;
-			var current_line = 0;
+			var current_line = 1;
 
+			// This is only to make sure that any function that is called has been
+			// either declared or defined previously. Other validations will be done
+			// in the overall program loop below.
 			for (var j = 0; j < function_list[i][1].length; j++) {
 				if (function_list[i][1][j][0] == 'LINE') {
 					current_line = function_list[i][1][j][1];
 				} else if (function_list[i][1][j][0] == 'CALL' &&
 						!functions[function_list[i][1][j][1]] &&
 						!prototypes[function_list[i][1][j][1]]) {
-					yy.parser.parseError("Unknown function: " + function_list[i][1][j][1], {
+					yy.parser.parseError("Undefined function: " + function_list[i][1][j][1], {
 						text: function_list[i][1][j][1],
 						line: current_line
 					});
@@ -126,8 +128,8 @@ function validate(function_list, program, yy) {
 			program = program.concat(function_list[i][1]);
 		}
 	}
-	
-	var current_line = 0;
+
+	var current_line = 1;
 	for (var i = 0; i < program.length; i++) {
 		if (program[i][0] == 'LINE') {
 			current_line = program[i][1];
@@ -148,11 +150,11 @@ function validate(function_list, program, yy) {
 		} else if (program[i][0] == 'PARAM' && program[i][1] != 0) {
 			yy.parser.parseError("Unknown variable: " + program[i][1], {
 				text: program[i][1],
-				line: current_line + 1
+				line: current_line
 			});
 		}
 	}
-	
+
 	return program;
 }
 %}
@@ -165,7 +167,7 @@ program
   | BEGINPROG BEGINEXEC expr_list ENDEXEC ENDPROG EOF
     { return validate([], $expr_list.concat([['LINE', yylineno], ['HALT']]), yy); }
   ;
-  
+
 def_list
   : def_list def ';'
     { $$ = $def_list.concat($def); }
@@ -202,7 +204,7 @@ def
     %}
   ;
 
-  
+
 expr_list
   : expr_list ';' genexpr
     { $$ = $expr_list.concat($genexpr); }
@@ -248,22 +250,22 @@ call
   | var '(' integer ')'
     { $$ = [['LINE', yylineno]].concat($integer).concat([['CALL', $var.toLowerCase(), 2], ['LINE', yylineno]]); }
   ;
-  
+
 cond
   : IF line term THEN expr %prec XIF
-    { $$ = $term.concat($line).concat([['JZ', $expr.length]]).concat($expr); }
+    { $$ = $line.concat($term).concat([['JZ', $expr.length]]).concat($expr); }
   | IF line term THEN expr ELSE expr
-    { $$ = $term.concat($line).concat([['JZ', 1 + $5.length]]).concat($5).concat([['JMP', $7.length]]).concat($7); }
+    { $$ = $line.concat($term).concat([['JZ', 1 + $5.length]]).concat($5).concat([['JMP', $7.length]]).concat($7); }
   ;
 
 loop
   : WHILE line term DO expr
-    { $$ = $term.concat($line).concat([['JZ', 1 + $expr.length]]).concat($expr).concat([['JMP', -1 -($term.length + 1 + $expr.length + 1)]]); }
+    { $$ = $line.concat($term).concat([['JZ', 1 + $expr.length]]).concat($expr).concat([['JMP', -1 -($term.length + $expr.length + 1)]]); }
   ;
 
 repeat
   : REPEAT line integer TIMES expr
-    { $$ = $integer.concat($line).concat([['DUP'], ['LOAD', 0], ['EQ'], ['NOT'], ['JZ', $expr.length + 2]]).concat($expr).concat([['DEC'], ['JMP', -1 -($expr.length + 7)], ['POP']]); }
+    { $$ = $line.concat($integer).concat([['DUP'], ['LOAD', 0], ['EQ'], ['NOT'], ['JZ', $expr.length + 2]]).concat($expr).concat([['DEC'], ['JMP', -1 -($expr.length + 6)], ['POP']]); }
   ;
 
 term

@@ -62,21 +62,21 @@
 function validate(function_list, program, yy) {
 	var functions = {};
 	var prototypes = {};
-	
+
 	for (var i = 0; i < function_list.length; i++) {
 		if (functions[function_list[i][0]]) {
 			yy.parser.parseError("Function redefinition: " + function_list[i][0], {
 				text: function_list[i][0],
-				line: function_list[i][3]
+				line: function_list[i][1][0][1]
 			});
 		}
-		
+
 		functions[function_list[i][0]] = program.length;
 		prototypes[function_list[i][0]] = function_list[i][2];
 		program = program.concat(function_list[i][1]);
 	}
 
-	var current_line = 0;
+	var current_line = 1;
 	for (var i = 0; i < program.length; i++) {
 		if (program[i][0] == 'LINE') {
 			current_line = program[i][1];
@@ -92,17 +92,17 @@ function validate(function_list, program, yy) {
 					line: current_line
 				});
 			}
-			
+
 			program[i][2] = program[i][1];
 			program[i][1] = functions[program[i][1]];
 		} else if (program[i][0] == 'PARAM' && program[i][1] != 0) {
 			yy.parser.parseError("Unknown variable: " + program[i][1], {
 				text: program[i][1],
-				line: current_line + 1
+				line: current_line
 			});
 		}
 	}
-	
+
 	return program;
 }
 %}
@@ -120,7 +120,7 @@ block
   : BEGIN expr_list END
     { $$ = $expr_list; }
   ;
-  
+
 def_list
   : def_list def
     { $$ = $def_list.concat($def); }
@@ -150,7 +150,7 @@ def
     %}
   ;
 
-  
+
 expr_list
   : expr_list expr
     { $$ = $expr_list.concat($expr); }
@@ -191,22 +191,22 @@ call
   | var '(' integer ')'
     { $$ = [['LINE', yylineno]].concat($integer).concat([['CALL', $var, 2], ['LINE', yylineno]]); }
   ;
-  
+
 cond
   : IF line '(' term ')' expr %prec XIF
-    { $$ = $term.concat($line).concat([['JZ', $expr.length]]).concat($expr); }
+    { $$ = $line.concat($term).concat([['JZ', $expr.length]]).concat($expr); }
   | IF line '(' term ')' expr ELSE expr
-    { $$ = $term.concat($line).concat([['JZ', 1 + $6.length]]).concat($6).concat([['JMP', $8.length]]).concat($8); }
+    { $$ = $line.concat($term).concat([['JZ', 1 + $6.length]]).concat($6).concat([['JMP', $8.length]]).concat($8); }
   ;
 
 loop
   : WHILE line '(' term ')' expr
-    { $$ = $term.concat($line).concat([['JZ', 1 + $expr.length]]).concat($expr).concat([['JMP', -1 -($term.length + 1 + $expr.length + 1)]]); }
+    { $$ = $line.concat($term).concat([['JZ', 1 + $expr.length]]).concat($expr).concat([['JMP', -1 -($term.length + $expr.length + 1)]]); }
   ;
 
 repeat
   : REPEAT line '(' integer ')' expr
-    { $$ = $integer.concat($line).concat([['DUP'], ['LOAD', 0], ['EQ'], ['NOT'], ['JZ', $expr.length + 2]]).concat($expr).concat([['DEC'], ['JMP', -1 -($expr.length + 7)], ['POP']]); }
+    { $$ = $line.concat($integer).concat([['DUP'], ['LOAD', 0], ['EQ'], ['NOT'], ['JZ', $expr.length + 2]]).concat($expr).concat([['DEC'], ['JMP', -1 -($expr.length + 6)], ['POP']]); }
   ;
 
 term

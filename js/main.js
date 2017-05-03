@@ -497,7 +497,6 @@ $(document)
                   'El número de parámetros de la llamada a función no coincide con el de su declaración',
               'Prototype parameter mismatch':
                   'El número de parámetros de la función no coincide con el de su prototipo',
-              'Unknown function': 'Función desconocida',
               'Undefined function': 'Función no definida',
               'Unknown variable': 'Variable desconocida'
             };
