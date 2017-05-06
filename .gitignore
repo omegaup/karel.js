@@ -1,6 +1,8 @@
 *.geany
 *.pyc
 dist/
+env/
+*driver.log
 karel.js-*.tgz
 karel.js.zip
 node_modules

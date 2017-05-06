@@ -562,6 +562,12 @@ var World = function(w, h) {
   self.init(w, h);
 };
 
+World.prototype.reset = function() {
+  var self = this;
+
+  self.init(self.w, self.h);
+};
+
 World.prototype.init = function(w, h) {
   var self = this;
 

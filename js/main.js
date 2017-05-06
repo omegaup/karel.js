@@ -1104,7 +1104,7 @@ $(document)
             }
 
             $('#ejecutar').trigger('unlock');
-            mundo = new World(100, 100);
+            mundo.reset();
             if (location.hash == '#debug') {
               mundo.runtime.debug = true;
             }
@@ -1621,6 +1621,22 @@ $(document)
             {sizes: [70, 30], direction: 'vertical'});
       recalcDimensions();
       $(window).resize(recalcDimensions);
+
+      // Expone varias cosas para que puedan ser accedidas desde las pruebas.
+      if (window) {
+        window.state = {
+          mundo: mundo,
+          editor: editor,
+
+          init: function(world, code) {
+            $('script#xmlMundo').html(world);
+            editor.setValue(code);
+            $('#worldclean').click();
+          },
+          cleanLog: function() { $('#mensajes')
+                                     .empty(); },
+        };
+      }
     });
 
 // vim: set expandtab:ts=2:sw=2
