@@ -1030,7 +1030,7 @@ World.prototype.load = function(doc) {
       self.move(yKarel, xKarel);
       var bagBuzzers = programa.getAttribute('mochilaKarel') ||
                        programa.getAttribute('mochilakarel') || 0;
-      if (bagBuzzers == 'INFINITO') {
+      if (bagBuzzers == 'INFINITO' || bagBuzzers == 'INFINITOS') {
         self.setBagBuzzers(-1);
       } else {
         self.setBagBuzzers(parseInt(bagBuzzers));
