@@ -25,6 +25,7 @@ _EMPTY_WORLD = '''
   </programas>
 </ejecucion>'''  # noqa
 
+
 def _init(driver, world, code, delay=1):
     '''Replaces the current program code with |code|.'''
 
@@ -32,11 +33,13 @@ def _init(driver, world, code, delay=1):
     driver.browser.find_element_by_id('retraso_txt').clear()
     driver.browser.find_element_by_id('retraso_txt').send_keys(str(delay))
 
+
 def _clean_state(driver):
     '''Cleans the state of the runtime.'''
 
     driver.browser.find_element_by_id('worldclean').click()
     driver.browser.execute_script('window.state.cleanLog();')
+
 
 def _wait_for_log_message(driver, message):
     '''Waits until |message| is posted to the log.'''
@@ -48,6 +51,7 @@ def _wait_for_log_message(driver, message):
     except TimeoutException as timeout:
         timeout.msg = driver.browser.find_element_by_id('mensajes').text
         raise timeout
+
 
 def test_smoke(driver):
     '''Tests basic functionality.'''

@@ -16,12 +16,14 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.wait import WebDriverWait
 
+
 _DEFAULT_TIMEOUT = 3  # seconds
 _CI = os.environ.get('CONTINUOUS_INTEGRATION') == 'true'
 _DIRNAME = os.path.dirname(__file__)
 _ROOT = os.path.abspath(os.path.join(_DIRNAME, '..'))
 _SUCCESS = True
 _WINDOW_SIZE = (1920, 1080)
+
 
 class Driver(object):
     '''Wraps the state needed to run a test.'''
@@ -46,7 +48,7 @@ class Driver(object):
         '''Asserts that evaluating the JavaScript |script| returns true.'''
 
         assert self.browser.execute_script('return !!(%s);' % script), \
-               'Evaluation of `%s` returned false' % script
+            'Evaluation of `%s` returned false' % script
 
     def assert_script_equal(self, script, value):
         '''Asserts that evaluating the JavaScript |script| returns true.'''
@@ -69,6 +71,7 @@ class Driver(object):
             lambda _: self.browser.execute_script(
                 'return document.readyState;') == 'complete')
 
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_pyfunc_call(pyfuncitem):
     '''Takes a screenshot and grabs console logs on test failures.'''
@@ -80,7 +83,7 @@ def pytest_pyfunc_call(pyfuncitem):
     if not outcome.excinfo:
         return
     _SUCCESS = False
-    if not 'driver' in pyfuncitem.funcargs:
+    if 'driver' not in pyfuncitem.funcargs:
         return
     try:
         driver = pyfuncitem.funcargs['driver']
@@ -102,6 +105,7 @@ def pytest_pyfunc_call(pyfuncitem):
     except Exception as ex:
         print(ex)
 
+
 def pytest_addoption(parser):
     '''Allow configuration of test invocation.'''
 
@@ -109,6 +113,7 @@ def pytest_addoption(parser):
                      help='The browsers that the test will run against')
     parser.addoption('--disable-headless', action='store_false',
                      dest='headless', help='Show the browser window')
+
 
 def pytest_generate_tests(metafunc):
     '''Parameterize the tests with the browsers.'''
@@ -119,6 +124,7 @@ def pytest_generate_tests(metafunc):
     if 'driver' in metafunc.fixturenames:
         metafunc.parametrize('browser', metafunc.config.option.browsers,
                              scope='session')
+
 
 @pytest.yield_fixture(scope='session')
 def driver(request, browser):
