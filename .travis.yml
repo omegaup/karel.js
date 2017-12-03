@@ -8,7 +8,8 @@ node_js:
   - "node"
 
 addons:
-  firefox: "latest"
+  firefox: latest
+  chrome: stable
   apt:
     sources:
       - ubuntu-toolchain-r-test
@@ -22,21 +23,22 @@ addons:
       - python3-pip
 
 before_install:
-  - "export DISPLAY=:99.0"
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
-  - sleep 3 # give xvfb some time to start
-  - wget https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-linux64.tar.gz
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
   - mkdir geckodriver
-  - tar -xf geckodriver-v0.16.1-linux64.tar.gz -C geckodriver
-  - export PATH=$PATH:$PWD/geckodriver
+  - tar -xf geckodriver-v0.19.1-linux64.tar.gz -C geckodriver
+  - wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
+  - mkdir chromedriver
+  - unzip chromedriver_linux64.zip chromedriver -d chromedriver
+  - export PATH=$PATH:$PWD/geckodriver:$PWD/chromedriver
   - pip install --user six
   - pip install --user https://github.com/google/closure-linter/zipball/master
   - pip3 install --user selenium
+  - pip3 install --user pytest
 
 script:
   - npm test
   - python2.7 libkarel/libkarel_test.py
-  - python3 test/webdriver.py
+  - python3 -m pytest test/
   - pylint --rcfile=libkarel/.pylintrc libkarel/libkarel.py libkarel/libkarel_test.py
-  - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py test/webdriver.py
+  - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py test/conftest.py test/test_webdriver.py
   - hook_tools/lint.py validate --all
