@@ -29,7 +29,7 @@ before_install:
   - wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
   - mkdir chromedriver
   - unzip chromedriver_linux64.zip chromedriver -d chromedriver
-  - export PATH=$PATH:$PWD/geckodriver:$PATH/chromedriver
+  - export PATH=$PATH:$PWD/geckodriver:$PWD/chromedriver
   - pip install --user six
   - pip install --user https://github.com/google/closure-linter/zipball/master
   - pip3 install --user selenium
@@ -40,5 +40,5 @@ script:
   - python2.7 libkarel/libkarel_test.py
   - python3 -m pytest test/
   - pylint --rcfile=libkarel/.pylintrc libkarel/libkarel.py libkarel/libkarel_test.py
-  - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py test/webdriver.py
+  - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py test/conftest.py test/test_webdriver.py
   - hook_tools/lint.py validate --all
