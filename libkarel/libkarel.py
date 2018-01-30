@@ -14,6 +14,19 @@ def load():
                 sys.argv[1])
 
 
+def load_dict():
+    """Regresa un diccionario con información sobre la ejecución actual"""
+    result = {
+        'case_name': sys.argv[1],
+        'contestant_output': KarelOutput(sys.stdin.read())
+    }
+    with open('data.in', 'r') as data_in:
+        result['case_input'] = KarelInput(data_in.read())
+    with open('data.out', 'r') as data_out:
+        result['case_output'] = KarelOutput(data_out.read())
+    return result
+
+
 class KarelInput(object):
     """Representa un archivo .in."""
 
@@ -152,7 +165,7 @@ class KarelInput(object):
             'mochila': self.mochila,
             'direccion': self.direccion,
             'despliega': self.despliega,
-        }.iteritems())
+        }.items())
 
 
 class KarelOutput(object):
@@ -262,6 +275,6 @@ class KarelOutput(object):
             'direccion': self.direccion,
             'resultado': self.resultado,
             'error': self.error,
-        }.iteritems())
+        }.items())
 
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
