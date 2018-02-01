@@ -26,7 +26,7 @@ before_install:
   - wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
   - mkdir geckodriver
   - tar -xf geckodriver-v0.19.1-linux64.tar.gz -C geckodriver
-  - wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
+  - wget https://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip
   - mkdir chromedriver
   - unzip chromedriver_linux64.zip chromedriver -d chromedriver
   - export PATH=$PATH:$PWD/geckodriver:$PWD/chromedriver
@@ -38,7 +38,7 @@ before_install:
 script:
   - npm test
   - python2.7 libkarel/libkarel_test.py
-  - python3 -m pytest test/
+  - python3 -m pytest test/ --browser=firefox
   - pylint --rcfile=libkarel/.pylintrc libkarel/libkarel.py libkarel/libkarel_test.py
   - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py test/conftest.py test/test_webdriver.py
   - hook_tools/lint.py validate --all
