@@ -1103,7 +1103,6 @@ $(document)
                                      'karel-current-line');
             }
 	    mundo = new World(100, 100);
-
             $('#ejecutar').trigger('unlock');
             mundo.reset();
             if (location.hash == '#debug') {
