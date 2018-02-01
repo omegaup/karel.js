@@ -1101,8 +1101,8 @@ $(document)
             if (linea_actual != null) {
               editor.removeLineClass(linea_actual, 'background',
                                      'karel-current-line');
-            } 
-	    mundo = new World(100, 100);
+            }
+			mundo = new World(100, 100);
             $('#ejecutar').trigger('unlock');
             mundo.reset();
             if (location.hash == '#debug') {
