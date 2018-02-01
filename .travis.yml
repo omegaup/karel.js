@@ -9,7 +9,7 @@ node_js:
 
 addons:
   firefox: latest
-  chrome: beta
+  chrome: stable
   apt:
     sources:
       - ubuntu-toolchain-r-test
@@ -38,7 +38,7 @@ before_install:
 script:
   - npm test
   - python2.7 libkarel/libkarel_test.py
-  - python3 -m pytest test/
+  - python3 -m pytest test/ --browser=firefox
   - pylint --rcfile=libkarel/.pylintrc libkarel/libkarel.py libkarel/libkarel_test.py
   - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py test/conftest.py test/test_webdriver.py
   - hook_tools/lint.py validate --all
