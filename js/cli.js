@@ -58,6 +58,22 @@ nomnom.command('draw')
               type: 'string',
               help: 'output file. Default is <world>.png.'
             })
+    .option('width',
+            {
+              abbr: 'w',
+              position: 3,
+              required: false,
+              type: 'string',
+              help: 'width to draw, in cells'
+            })
+    .option('height',
+            {
+              abbr: 'h',
+              position: 4,
+              required: false,
+              type: 'string',
+              help: 'height to draw, in cells'
+            })
     .help('draw a world input file as a png');
 
 var opts = nomnom.script('karel.js')
@@ -134,8 +150,8 @@ if (opts['0'] == 'compile') {
   var world = new karel.World(100, 100);
   world.load(worldXml);
 
-  var height = parseInt(world.XMLheight);
-  var width = parseInt(world.XMLwidth);
+  var height = parseInt(opts.height || world.XMLheight);
+  var width = parseInt(opts.width || world.XMLwidth);
 
   var imgheight = 30 * (height + 1) + 15;
   var imgwidth = 30 * (width + 1) + 15;
@@ -149,7 +165,7 @@ if (opts['0'] == 'compile') {
 
   var ctx = canvas.getContext('2d');
 
-  var renderer = new WorldRender(ctx, imgheight, imgwidth);
+  var renderer = new WorldRender(ctx, world.XMLheight, world.XMLwidth);
 
   renderer.paint(world, imgwidth, imgheight);
 } else {
