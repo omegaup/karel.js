@@ -916,6 +916,9 @@ World.prototype.load = function(doc) {
         return;
       }
 
+      self.XMLheight = alto;
+      self.XMLwidth = ancho;
+
       for (var i = 1; i <= alto; i++) {
         self.addWall(i, 1, 0);
         self.addWall(i, ancho, 2);

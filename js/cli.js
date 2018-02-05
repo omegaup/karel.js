@@ -2,8 +2,10 @@
 
 var fs = require('fs');
 var karel = require('./karel.js');
+var WorldRender = require('./mundo.js').WorldRender;
 var version = require('../package.json').version;
 var DOMParser = require('xmldom').DOMParser;
+var Canvas = require('canvas-prebuilt');
 
 var nomnom = require('nomnom');
 
@@ -38,6 +40,25 @@ nomnom.command('run')
               help: 'the program you want to run'
             })
     .help('run a compiled karel program');
+
+nomnom.command('draw')
+    .option('world',
+            {
+              abbr: 'w',
+              position: 1,
+              required: true,
+              type: 'string',
+              help: 'the world to be rendered'
+            })
+    .option('output',
+            {
+              abbr: 'o',
+              position: 2,
+              required: false,
+              type: 'string',
+              help: 'output file. Default is <world>.png.'
+            })
+    .help('draw a world input file as a png');
 
 var opts = nomnom.script('karel.js')
                .option('verbose',
@@ -102,6 +123,39 @@ if (opts['0'] == 'compile') {
   }
 
   fs.writeFileSync(output, JSON.stringify(program));
+} else if (opts['0'] == 'draw') {
+  var outputFile = opts.output || opts.world.replace(/[^.]*$/, "png");
+
+  var out = fs.createWriteStream(outputFile, {encoding: 'binary'});
+
+  var worldXml = new DOMParser().parseFromString(
+      fs.readFileSync(opts.world, {encoding: 'utf-8'}), 'text/xml');
+
+  var world = new karel.World(100, 100);
+  world.load(worldXml);
+
+  var height = parseInt(world.XMLheight);
+  var width = parseInt(world.XMLwidth);
+
+  var imgheight = 30 * (height + 1) + 15;
+  var imgwidth = 30 * (width + 1) + 15;
+
+  var canvas = new Canvas(imgwidth, imgheight);
+  var stream = canvas.pngStream();
+
+  stream.on('data', function(chunk){
+    out.write(chunk);
+  });
+
+  stream.on('end', function(){
+    out.end();
+  });
+
+  var ctx = canvas.getContext('2d');
+
+  var renderer = new WorldRender(ctx, imgheight, imgwidth);
+
+  renderer.paint(world, imgwidth, imgheight);
 } else {
   var program = JSON.parse(fs.readFileSync(opts.program, {encoding: 'utf-8'}));
   var worldXml = new DOMParser().parseFromString(

@@ -47,7 +47,8 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "commander": "^2.9.0",
-    "xmldom": "^0.1.27"
+    "xmldom": "^0.1.27",
+    "canvas-prebuilt": "^1.6"
   },
   "keywords": [
     "karel"
