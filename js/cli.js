@@ -124,7 +124,7 @@ if (opts['0'] == 'compile') {
 
   fs.writeFileSync(output, JSON.stringify(program));
 } else if (opts['0'] == 'draw') {
-  var outputFile = opts.output || opts.world.replace(/[^.]*$/, "png");
+  var outputFile = opts.output || opts.world.replace(/[^.]*$/, 'png');
 
   var out = fs.createWriteStream(outputFile, {encoding: 'binary'});
 
@@ -143,13 +143,9 @@ if (opts['0'] == 'compile') {
   var canvas = new Canvas(imgwidth, imgheight);
   var stream = canvas.pngStream();
 
-  stream.on('data', function(chunk){
-    out.write(chunk);
-  });
+  stream.on('data', function(chunk) { out.write(chunk); });
 
-  stream.on('end', function(){
-    out.end();
-  });
+  stream.on('end', function() { out.end(); });
 
   var ctx = canvas.getContext('2d');
 
