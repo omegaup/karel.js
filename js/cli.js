@@ -46,9 +46,10 @@ nomnom.command('draw')
             {
               abbr: 'w',
               position: 1,
-              required: true,
+              required: false,
               type: 'string',
-              help: 'the world to be rendered'
+              default: '/dev/stdin',
+              help: 'the world to be rendered. Defaults to stdin.'
             })
     .option('output',
             {
