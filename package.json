@@ -33,7 +33,7 @@
     }
   },
   "bin": {
-    "kareljs": "./cmd/kareljs"
+    "kareljs": "./js/cli.js"
   },
   "repository": {
     "type": "git",
