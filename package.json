@@ -46,7 +46,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "commander": "^2.9.0",
+    "nomnom": "^1.8.1",
     "xmldom": "^0.1.27",
     "canvas-prebuilt": "^1.6"
   },
