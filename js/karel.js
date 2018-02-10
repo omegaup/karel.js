@@ -156,7 +156,7 @@ Runtime.prototype.load = function(opcodes) {
   var function_map = {};
   self.function_names = [];
   var function_idx = 0;
-  self.program = new Int16Array(new ArrayBuffer(opcodes.length * 6));
+  self.program = new Int32Array(new ArrayBuffer(opcodes.length * 3 * 4));
   for (var i = 0; i < opcodes.length; i++) {
     self.program[3 * i] = opcode_mapping.indexOf(opcodes[i][0]);
     if (opcodes[i].length > 1) {
@@ -192,7 +192,7 @@ Runtime.prototype.reset = function() {
     fp: -1,
     line: -1,
     ic: 0,
-    stack: new Int32Array(new ArrayBuffer(0xffff * 16 + 40)),
+    stack: new Int32Array(new ArrayBuffer((0xffff * 16 + 40) * 4)),
     stackSize: 0,
 
     // Instruction counts
@@ -529,17 +529,11 @@ Runtime.prototype.next = function() {
     }
 
     if (self.debug) {
-      var subarray = [];
-      for (var i = 0; i <= self.state.sp; i++) {
-        subarray.push(self.state.stack[i]);
-      }
       var copy = {
         pc: self.state.pc,
-        sp: self.state.sp,
-        fp: self.state.fp,
+        stackSize: self.state.stackSize,
         line: self.state.line,
         ic: self.state.ic,
-        stack: subarray,
         running: self.state.running
       };
       self.fireEvent(
@@ -958,7 +952,14 @@ World.prototype.load = function(doc) {
     monton: function(monton) {
       var i = parseInt(monton.getAttribute('y'), 10);
       var j = parseInt(monton.getAttribute('x'), 10);
-      self.setBuzzers(i, j, parseInt(monton.getAttribute('zumbadores'), 10));
+      var zumbadores = monton.getAttribute('zumbadores');
+      if (zumbadores == 'INFINITO') {
+        zumbadores = -1;
+      } else {
+        zumbadores = parseInt(zumbadores, 10);
+        if (isNaN(zumbadores)) zumbadores = 0;
+      }
+      self.setBuzzers(i, j, zumbadores);
     },
 
     pared: function(pared) {
@@ -1352,7 +1353,8 @@ World.prototype.rotate = function(orientation) {
 World.prototype.setBagBuzzers = function(buzzers) {
   var self = this;
 
-  self.bagBuzzers = self.startBagBuzzers = buzzers == 0xffff ? -1 : buzzers;
+  if (isNaN(buzzers)) buzzers = 0;
+  self.bagBuzzers = self.startBagBuzzers = (buzzers == 0xffff ? -1 : buzzers);
   self.dirty = true;
 };
 
