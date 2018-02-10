@@ -532,6 +532,8 @@ Runtime.prototype.next = function() {
       var copy = {
         pc: self.state.pc,
         stackSize: self.state.stackSize,
+        expressionStack: Array.from(
+            self.state.stack.slice(self.state.fp + 4, self.state.sp + 1)),
         line: self.state.line,
         ic: self.state.ic,
         running: self.state.running
