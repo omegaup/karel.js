@@ -15,6 +15,23 @@ namespace karel {
 
 namespace {
 
+constexpr bool kDebug = false;
+
+std::string Stringify(const std::vector<int32_t>& expression_stack) {
+  std::ostringstream buffer;
+  buffer << "[";
+  bool first = true;
+  for (int32_t val : expression_stack) {
+    if (first)
+      first = false;
+    else
+      buffer << ",";
+    buffer << val;
+  }
+  buffer << "]";
+  return buffer.str();
+}
+
 std::experimental::optional<Opcode> ParseOpcode(
     std::experimental::string_view name) {
   if (name == "HALT")
@@ -199,6 +216,7 @@ std::experimental::optional<Instruction> ParseInstruction(
 struct StackFrame {
   int32_t pc;
   int32_t param;
+  size_t sp;
 };
 
 }  // namespace
@@ -235,13 +253,19 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
   int32_t pc = 0;
   size_t ic = 0;
   std::stack<StackFrame> function_stack;
-  std::stack<int32_t> expression_stack;
+  std::vector<int32_t> expression_stack;
 
   while (static_cast<size_t>(pc) < program.size()) {
     if (ic >= runtime->instruction_limit)
       return RunResult::INSTRUCTION;
 
     const auto& curr = program[pc];
+    if (kDebug) {
+      fprintf(stdout, "opcode \"%d %s,%d\"\n",
+              static_cast<int32_t>(curr.opcode),
+              kOpcodeNames[static_cast<int32_t>(curr.opcode)], curr.arg);
+      fflush(stdout);
+    }
     switch (curr.opcode) {
       case Opcode::HALT:
         return RunResult::OK;
@@ -258,15 +282,15 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         break;
 
       case Opcode::LOAD:
-        expression_stack.emplace(curr.arg);
+        expression_stack.emplace_back(curr.arg);
         break;
 
       case Opcode::CALL: {
         ic++;
-        int32_t param = expression_stack.top();
-        expression_stack.pop();
+        int32_t param = expression_stack.back();
+        expression_stack.pop_back();
 
-        function_stack.emplace(StackFrame{pc, param});
+        function_stack.emplace(StackFrame{pc, param, expression_stack.size()});
         pc = curr.arg - 1;
 
         if (function_stack.size() >= runtime->stack_limit)
@@ -278,77 +302,80 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
       case Opcode::RET: {
         if (function_stack.empty())
           return RunResult::OK;
-        pc = function_stack.top().pc;
+        StackFrame& frame = function_stack.top();
+        pc = frame.pc;
+        if (expression_stack.size() > frame.sp)
+          expression_stack.resize(frame.sp);
         function_stack.pop();
 
         break;
       }
 
       case Opcode::WORLDWALLS:
-        expression_stack.emplace(runtime->get_walls());
+        expression_stack.emplace_back(runtime->get_walls());
         break;
 
       case Opcode::ORIENTATION:
-        expression_stack.emplace(runtime->orientation);
+        expression_stack.emplace_back(runtime->orientation);
         break;
 
       case Opcode::ROTL: {
-        int32_t op = expression_stack.top();
-        expression_stack.top() = (op + 3) & 3;
+        int32_t op = expression_stack.back();
+        expression_stack.back() = (op + 3) & 3;
         break;
       }
 
       case Opcode::ROTR: {
-        int32_t op = expression_stack.top();
-        expression_stack.top() = (op + 1) & 3;
+        int32_t op = expression_stack.back();
+        expression_stack.back() = (op + 1) & 3;
         break;
       }
 
       case Opcode::MASK: {
-        int32_t op = expression_stack.top();
-        expression_stack.top() = 1 << op;
+        int32_t op = expression_stack.back();
+        expression_stack.back() = 1 << op;
         break;
       }
 
       case Opcode::NOT: {
-        int32_t op = expression_stack.top();
-        expression_stack.top() = (op == 0) ? 1 : 0;
+        int32_t op = expression_stack.back();
+        expression_stack.back() = (op == 0) ? 1 : 0;
         break;
       }
 
       case Opcode::AND: {
-        int32_t op2 = expression_stack.top();
-        expression_stack.pop();
-        int32_t op1 = expression_stack.top();
-        expression_stack.top() = (op1 & op2) ? 1 : 0;
+        int32_t op2 = expression_stack.back();
+        expression_stack.pop_back();
+        int32_t op1 = expression_stack.back();
+        expression_stack.back() = (op1 & op2) ? 1 : 0;
         break;
       }
 
       case Opcode::OR: {
-        int32_t op2 = expression_stack.top();
-        expression_stack.pop();
-        int32_t op1 = expression_stack.top();
-        expression_stack.top() = (op1 | op2) ? 1 : 0;
+        int32_t op2 = expression_stack.back();
+        expression_stack.pop_back();
+        int32_t op1 = expression_stack.back();
+        expression_stack.back() = (op1 | op2) ? 1 : 0;
         break;
       }
 
       case Opcode::EQ: {
-        int32_t op2 = expression_stack.top();
-        expression_stack.pop();
-        int32_t op1 = expression_stack.top();
-        expression_stack.top() = (op1 == op2) ? 1 : 0;
+        int32_t op2 = expression_stack.back();
+        expression_stack.pop_back();
+        int32_t op1 = expression_stack.back();
+        expression_stack.back() = (op1 == op2) ? 1 : 0;
         break;
       }
 
       case Opcode::JZ:
         ic++;
-        if (expression_stack.top() == 0)
+        if (expression_stack.back() == 0)
           pc += curr.arg;
-        expression_stack.pop();
+        expression_stack.pop_back();
         break;
 
       case Opcode::WORLDBUZZERS:
-        expression_stack.emplace(runtime->get_buzzers());
+        expression_stack.emplace_back(runtime->get_buzzers());
         break;
 
       case Opcode::FORWARD: {
@@ -363,7 +390,7 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
       }
 
       case Opcode::BAGBUZZERS:
-        expression_stack.emplace(runtime->bag);
+        expression_stack.emplace_back(runtime->bag);
         break;
 
       case Opcode::JMP:
@@ -390,34 +417,45 @@ RunResult Run(const std::vector<Instruction>& program, Runtime* runtime) {
         break;
 
       case Opcode::EZ: {
-        if (expression_stack.top() == 0)
+        if (expression_stack.back() == 0)
           return static_cast<RunResult>(curr.arg);
-        expression_stack.pop();
+        expression_stack.pop_back();
         break;
       }
 
       case Opcode::POP:
-        expression_stack.pop();
+        expression_stack.pop_back();
         break;
 
       case Opcode::DUP:
-        expression_stack.emplace(expression_stack.top());
+        expression_stack.emplace_back(expression_stack.back());
         break;
 
       case Opcode::DEC:
-        expression_stack.top()--;
+        expression_stack.back()--;
         break;
 
       case Opcode::INC:
-        expression_stack.top()++;
+        expression_stack.back()++;
         break;
 
       case Opcode::PARAM:
-        expression_stack.emplace(function_stack.top().param);
+        expression_stack.emplace_back(function_stack.top().param);
         break;
     }
 
     pc++;
+
+    if (kDebug) {
+      fprintf(stdout,
+              "state "
+              "{\"pc\":%d,\"stackSize\":%zu,\"expressionStack\":%s\"line\":%zu,"
+              "\"ic\":%zu,\"running\":"
+              "true}\n",
+              pc, function_stack.size(), Stringify(expression_stack).c_str(),
+              runtime->line, ic);
+      fflush(stdout);
+    }
   }
 
   return RunResult::OK;

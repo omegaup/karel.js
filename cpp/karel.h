@@ -38,6 +38,14 @@ enum class Opcode : uint32_t {
   PARAM
 };
 
+constexpr const char* kOpcodeNames[] = {
+    "HALT",    "LINE",         "LEFT",       "WORLDWALLS", "ORIENTATION",
+    "ROTL",    "ROTR",         "MASK",       "NOT",        "AND",
+    "OR",      "EQ",           "EZ",         "JZ",         "JMP",
+    "FORWARD", "WORLDBUZZERS", "BAGBUZZERS", "PICKBUZZER", "LEAVEBUZZER",
+    "LOAD",    "POP",          "DUP",        "DEC",        "INC",
+    "CALL",    "RET",          "PARAM"};
+
 struct Instruction {
   Opcode opcode = Opcode::HALT;
   int32_t arg = 0;
