@@ -579,7 +579,6 @@ World.prototype.init = function(w, h) {
     self.map = [];
     self.currentMap = [];
     self.wallMap = [];
-
     for (var i = 0; i <= self.h; i++) {
       for (var j = 0; j <= self.w; j++) {
         self.map.push(0);
@@ -591,6 +590,59 @@ World.prototype.init = function(w, h) {
 
   self.clear();
 };
+
+World.prototype.resize = function(w, h) {
+  var self = this;
+  var newWallMap = [];
+  var newMap = [];
+  var newCurrentMap = [];
+
+  for (var i = 1; i <= self.h; i++) {
+    self.wallMap[parseInt(self.w) * i + 1] ^= (1 << 0);
+    self.wallMap[parseInt(self.w) * (i + 1)] ^= (1 << 2);
+  }
+
+  for (var j = 1; j <= self.w; j++) {
+    self.wallMap[parseInt(self.w) * parseInt(self.h) + j] ^= (1 << 1);
+    self.wallMap[parseInt(self.w) + j] ^= (1 << 3);
+  }
+
+  for(var i = 1; i <= h; i++) {
+    for(var j = 1; j <= w; j++) {
+      newWallMap[w * i + j] = self.walls(i, j);
+      newMap[w * i + j] = newCurrentMap[w * i + j] = self.buzzers(i, j);
+    }
+  }
+
+  self.wallMap = newWallMap;
+  self.map = newMap;
+  self.currentMap = newCurrentMap;
+  self.w = w;
+  self.h = h;
+
+  for (var i = 1; i <= self.h; i++) {
+    self.addWall(parseInt(i), 1, 0);
+    self.addWall(parseInt(i), parseInt(self.w), 2);
+  }
+
+  for (var j = 1; j <= self.w; j++) {
+    self.addWall(parseInt(self.h), parseInt(j), 1);
+    self.addWall(1, parseInt(j), 3);
+  }
+
+  if(self.start_i > self.h) {
+    self.start_i = self.i = parseInt(self.h);
+  }
+
+  if(self.start_j > self.w) {
+    self.start_j = self.j = parseInt(self.w);
+  }
+
+  self.dumps = {};
+  self.dumpCells = [];
+
+  self.dirty = true;
+}
 
 World.prototype.clear = function() {
   var self = this;
@@ -604,13 +656,13 @@ World.prototype.clear = function() {
   }
 
   for (var i = 1; i <= self.h; i++) {
-    self.addWall(i, 1, 0);
-    self.addWall(i, self.w, 2);
+    self.addWall(parseInt(i), 1, 0);
+    self.addWall(parseInt(i), parseInt(self.w), 2);
   }
 
   for (var j = 1; j <= self.w; j++) {
-    self.addWall(self.h, j, 1);
-    self.addWall(1, j, 3);
+    self.addWall(parseInt(self.h), parseInt(j), 1);
+    self.addWall(1, parseInt(j), 3);
   }
 
   self.orientation = 1;
@@ -751,9 +803,9 @@ World.prototype.toggleWall = function(i, j, orientation) {
 
   if (orientation === 0 && j > 1) {
     self.wallMap[self.w * i + (j - 1)] ^= (1 << 2);
-  } else if (orientation === 1 && i <= self.h) {
+  } else if (orientation === 1 && i < self.h) {
     self.wallMap[self.w * (i + 1) + j] ^= (1 << 3);
-  } else if (orientation === 2 && j <= self.w) {
+  } else if (orientation === 2 && j < self.w) {
     self.wallMap[self.w * i + (j + 1)] ^= (1 << 0);
   } else if (orientation === 3 && i > 1) {
     self.wallMap[self.w * (i - 1) + j] ^= (1 << 1);
@@ -772,9 +824,9 @@ World.prototype.addWall = function(i, j, orientation) {
 
   if (orientation === 0 && j > 1)
     self.wallMap[self.w * i + (j - 1)] |= (1 << 2);
-  else if (orientation === 1 && i <= self.h)
+  else if (orientation === 1 && i < self.h)
     self.wallMap[self.w * (i + 1) + j] |= (1 << 3);
-  else if (orientation === 2 && j <= self.w)
+  else if (orientation === 2 && j < self.w)
     self.wallMap[self.w * i + (j + 1)] |= (1 << 0);
   else if (orientation === 3 && i > 1)
     self.wallMap[self.w * (i - 1) + j] |= (1 << 1);
@@ -900,8 +952,8 @@ World.prototype.load = function(doc) {
 
   var rules = {
     mundo: function(mundo) {
-      var alto = mundo.getAttribute('alto');
-      var ancho = mundo.getAttribute('ancho');
+      var alto = parseInt(mundo.getAttribute('alto'));
+      var ancho = parseInt(mundo.getAttribute('ancho'));
 
       if (!alto || !ancho) {
         return;
@@ -911,16 +963,7 @@ World.prototype.load = function(doc) {
       if (!alto || !ancho) {
         return;
       }
-
-      for (var i = 1; i <= alto; i++) {
-        self.addWall(i, 1, 0);
-        self.addWall(i, ancho, 2);
-      }
-
-      for (var j = 1; j <= ancho; j++) {
-        self.addWall(alto, j, 1);
-        self.addWall(1, j, 3);
-      }
+      self.resize(ancho, alto);
     },
 
     condiciones: function(condiciones) {

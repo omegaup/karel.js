@@ -354,13 +354,15 @@ $(document)
       }
 
       var world = $('#world')[0];
+      var h = 100;
+      var w = 100;
       var context = world.getContext('2d');
-      var wRender = new WorldRender(context, 100, 100);
+      var wRender = new WorldRender(context, w, h);
       var borrar_zumbadores = false;
       var zumbadores_anterior = 0;
       var fila_evento;
       var columna_evento;
-      var mundo = new World(100, 100);
+      var mundo = new World(w, h);
       if (location.hash == '#debug') {
         mundo.runtime.debug = true;
       }
@@ -757,6 +759,8 @@ $(document)
             $('#evaluacion').attr('disabled', 'disabled');
             $('#quitar_zumbadores').attr('disabled', 'disabled');
             $('#mochila').attr('disabled', 'disabled');
+            $('#filas').attr('disabled', 'disabled');
+            $('#columnas').attr('disabled', 'disabled');
             $('#inf_zumbadores').attr('disabled', 'disabled');
             $('#paso').attr('disabled', 'disabled');
             $('#worldclean').attr('disabled', 'disabled');
@@ -782,6 +786,8 @@ $(document)
             $('#evaluacion').removeAttr('disabled');
             $('#quitar_zumbadores').removeAttr('disabled');
             $('#mochila').removeAttr('disabled');
+            $('#filas').removeAttr('disabled');
+            $('#columnas').removeAttr('disabled');
             $('#inf_zumbadores').removeAttr('disabled');
             $('#paso').removeAttr('disabled');
             $('#worldclean').removeAttr('disabled');
@@ -1052,6 +1058,15 @@ $(document)
               src = $('script#xmlMundo').html();
             }
             mundo.load(parseWorld(src));
+            
+            if($('#filas').val() != mundo.h || $('#columnas').val() != mundo.w) {
+              $('#filas').val(mundo.h);
+              h = mundo.h;
+              $('#columnas').val(mundo.w);
+              w = mundo.w;
+              wRender = new WorldRender(context, w, h);
+            }
+
             if (mundo.bagBuzzers == -1 !=
                 $('#inf_zumbadores').hasClass('active')) {
               $('#inf_zumbadores').toggleClass('active');
@@ -1102,7 +1117,7 @@ $(document)
               editor.removeLineClass(linea_actual, 'background',
                                      'karel-current-line');
             }
-            mundo = new World(100, 100);
+            mundo = new World(w, h);
             $('#ejecutar').trigger('unlock');
             mundo.reset();
             if (location.hash == '#debug') {
@@ -1333,14 +1348,14 @@ $(document)
       $('#world');
       [0].onmousewheel = function(event) {
         if (event.wheelDeltaX < 0 &&
-            (wRender.primera_columna + wRender.num_columnas) < 102) {
+            (wRender.primera_columna + wRender.num_columnas) < w + 2) {
           wRender.primera_columna += 1;
         } else if (event.wheelDeltaX > 0 && wRender.primera_columna > 1) {
           wRender.primera_columna -= 1;
         }
 
         if (event.wheelDeltaY > 0 &&
-            (wRender.primera_fila + wRender.num_filas) < 102) {
+            (wRender.primera_fila + wRender.num_filas) < h + 2) {
           wRender.primera_fila += 1;
         } else if (event.wheelDeltaY < 0 && wRender.primera_fila > 1) {
           wRender.primera_fila -= 1;
@@ -1357,7 +1372,7 @@ $(document)
             var y = event.gesture.deltaY % 2;
 
             if (event.gesture.deltaX < 0 &&
-                (wRender.primera_columna + wRender.num_columnas) < 102 &&
+                (wRender.primera_columna + wRender.num_columnas) < w + 2 &&
                 x == 0) {
               wRender.primera_columna += 1;
             } else if (event.gesture.deltaX > 0 &&
@@ -1366,7 +1381,7 @@ $(document)
             }
 
             if (event.gesture.deltaY > 0 &&
-                (wRender.primera_fila + wRender.num_filas) < 102 && y == 0) {
+                (wRender.primera_fila + wRender.num_filas) < h + 2 && y == 0) {
               wRender.primera_fila += 1;
             } else if (event.gesture.deltaY < 0 && wRender.primera_fila > 1 &&
                        y == 0) {
@@ -1393,7 +1408,34 @@ $(document)
             $(document.body).css('cursor', 'auto');
             currentCell = undefined;
           });
-
+      $('#filas')
+          .blur(function(event) {
+            if($(this).val() > 0 && $(this).val() <= 10000 && $(this).val() != h) { 
+              h = $(this).val();
+              mundo.resize(w, h);
+              addEventListeners(mundo);
+              wRender = new WorldRender(context, w, h);
+              wRender.paint(mundo, world.width, world.height,
+                            {editable: true, track_karel: true});
+              $('#xmlMundo').html(mundo.save());
+            } else {
+              $(this).val(h);
+            }
+          });
+      $('#columnas')
+          .blur(function(event) {
+            if($(this).val() > 0 && $(this).val() <= 10000 && $(this).val != w) { 
+              w = $(this).val();
+              mundo.resize(w, h);
+              addEventListeners(mundo);
+              wRender = new WorldRender(context, w, h);
+              wRender.paint(mundo, world.width, world.height,
+                            {editable: true, track_karel: true});
+              $('#xmlMundo').html(mundo.save());
+            } else {
+              $(this).val(w);
+            }
+          });
       $('#inf_zumbadores')
           .click(function(event) {
             if ($(this).hasClass('active')) {  // ya hay infinitos
