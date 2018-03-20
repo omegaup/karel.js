@@ -591,22 +591,45 @@ World.prototype.init = function(w, h) {
   self.clear();
 };
 
+World.prototype.addBorderWalls = function() {
+  var self = this;
+
+  for (var i = 1; i <= self.h; i++) {
+    self.addWall(i, 1, 0);
+    self.addWall(i, self.w, 2);
+  }
+
+  for (var j = 1; j <= self.w; j++) {
+    self.addWall(self.h, j, 1);
+    self.addWall(1, j, 3);
+  }
+}
+
 World.prototype.resize = function(w, h) {
   var self = this;
-  var newWallMap = [];
-  var newMap = [];
-  var newCurrentMap = [];
+  
+  if(ArrayBuffer) {
+    var len = (w + 2) * (h + 2);
+    var newMap = new Int32Array(new ArrayBuffer(len * 4));
+    var newCurrentMap = new Int32Array(new ArrayBuffer(len * 4));
+    var newWallMap = new Uint8Array(new ArrayBuffer(len));
+  } else {
+    var newWallMap = [];
+    var newMap = [];
+    var newCurrentMap = [];
+  }
 
+  //Eliminamos las paredes del borde
   for (var i = 1; i <= self.h; i++) {
     self.wallMap[self.w * i + 1] ^= (1 << 0);
     self.wallMap[self.w * (i + 1)] ^= (1 << 2);
   }
-
   for (var j = 1; j <= self.w; j++) {
     self.wallMap[self.w * self.h + j] ^= (1 << 1);
     self.wallMap[self.w + j] ^= (1 << 3);
   }
 
+  //Copiamos todas las paredes
   for(var i = 1; i <= h; i++) {
     for(var j = 1; j <= w; j++) {
       newWallMap[w * i + j] = self.walls(i, j);
@@ -620,16 +643,9 @@ World.prototype.resize = function(w, h) {
   self.w = w;
   self.h = h;
 
-  for (var i = 1; i <= self.h; i++) {
-    self.addWall(i, 1, 0);
-    self.addWall(i, self.w, 2);
-  }
+  self.addBorderWalls();
 
-  for (var j = 1; j <= self.w; j++) {
-    self.addWall(self.h, j, 1);
-    self.addWall(1, j, 3);
-  }
-
+  //Checamos si karel sigue dentro del mundo
   if(self.start_i > self.h) 
     self.start_i = self.i = self.h;
 
@@ -654,15 +670,7 @@ World.prototype.clear = function() {
     self.map[i] = self.currentMap[i] = 0;
   }
 
-  for (var i = 1; i <= self.h; i++) {
-    self.addWall(i, 1, 0);
-    self.addWall(i, self.w, 2);
-  }
-
-  for (var j = 1; j <= self.w; j++) {
-    self.addWall(self.h, j, 1);
-    self.addWall(1, j, 3);
-  }
+  self.addBorderWalls();
 
   self.orientation = 1;
   self.startOrientation = 1;
@@ -951,8 +959,8 @@ World.prototype.load = function(doc) {
 
   var rules = {
     mundo: function(mundo) {
-      var alto = parseInt(mundo.getAttribute('alto'));
-      var ancho = parseInt(mundo.getAttribute('ancho'));
+      var alto = mundo.getAttribute('alto');
+      var ancho = mundo.getAttribute('ancho');
 
       if (!alto || !ancho) {
         return;
