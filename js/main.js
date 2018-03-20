@@ -1411,7 +1411,7 @@ $(document)
       $('#filas')
           .blur(function(event) {
             if($(this).val() > 0 && $(this).val() <= 10000 && $(this).val() != h) { 
-              h = $(this).val();
+              h = parseInt($(this).val());
               mundo.resize(w, h);
               addEventListeners(mundo);
               wRender = new WorldRender(context, w, h);
@@ -1425,7 +1425,7 @@ $(document)
       $('#columnas')
           .blur(function(event) {
             if($(this).val() > 0 && $(this).val() <= 10000 && $(this).val != w) { 
-              w = $(this).val();
+              w = parseInt($(this).val());
               mundo.resize(w, h);
               addEventListeners(mundo);
               wRender = new WorldRender(context, w, h);

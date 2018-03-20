@@ -598,13 +598,13 @@ World.prototype.resize = function(w, h) {
   var newCurrentMap = [];
 
   for (var i = 1; i <= self.h; i++) {
-    self.wallMap[parseInt(self.w) * i + 1] ^= (1 << 0);
-    self.wallMap[parseInt(self.w) * (i + 1)] ^= (1 << 2);
+    self.wallMap[self.w * i + 1] ^= (1 << 0);
+    self.wallMap[self.w * (i + 1)] ^= (1 << 2);
   }
 
   for (var j = 1; j <= self.w; j++) {
-    self.wallMap[parseInt(self.w) * parseInt(self.h) + j] ^= (1 << 1);
-    self.wallMap[parseInt(self.w) + j] ^= (1 << 3);
+    self.wallMap[self.w * self.h + j] ^= (1 << 1);
+    self.wallMap[self.w + j] ^= (1 << 3);
   }
 
   for(var i = 1; i <= h; i++) {
@@ -621,22 +621,21 @@ World.prototype.resize = function(w, h) {
   self.h = h;
 
   for (var i = 1; i <= self.h; i++) {
-    self.addWall(parseInt(i), 1, 0);
-    self.addWall(parseInt(i), parseInt(self.w), 2);
+    self.addWall(i, 1, 0);
+    self.addWall(i, self.w, 2);
   }
 
   for (var j = 1; j <= self.w; j++) {
-    self.addWall(parseInt(self.h), parseInt(j), 1);
-    self.addWall(1, parseInt(j), 3);
+    self.addWall(self.h, j, 1);
+    self.addWall(1, j, 3);
   }
 
-  if(self.start_i > self.h) {
-    self.start_i = self.i = parseInt(self.h);
-  }
+  if(self.start_i > self.h) 
+    self.start_i = self.i = self.h;
 
-  if(self.start_j > self.w) {
-    self.start_j = self.j = parseInt(self.w);
-  }
+  if(self.start_j > self.w) 
+    self.start_j = self.j = self.w;
+  
 
   self.dumps = {};
   self.dumpCells = [];
@@ -656,13 +655,13 @@ World.prototype.clear = function() {
   }
 
   for (var i = 1; i <= self.h; i++) {
-    self.addWall(parseInt(i), 1, 0);
-    self.addWall(parseInt(i), parseInt(self.w), 2);
+    self.addWall(i, 1, 0);
+    self.addWall(i, self.w, 2);
   }
 
   for (var j = 1; j <= self.w; j++) {
-    self.addWall(parseInt(self.h), parseInt(j), 1);
-    self.addWall(1, parseInt(j), 3);
+    self.addWall(self.h, j, 1);
+    self.addWall(1, j, 3);
   }
 
   self.orientation = 1;
