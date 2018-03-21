@@ -646,16 +646,16 @@ World.prototype.resize = function(w, h) {
   self.addBorderWalls();
 
   //Checamos si karel sigue dentro del mundo
-  if(self.start_i > self.h) 
+  if(self.start_i > self.h) {
     self.start_i = self.i = self.h;
+  }
 
-  if(self.start_j > self.w) 
+  if(self.start_j > self.w) {
     self.start_j = self.j = self.w;
+  }
   
-
   self.dumps = {};
   self.dumpCells = [];
-
   self.dirty = true;
 }
 
