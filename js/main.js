@@ -357,7 +357,7 @@ $(document)
       var h = 100;
       var w = 100;
       var context = world.getContext('2d');
-      var wRender = new WorldRender(context, w, h);
+      var wRender = new WorldRender(context, h, w);
       var borrar_zumbadores = false;
       var zumbadores_anterior = 0;
       var fila_evento;
@@ -1064,7 +1064,7 @@ $(document)
               h = mundo.h;
               $('#columnas').val(mundo.w);
               w = mundo.w;
-              wRender = new WorldRender(context, w, h);
+              wRender = new WorldRender(context, h, w);
             }
 
             if (mundo.bagBuzzers == -1 !=
@@ -1414,7 +1414,7 @@ $(document)
               h = parseInt($(this).val());
               mundo.resize(w, h);
               addEventListeners(mundo);
-              wRender = new WorldRender(context, w, h);
+              wRender = new WorldRender(context, h, w);
               wRender.paint(mundo, world.width, world.height,
                             {editable: true, track_karel: true});
               $('#xmlMundo').html(mundo.save());
@@ -1428,7 +1428,7 @@ $(document)
               w = parseInt($(this).val());
               mundo.resize(w, h);
               addEventListeners(mundo);
-              wRender = new WorldRender(context, w, h);
+              wRender = new WorldRender(context, h, w);
               wRender.paint(mundo, world.width, world.height,
                             {editable: true, track_karel: true});
               $('#xmlMundo').html(mundo.save());
