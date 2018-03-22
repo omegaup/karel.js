@@ -618,6 +618,7 @@ World.prototype.resize = function(w, h) {
     var newMap = [];
     var newCurrentMap = [];
   }
+  var newDumpCells = [];
 
   //Eliminamos las paredes del borde
   for (var i = 1; i <= self.h; i++) {
@@ -628,7 +629,6 @@ World.prototype.resize = function(w, h) {
     self.wallMap[self.w * self.h + j] ^= (1 << 1);
     self.wallMap[self.w + j] ^= (1 << 3);
   }
-
   //Copiamos todas las paredes
   for(var i = 1; i <= h; i++) {
     for(var j = 1; j <= w; j++) {
@@ -637,6 +637,13 @@ World.prototype.resize = function(w, h) {
     }
   }
 
+  for(var dumpPos = 0; dumpPos < self.dumpCells.length; dumpPos++) {
+    if(self.dumpCells[dumpPos][0] <= h && self.dumpCells[dumpPos][1] <= w) {
+      newDumpCells.push(self.dumpCells[dumpPos]);
+    }
+  }
+  
+  self.dumpCells = newDumpCells;
   self.wallMap = newWallMap;
   self.map = newMap;
   self.currentMap = newCurrentMap;
@@ -653,9 +660,7 @@ World.prototype.resize = function(w, h) {
   if(self.start_j > self.w) {
     self.start_j = self.j = self.w;
   }
-  
-  self.dumps = {};
-  self.dumpCells = [];
+
   self.dirty = true;
 }
 
