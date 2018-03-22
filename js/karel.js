@@ -603,22 +603,25 @@ World.prototype.addBorderWalls = function() {
     self.addWall(self.h, j, 1);
     self.addWall(1, j, 3);
   }
-}
+};
 
 World.prototype.resize = function(w, h) {
   var self = this;
   
+  var newMap;
+  var newCurrentMap;
+  var newWallMap;
+  var newDumpCells = [];
   if(ArrayBuffer) {
     var len = (w + 2) * (h + 2);
-    var newMap = new Int32Array(new ArrayBuffer(len * 4));
-    var newCurrentMap = new Int32Array(new ArrayBuffer(len * 4));
-    var newWallMap = new Uint8Array(new ArrayBuffer(len));
+    newMap = new Int32Array(new ArrayBuffer(len * 4));
+    newCurrentMap = new Int32Array(new ArrayBuffer(len * 4));
+    newWallMap = new Uint8Array(new ArrayBuffer(len));
   } else {
-    var newWallMap = [];
-    var newMap = [];
-    var newCurrentMap = [];
+    newWallMap = [];
+    newMap = [];
+    newCurrentMap = [];
   }
-  var newDumpCells = [];
 
   //Eliminamos las paredes del borde
   for (var i = 1; i <= self.h; i++) {
@@ -662,7 +665,7 @@ World.prototype.resize = function(w, h) {
   }
 
   self.dirty = true;
-}
+};
 
 World.prototype.clear = function() {
   var self = this;
