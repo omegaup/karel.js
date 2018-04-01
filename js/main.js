@@ -1134,6 +1134,9 @@ $(document)
             if ($('#orientacion_karel').hasClass('active')) {
               $('#orientacion_karel').button('toggle');
             }
+            if ($('#inf_zumbadores').hasClass('active')) {
+              $('#inf_zumbadores').button('toggle');
+            }
             if ($('#mochila_karel').hasClass('active')) {
               $('#mochila_karel').button('toggle');
             }
