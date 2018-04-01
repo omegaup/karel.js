@@ -258,6 +258,19 @@
         height: 100%;
         float: left;
       }
+
+      @media (max-width: 1199px) {
+        .visible-lg {
+          display: none;
+        }
+      }
+
+      @media (max-width: 979px) {
+        .hidden-mobile {
+          display: none;
+        }
+      }
+
   </style>
 </head>
 <body>
@@ -365,7 +378,7 @@
   <div class="container"
        style="margin-top:50px">
     <div class="row">
-      <div class="span12">
+      <div class="span12 hidden-mobile">
         <div class="btn-group">
           <button class="btn"
                data-toggle="tooltip"
@@ -413,7 +426,7 @@
                  id="inf_zumbadores">INF</button>
           </div>
         </div>
-        <div class="btn-group">
+        <div class="btn-group visible-lg">
           <div class="input-prepend input-append">
             <span class="add-on"
                  title="El tiempo (en milisegundos) de espera entre pasos de Karel">Retraso</span>
