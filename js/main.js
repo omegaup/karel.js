@@ -1414,12 +1414,13 @@ $(document)
           });
       $('#filas')
           .blur(function(event) {
-            if ($(this).val() <= 0 || $(this).val() > 10000 ||
-                $(this).val() == h) {
+            var valor = parseInt($(this).val());
+            if (0 > valor || valor > 10000 || valor == h ||
+                Number.isNaN(valor)) {
               $(this).val(h);
               return;
             }
-            h = parseInt($(this).val());
+            h = valor;
             mundo.resize(w, h);
             addEventListeners(mundo);
             wRender = new WorldRender(context, h, w);
@@ -1429,12 +1430,13 @@ $(document)
           });
       $('#columnas')
           .blur(function(event) {
-            if ($(this).val() <= 0 || $(this).val() > 10000 ||
-                $(this).val() == w) {
+            var valor = parseInt($(this).val());
+            if (0 > valor || valor > 10000 || valor == w ||
+                Number.isNaN(valor)) {
               $(this).val(w);
               return;
             }
-            w = parseInt($(this).val());
+            w = valor;
             mundo.resize(w, h);
             addEventListeners(mundo);
             wRender = new WorldRender(context, h, w);
