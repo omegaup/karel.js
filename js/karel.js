@@ -607,12 +607,12 @@ World.prototype.addBorderWalls = function() {
 
 World.prototype.resize = function(w, h) {
   var self = this;
-  
+
   var newMap;
   var newCurrentMap;
   var newWallMap;
   var newDumpCells = [];
-  if(ArrayBuffer) {
+  if (ArrayBuffer) {
     var len = (w + 2) * (h + 2);
     newMap = new Int32Array(new ArrayBuffer(len * 4));
     newCurrentMap = new Int32Array(new ArrayBuffer(len * 4));
@@ -623,7 +623,7 @@ World.prototype.resize = function(w, h) {
     newCurrentMap = [];
   }
 
-  //Eliminamos las paredes del borde
+  // Eliminamos las paredes del borde
   for (var i = 1; i <= self.h; i++) {
     self.wallMap[self.w * i + 1] ^= (1 << 0);
     self.wallMap[self.w * (i + 1)] ^= (1 << 2);
@@ -632,20 +632,20 @@ World.prototype.resize = function(w, h) {
     self.wallMap[self.w * self.h + j] ^= (1 << 1);
     self.wallMap[self.w + j] ^= (1 << 3);
   }
-  //Copiamos todas las paredes
-  for(var i = 1; i <= h; i++) {
-    for(var j = 1; j <= w; j++) {
+  // Copiamos todas las paredes
+  for (var i = 1; i <= h; i++) {
+    for (var j = 1; j <= w; j++) {
       newWallMap[w * i + j] = self.walls(i, j);
       newMap[w * i + j] = newCurrentMap[w * i + j] = self.buzzers(i, j);
     }
   }
 
-  for(var dumpPos = 0; dumpPos < self.dumpCells.length; dumpPos++) {
-    if(self.dumpCells[dumpPos][0] <= h && self.dumpCells[dumpPos][1] <= w) {
+  for (var dumpPos = 0; dumpPos < self.dumpCells.length; dumpPos++) {
+    if (self.dumpCells[dumpPos][0] <= h && self.dumpCells[dumpPos][1] <= w) {
       newDumpCells.push(self.dumpCells[dumpPos]);
     }
   }
-  
+
   self.dumpCells = newDumpCells;
   self.wallMap = newWallMap;
   self.map = newMap;
@@ -655,12 +655,12 @@ World.prototype.resize = function(w, h) {
 
   self.addBorderWalls();
 
-  //Checamos si karel sigue dentro del mundo
-  if(self.start_i > self.h) {
+  // Checamos si karel sigue dentro del mundo
+  if (self.start_i > self.h) {
     self.start_i = self.i = self.h;
   }
 
-  if(self.start_j > self.w) {
+  if (self.start_j > self.w) {
     self.start_j = self.j = self.w;
   }
 

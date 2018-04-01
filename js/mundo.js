@@ -344,7 +344,8 @@ var WorldRender = function(context, worldHeight, worldWidth) {
   };
 
   this.moveNorth = function() {
-    if (this.primera_fila + this.num_filas - 2 < worldWidth) this.primera_fila++;
+    if (this.primera_fila + this.num_filas - 2 < worldWidth)
+      this.primera_fila++;
   };
 
   this.moveWest = function() {
