@@ -1414,33 +1414,31 @@ $(document)
           });
       $('#filas')
           .blur(function(event) {
-            if ($(this).val() > 0 && $(this).val() <= 10000 &&
-                $(this).val() != h) {
-              h = parseInt($(this).val());
-              mundo.resize(w, h);
-              addEventListeners(mundo);
-              wRender = new WorldRender(context, h, w);
-              wRender.paint(mundo, world.width, world.height,
-                            {editable: true, track_karel: true});
-              $('#xmlMundo').html(mundo.save());
-            } else {
+            if ($(this).val() <= 0 || $(this).val() > 10000 || $(this).val() == h) {
               $(this).val(h);
+              return;
             }
+            h = parseInt($(this).val());
+            mundo.resize(w, h);
+            addEventListeners(mundo);
+            wRender = new WorldRender(context, h, w);
+            wRender.paint(mundo, world.width, world.height,
+                          {editable: true, track_karel: true});
+            $('#xmlMundo').html(mundo.save());
           });
       $('#columnas')
           .blur(function(event) {
-            if ($(this).val() > 0 && $(this).val() <= 10000 &&
-                $(this).val != w) {
-              w = parseInt($(this).val());
-              mundo.resize(w, h);
-              addEventListeners(mundo);
-              wRender = new WorldRender(context, h, w);
-              wRender.paint(mundo, world.width, world.height,
-                            {editable: true, track_karel: true});
-              $('#xmlMundo').html(mundo.save());
-            } else {
+            if ($(this).val() <= 0 || $(this).val() > 10000 || $(this).val() == w) {
               $(this).val(w);
+              return;
             }
+            w = parseInt($(this).val());
+            mundo.resize(w, h);
+            addEventListeners(mundo);
+            wRender = new WorldRender(context, h, w);
+            wRender.paint(mundo, world.width, world.height,
+                          {editable: true, track_karel: true});
+            $('#xmlMundo').html(mundo.save());
           });
       $('#inf_zumbadores')
           .click(function(event) {
