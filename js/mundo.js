@@ -344,7 +344,7 @@ var WorldRender = function(context, worldHeight, worldWidth) {
   };
 
   this.moveNorth = function() {
-    if (this.primera_fila + this.num_filas - 2 < worldWidth)
+    if (this.primera_fila + this.num_filas - 2 < worldHeight)
       this.primera_fila++;
   };
 
@@ -353,7 +353,7 @@ var WorldRender = function(context, worldHeight, worldWidth) {
   };
 
   this.moveEast = function() {
-    if (this.primera_columna + this.num_columnas - 2 < worldHeight)
+    if (this.primera_columna + this.num_columnas - 2 < worldWidth)
       this.primera_columna++;
   };
 
