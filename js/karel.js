@@ -585,7 +585,7 @@ World.prototype.createMaps = function() {
     }
   }
 
-}
+};
 
 World.prototype.init = function(w, h) {
   var self = this;
@@ -636,16 +636,16 @@ World.prototype.resize = function(w, h) {
   // Vaciamos dumpCells y la llenamos de nuevo
   self.dumpCells = [];
   for (var dumpPos = 0; dumpPos < oldDumpCells.length; dumpPos++) {
-    if (oldDumpCells[dumpPos][0] <= self.h && oldDumpCells[dumpPos][1] <= self.w) {
-      self.setDumpCell(oldDumpCells[dumpPos][0], oldDumpCells[dumpPos][1], true);
+    if (oldDumpCells[dumpPos][0] <= self.h &&
+        oldDumpCells[dumpPos][1] <= self.w) {
+      self.setDumpCell(oldDumpCells[dumpPos][0], oldDumpCells[dumpPos][1],
+                       true);
     }
   }
 
   // Checamos si karel sigue dentro del mundo
-  if (self.start_i > self.h) 
-    self.start_i = self.i = self.h;
-  if (self.start_j > self.w) 
-    self.start_j = self.j = self.w;
+  if (self.start_i > self.h) self.start_i = self.i = self.h;
+  if (self.start_j > self.w) self.start_j = self.j = self.w;
 
   self.dirty = true;
 };
@@ -830,10 +830,9 @@ World.prototype.setCellWalls = function(i, j, wallMask) {
   var self = this;
 
   for (var pos = 0; pos < 4; pos++) {
-    if (wallMask & (1 << pos)) 
-      self.addWall(i, j, pos);
+    if (wallMask & (1 << pos)) self.addWall(i, j, pos);
   }
-}
+};
 
 World.prototype.addWall = function(i, j, orientation) {
   var self = this;

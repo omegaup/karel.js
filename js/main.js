@@ -1414,7 +1414,8 @@ $(document)
           });
       $('#filas')
           .blur(function(event) {
-            if ($(this).val() <= 0 || $(this).val() > 10000 || $(this).val() == h) {
+            if ($(this).val() <= 0 || $(this).val() > 10000 ||
+                $(this).val() == h) {
               $(this).val(h);
               return;
             }
@@ -1428,7 +1429,8 @@ $(document)
           });
       $('#columnas')
           .blur(function(event) {
-            if ($(this).val() <= 0 || $(this).val() > 10000 || $(this).val() == w) {
+            if ($(this).val() <= 0 || $(this).val() > 10000 ||
+                $(this).val() == w) {
               $(this).val(w);
               return;
             }
