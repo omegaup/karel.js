@@ -31,6 +31,7 @@ var WorldRender = function(context, worldHeight, worldWidth) {
   this.polygon_end = undefined;
 
   this.paint = function(world, mundo_ancho, mundo_alto, options) {
+
     options = options || {};
 
     function dibuja_karel(context, world, origen) {  // Dibujar a Karel
@@ -119,6 +120,7 @@ var WorldRender = function(context, worldHeight, worldWidth) {
     // Dibujar las cosas que pertenecen al mundo por cada casilla
     num_fila = 1;     // Posicion relativa a la pantalla
     num_columna = 1;  // Posicion relativa a la pantalla
+
     for (var fila = this.primera_fila;
          fila < (this.primera_fila + this.num_filas); fila++) {
       num_columna = 1;
@@ -342,7 +344,8 @@ var WorldRender = function(context, worldHeight, worldWidth) {
   };
 
   this.moveNorth = function() {
-    if (this.primera_fila + this.num_filas - 2 < 100) this.primera_fila++;
+    if (this.primera_fila + this.num_filas - 2 < worldHeight)
+      this.primera_fila++;
   };
 
   this.moveWest = function() {
@@ -350,7 +353,7 @@ var WorldRender = function(context, worldHeight, worldWidth) {
   };
 
   this.moveEast = function() {
-    if (this.primera_columna + this.num_columnas - 2 < 100)
+    if (this.primera_columna + this.num_columnas - 2 < worldWidth)
       this.primera_columna++;
   };
 
