@@ -1399,6 +1399,7 @@ World.prototype.errorMap = function(s) {
 
 World.prototype.move = function(i, j) {
   var self = this;
+  if (0 > i || i > self.h || 0 > j || j > self.w) return;
 
   self.i = self.start_i = i;
   self.j = self.start_j = j;
