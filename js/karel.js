@@ -601,7 +601,6 @@ World.prototype.init = function(w, h) {
 World.prototype.resize = function(w, h) {
   var self = this;
 
-
   // Eliminamos las paredes del borde
   for (var i = 1; i <= self.h; i++) {
     self.wallMap[self.w * i + 1] &= ~(1 << 0);
@@ -618,7 +617,6 @@ World.prototype.resize = function(w, h) {
   var oldCurrentMap = self.oldCurrentMap;
   var oldWallMap = self.wallMap;
   var oldDumpCells = self.dumpCells;
-
 
   self.w = w;
   self.h = h;
