@@ -29,7 +29,7 @@ def load_dict():
 
 
 class Direccion(object):  # pylint: disable=R0903
-    """Constantes para las máscara de bits de las paredes del mundo"""
+    """Constantes para las máscaras de bits de las paredes del mundo"""
     OESTE = 1
     NORTE = 2
     ESTE = 4
