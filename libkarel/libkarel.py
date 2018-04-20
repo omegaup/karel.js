@@ -5,6 +5,7 @@
 
 import xml.etree.ElementTree as ET
 import sys
+from collections import defaultdict
 
 
 def load():
@@ -25,6 +26,13 @@ def load_dict():
     with open('data.out', 'r') as data_out:
         result['case_output'] = KarelOutput(data_out.read())
     return result
+
+
+class Direccion(object):
+    OESTE = 1
+    NORTE = 2
+    ESTE = 4
+    SUR = 8
 
 
 class KarelInput(object):
@@ -58,9 +66,37 @@ class KarelInput(object):
             } for x in self.root.findall('mundos/mundo/monton')]
         self.__zumbadores = {(x['x'], x['y']): x['zumbadores']
                              for x in lista_zumbadores}
+
         lista_dump = [{k: int(x.attrib[k]) for k in x.attrib} for x in
                       self.root.findall('mundos/mundo/posicionDump')]
         self.__dump = set((x['x'], x['y']) for x in lista_dump)
+
+        self.__paredes = defaultdict(lambda: 0)
+
+        for x in range(1, self.__w + 1):
+            self.__paredes[(x, 0)] |= Direccion.NORTE
+            self.__paredes[(x, 1)] |= Direccion.SUR
+            self.__paredes[(x, self.__h)] |= Direccion.NORTE
+            self.__paredes[(x, self.__h + 1)] |= Direccion.SUR
+
+        for y in range(1, self.__h + 1):
+            self.__paredes[(0, y)] |= Direccion.ESTE
+            self.__paredes[(1, y)] |= Direccion.OESTE
+            self.__paredes[(self.__w, y)] |= Direccion.ESTE
+            self.__paredes[(self.__w + 1, y)] |= Direccion.OESTE
+
+        for p in self.root.findall('mundos/mundo/pared'):
+            x = int(p.attrib['x1'])
+            y = int(p.attrib['y1'])
+
+            if 'x2' in p.attrib:
+                x = max(x, int(p.attrib['x2']))
+                self.__paredes[(x, y)] |= Direccion.NORTE
+                self.__paredes[(x, y + 1)] |= Direccion.SUR
+            elif 'y2' in p.attrib:
+                y = max(y, int(p.attrib['y2']))
+                self.__paredes[(x, y)] |= Direccion.ESTE
+                self.__paredes[(x + 1, y)] |= Direccion.OESTE
 
     @property
     def x(self):  # pylint: disable=C0103
@@ -147,6 +183,26 @@ class KarelInput(object):
         if zumbadores == 'INFINITO':
             return zumbadores
         return int(zumbadores)
+
+    @property
+    def lista_paredes(self):
+        """Un defaultdict con las paredes del mundo.
+
+        Cada llave (x, y) tiene como valor una máscara de bits
+        con las paredes adyacentes a esa casilla.
+
+        Las direcciones de la máscara están descritas en Direccion.
+        """
+        return self.__paredes
+
+    def paredes(self, casilla_x, casilla_y):
+        """Regresa una máscara de bits con las direcciones en
+        las que hay una pared en la casilla (x, y).
+
+        Las direcciones de la máscara están descritas en Direccion.
+        """
+
+        return self.__paredes.get((casilla_x, casilla_y), 0)
 
     @property
     def lista_dump(self):
