@@ -28,7 +28,8 @@ def load_dict():
     return result
 
 
-class Direccion(object):
+class Direccion(object): # pylint: disable=R0903
+    """Constantes para las máscara de bits de las paredes del mundo"""
     OESTE = 1
     NORTE = 2
     ESTE = 4
@@ -73,28 +74,28 @@ class KarelInput(object):
 
         self.__paredes = defaultdict(lambda: 0)
 
-        for x in range(1, self.__w + 1):
+        for x in range(1, self.__w + 1): # pylint: disable=C0103
             self.__paredes[(x, 0)] |= Direccion.NORTE
             self.__paredes[(x, 1)] |= Direccion.SUR
             self.__paredes[(x, self.__h)] |= Direccion.NORTE
             self.__paredes[(x, self.__h + 1)] |= Direccion.SUR
 
-        for y in range(1, self.__h + 1):
+        for y in range(1, self.__h + 1): # pylint: disable=C0103
             self.__paredes[(0, y)] |= Direccion.ESTE
             self.__paredes[(1, y)] |= Direccion.OESTE
             self.__paredes[(self.__w, y)] |= Direccion.ESTE
             self.__paredes[(self.__w + 1, y)] |= Direccion.OESTE
 
-        for p in self.root.findall('mundos/mundo/pared'):
-            x = int(p.attrib['x1'])
-            y = int(p.attrib['y1'])
+        for p in self.root.findall('mundos/mundo/pared'): # pylint: disable=C0103
+            x = int(p.attrib['x1']) # pylint: disable=C0103
+            y = int(p.attrib['y1']) # pylint: disable=C0103
 
             if 'x2' in p.attrib:
-                x = max(x, int(p.attrib['x2']))
+                x = max(x, int(p.attrib['x2'])) # pylint: disable=C0103
                 self.__paredes[(x, y)] |= Direccion.NORTE
                 self.__paredes[(x, y + 1)] |= Direccion.SUR
             elif 'y2' in p.attrib:
-                y = max(y, int(p.attrib['y2']))
+                y = max(y, int(p.attrib['y2'])) # pylint: disable=C0103
                 self.__paredes[(x, y)] |= Direccion.ESTE
                 self.__paredes[(x + 1, y)] |= Direccion.OESTE
 
