@@ -58,21 +58,21 @@ class TestLibKarelInput(unittest.TestCase):
 
         karel_in = libkarel.KarelInput('''
 <ejecucion>
-	<condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000"></condiciones>
-	<mundos>
-		<mundo nombre="mundo_0" ancho="3" alto="2">
-			<pared x1="1" y1="0" y2="1"></pared>
-			<pared x1="1" y1="1" x2="2"></pared>
-			<pared x1="2" y1="1" y2="2"></pared>
-		</mundo>
-	</mundos>
-	<programas tipoEjecucion="CONTINUA" intruccionesCambioContexto="1" milisegundosParaPasoAutomatico="0">
-		<programa nombre="p1" ruta="{$2$}" mundoDeEjecucion="mundo_0" xKarel="1" yKarel="1" direccionKarel="NORTE" mochilaKarel="0"></programa>
-	</programas>
+  <condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000"></condiciones>
+  <mundos>
+    <mundo nombre="mundo_0" ancho="3" alto="2">
+      <pared x1="1" y1="0" y2="1"></pared>
+      <pared x1="1" y1="1" x2="2"></pared>
+      <pared x1="2" y1="1" y2="2"></pared>
+    </mundo>
+  </mundos>
+  <programas tipoEjecucion="CONTINUA" intruccionesCambioContexto="1" milisegundosParaPasoAutomatico="0">
+    <programa nombre="p1" ruta="{$2$}" mundoDeEjecucion="mundo_0" xKarel="1" yKarel="1" direccionKarel="NORTE" mochilaKarel="0"></programa>
+  </programas>
 </ejecucion>
         ''')
-	
-	Direccion = libkarel.Direccion
+
+	Direccion = libkarel.Direccion  # pylint: disable=C0103
 
 	# pylint: disable=C0301
         self.assertEqual(karel_in.paredes(1, 1), Direccion.SUR | Direccion.OESTE | Direccion.ESTE)
