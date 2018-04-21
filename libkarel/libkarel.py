@@ -74,6 +74,7 @@ class KarelInput(object):
 
         self.__paredes = defaultdict(int)
 
+        # pylint: disable=W0105
         """Las paredes se representan como el segmento que une
         dos puntos (x1,y1), (x2,y2) en el plano.
 
