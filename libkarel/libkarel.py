@@ -29,7 +29,7 @@ def load_dict():
 
 
 class Direccion(object):  # pylint: disable=R0903
-    """Constantes para las máscaras de bits de las paredes del mundo"""
+    """Constantes para las máscara de bits de las paredes del mundo"""
     OESTE = 1
     NORTE = 2
     ESTE = 4
@@ -72,8 +72,33 @@ class KarelInput(object):
                       self.root.findall('mundos/mundo/posicionDump')]
         self.__dump = set((x['x'], x['y']) for x in lista_dump)
 
-        self.__paredes = defaultdict(lambda: 0)
+        self.__paredes = defaultdict(int)
 
+        """Las paredes se representan como el segmento que une
+        dos puntos (x1,y1), (x2,y2) en el plano.
+
+        Pensemos en el caso de una pared horizontal. Sin pérdida de
+        generalidad, sea x1 > x2. El diagrama ilustra este caso:
+
+               pared
+                 |
+        (x2, y2) v (x1, y1)
+           * --------- *
+
+           |           |
+              (x1, y1) <- celda con una pared al norte
+           |           |
+
+           * - - - - - *
+
+        El código asigna x = max(x1, x2), y = y1 = y2.
+        Eso basta para saber cuáles son las dos celdas adyacentes
+        a la pared. El caso vertical es análogo.
+
+        En el XML se distingue del caso vertical u horizontal
+        por la existencia o no de los atributos x2, y2, ya que
+        se obvia el que está repetido.
+        """
         for x in range(1, self.__w + 1):  # pylint: disable=C0103
             self.__paredes[(x, 0)] |= Direccion.NORTE
             self.__paredes[(x, 1)] |= Direccion.SUR
@@ -186,15 +211,15 @@ class KarelInput(object):
         return int(zumbadores)
 
     @property
-    def lista_paredes(self):
-        """Un defaultdict con las paredes del mundo.
+    def mapa_paredes(self):
+        """Un diccionario con las paredes del mundo.
 
         Cada llave (x, y) tiene como valor una máscara de bits
         con las paredes adyacentes a esa casilla.
 
         Las direcciones de la máscara están descritas en Direccion.
         """
-        return self.__paredes
+        return defaultdict(self.__paredes)
 
     def paredes(self, casilla_x, casilla_y):
         """Regresa una máscara de bits con las direcciones en
@@ -203,7 +228,7 @@ class KarelInput(object):
         Las direcciones de la máscara están descritas en Direccion.
         """
 
-        return self.__paredes.get((casilla_x, casilla_y), 0)
+        return self.__paredes[(casilla_x, casilla_y)]
 
     @property
     def lista_dump(self):
