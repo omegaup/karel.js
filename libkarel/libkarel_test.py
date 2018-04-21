@@ -82,6 +82,7 @@ class TestLibKarelInput(unittest.TestCase):
         self.assertEqual(karel_in.paredes(2, 2), Direccion.SUR | Direccion.ESTE | Direccion.NORTE)
         self.assertEqual(karel_in.paredes(3, 2), Direccion.NORTE | Direccion.OESTE | Direccion.ESTE)
 
+
 class TestLibKarelOutput(unittest.TestCase):
     """Prueba libkarel.KarelOutput"""
     # pylint: disable=R0904
