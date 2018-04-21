@@ -72,12 +72,12 @@ class TestLibKarelInput(unittest.TestCase):
 </ejecucion>
         ''')
         
-        self.assertEqual(karel_in.paredes[(1,1)], Direccion.SUR | Direccion.OESTE | Direccion.ESTE)
-        self.assertEqual(karel_in.paredes[(2,1)], Direccion.SUR | Direccion.OESTE | Direccion.NORTE)
-        self.assertEqual(karel_in.paredes[(3,1)], Direccion.SUR | Direccion.ESTE)
-        self.assertEqual(karel_in.paredes[(1,2)], Direccion.NORTE | Direccion.OESTE)
-        self.assertEqual(karel_in.paredes[(2,2)], Direccion.SUR | Direccion.ESTE | Direccion.NORTE)
-        self.assertEqual(karel_in.paredes[(3,2)], Direccion.NORTE | Direccion.OESTE | Direccion.ESTE)
+        self.assertEqual(karel_in.paredes(1,1), Direccion.SUR | Direccion.OESTE | Direccion.ESTE)
+        self.assertEqual(karel_in.paredes(2,1), Direccion.SUR | Direccion.OESTE | Direccion.NORTE)
+        self.assertEqual(karel_in.paredes(3,1), Direccion.SUR | Direccion.ESTE)
+        self.assertEqual(karel_in.paredes(1,2), Direccion.NORTE | Direccion.OESTE)
+        self.assertEqual(karel_in.paredes(2,2), Direccion.SUR | Direccion.ESTE | Direccion.NORTE)
+        self.assertEqual(karel_in.paredes(3,2), Direccion.NORTE | Direccion.OESTE | Direccion.ESTE)
 
 class TestLibKarelOutput(unittest.TestCase):
     """Prueba libkarel.KarelOutput"""
