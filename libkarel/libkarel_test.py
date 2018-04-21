@@ -55,7 +55,7 @@ class TestLibKarelInput(unittest.TestCase):
 
     def test_walls(self):
         """Prueba de las paredes."""
-        
+
         karel_in = libkarel.KarelInput('''
 <ejecucion>
 	<condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000"></condiciones>
@@ -71,13 +71,16 @@ class TestLibKarelInput(unittest.TestCase):
 	</programas>
 </ejecucion>
         ''')
-        
-        self.assertEqual(karel_in.paredes(1,1), Direccion.SUR | Direccion.OESTE | Direccion.ESTE)
-        self.assertEqual(karel_in.paredes(2,1), Direccion.SUR | Direccion.OESTE | Direccion.NORTE)
-        self.assertEqual(karel_in.paredes(3,1), Direccion.SUR | Direccion.ESTE)
-        self.assertEqual(karel_in.paredes(1,2), Direccion.NORTE | Direccion.OESTE)
-        self.assertEqual(karel_in.paredes(2,2), Direccion.SUR | Direccion.ESTE | Direccion.NORTE)
-        self.assertEqual(karel_in.paredes(3,2), Direccion.NORTE | Direccion.OESTE | Direccion.ESTE)
+	
+	Direccion = libkarel.Direccion
+
+	# pylint: disable=C0301
+        self.assertEqual(karel_in.paredes(1, 1), Direccion.SUR | Direccion.OESTE | Direccion.ESTE)
+        self.assertEqual(karel_in.paredes(2, 1), Direccion.SUR | Direccion.OESTE | Direccion.NORTE)
+        self.assertEqual(karel_in.paredes(3, 1), Direccion.SUR | Direccion.ESTE)
+        self.assertEqual(karel_in.paredes(1, 2), Direccion.NORTE | Direccion.OESTE)
+        self.assertEqual(karel_in.paredes(2, 2), Direccion.SUR | Direccion.ESTE | Direccion.NORTE)
+        self.assertEqual(karel_in.paredes(3, 2), Direccion.NORTE | Direccion.OESTE | Direccion.ESTE)
 
 class TestLibKarelOutput(unittest.TestCase):
     """Prueba libkarel.KarelOutput"""
