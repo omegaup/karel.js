@@ -72,7 +72,7 @@ class TestLibKarelInput(unittest.TestCase):
 </ejecucion>
         ''')
 
-	Direccion = libkarel.Direccion  # pylint: disable=C0103
+        Direccion = libkarel.Direccion  # pylint: disable=C0103
 
 	# pylint: disable=C0301
         self.assertEqual(karel_in.paredes(1, 1), Direccion.SUR | Direccion.OESTE | Direccion.ESTE)
