@@ -1,2 +1,24 @@
+[MESSAGES CONTROL]
+
+# We are locally disabling something because we don't want to hear about it.
+#  I0011 = Locally disabling
+#
+# Too few public methods is bad for context managers or enums.
+#  R0903 = Too few public methods
+#
+# Too many public methods is bad for tests.
+#  R0904 = Too many public methods
+disable=I0011,R0903,R0904
+
+[BASIC]
+
+# We allow variables to be two characters.
+attr-rgx=[a-z_][a-z0-9_]{1,64}$
+function-rgx=[a-z_][a-z0-9_]{1,64}$
+variable-rgx=[a-z_][a-z0-9_]{1,64}$
+
+# We also allow 's' (for strings) and 'f' (for files), 'x', 'y', 'w', 'h'
+good-names=i,j,k,ex,Run,_,s,f,x,y,w,h
+
 [DESIGN]
 max-attributes=20

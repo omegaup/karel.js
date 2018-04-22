@@ -63,22 +63,22 @@ class KarelInput(object):
         self.__dump = set((x['x'], x['y']) for x in lista_dump)
 
     @property
-    def x(self):  # pylint: disable=C0103
+    def x(self):
         """La posición x inicial de Karel."""
         return self.__x
 
     @property
-    def y(self):  # pylint: disable=C0103
+    def y(self):
         """La posición y inicial de Karel."""
         return self.__y
 
     @property
-    def w(self):  # pylint: disable=C0103
+    def w(self):
         """El ancho del mundo."""
         return self.__w
 
     @property
-    def h(self):  # pylint: disable=C0103
+    def h(self):
         """"El alto del mundo."""
         return self.__h
 
@@ -210,12 +210,12 @@ class KarelOutput(object):
                     self.__instrucciones[k] = int(instrucciones.attrib[k])
 
     @property
-    def x(self):  # pylint: disable=C0103
+    def x(self):
         """La posición x final de Karel. None si no se hizo dump posición."""
         return self.__x
 
     @property
-    def y(self):  # pylint: disable=C0103
+    def y(self):
         """La posición y final de Karel. None si no se hizo dump posición."""
         return self.__y
 

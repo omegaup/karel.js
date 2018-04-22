@@ -10,7 +10,6 @@ import libkarel
 
 class TestLibKarelInput(unittest.TestCase):
     """Prueba libkarel.KarelInput."""
-    # pylint: disable=R0904
 
     def test_basic(self):
         """Prueba básica."""
@@ -56,7 +55,6 @@ class TestLibKarelInput(unittest.TestCase):
 
 class TestLibKarelOutput(unittest.TestCase):
     """Prueba libkarel.KarelOutput"""
-    # pylint: disable=R0904
 
     def test_basic(self):
         """Prueba básica."""
