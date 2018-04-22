@@ -5,6 +5,7 @@
 
 import unittest
 
+import libkarel
 from libkarel import Direccion
 
 
