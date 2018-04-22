@@ -76,25 +76,25 @@ class KarelInput(object):
 
         # Las paredes se representan como el segmento que une
         # dos puntos (x1,y1), (x2,y2) en el plano.
-
+        #
         # Pensemos en el caso de una pared horizontal. Sin pérdida de
         # generalidad, sea x1 > x2. El diagrama ilustra este caso:
-
+        #
         #        pared
         #          |
         # (x2, y2) v (x1, y1)
         #    * --------- *
-
+        #
         #    |           |
         #       (x1, y1) <- celda con una pared al norte
         #    |           |
-
+        #
         #    * - - - - - *
-
+        #
         # El código asigna x = max(x1, x2), y = y1 = y2.
         # Eso basta para saber cuáles son las dos celdas adyacentes
         # a la pared. El caso vertical es análogo.
-
+        #
         # En el XML se distingue del caso vertical u horizontal
         # por la existencia o no de los atributos x2, y2, ya que
         # se obvia el que está repetido.
@@ -111,16 +111,16 @@ class KarelInput(object):
             self.__paredes[(self.__w, y)] |= Direccion.ESTE
             self.__paredes[(self.__w + 1, y)] |= Direccion.OESTE
 
-        for p in self.root.findall('mundos/mundo/pared'):
-            x = int(p.attrib['x1'])
-            y = int(p.attrib['y1'])
+        for pared in self.root.findall('mundos/mundo/pared'):
+            x = int(pared.attrib['x1'])
+            y = int(pared.attrib['y1'])
 
             if 'x2' in p.attrib:
-                x = max(x, int(p.attrib['x2']))
+                x = max(x, int(pared.attrib['x2']))
                 self.__paredes[(x, y)] |= Direccion.NORTE
                 self.__paredes[(x, y + 1)] |= Direccion.SUR
             elif 'y2' in p.attrib:
-                y = max(y, int(p.attrib['y2']))
+                y = max(y, int(pared.attrib['y2']))
                 self.__paredes[(x, y)] |= Direccion.ESTE
                 self.__paredes[(x + 1, y)] |= Direccion.OESTE
 
