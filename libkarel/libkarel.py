@@ -28,7 +28,7 @@ def load_dict():
     return result
 
 
-class Direccion(object):  # pylint: disable=R0903
+class Direccion(object):
     """Constantes para las máscara de bits de las paredes del mundo"""
     OESTE = 1
     NORTE = 2
@@ -99,48 +99,48 @@ class KarelInput(object):
         # por la existencia o no de los atributos x2, y2, ya que
         # se obvia el que está repetido.
 
-        for x in range(1, self.__w + 1):  # pylint: disable=C0103
+        for x in range(1, self.__w + 1):
             self.__paredes[(x, 0)] |= Direccion.NORTE
             self.__paredes[(x, 1)] |= Direccion.SUR
             self.__paredes[(x, self.__h)] |= Direccion.NORTE
             self.__paredes[(x, self.__h + 1)] |= Direccion.SUR
 
-        for y in range(1, self.__h + 1):  # pylint: disable=C0103
+        for y in range(1, self.__h + 1):
             self.__paredes[(0, y)] |= Direccion.ESTE
             self.__paredes[(1, y)] |= Direccion.OESTE
             self.__paredes[(self.__w, y)] |= Direccion.ESTE
             self.__paredes[(self.__w + 1, y)] |= Direccion.OESTE
 
-        for p in self.root.findall('mundos/mundo/pared'):  # pylint: disable=C0103
-            x = int(p.attrib['x1'])  # pylint: disable=C0103
-            y = int(p.attrib['y1'])  # pylint: disable=C0103
+        for p in self.root.findall('mundos/mundo/pared'):
+            x = int(p.attrib['x1'])
+            y = int(p.attrib['y1'])
 
             if 'x2' in p.attrib:
-                x = max(x, int(p.attrib['x2']))  # pylint: disable=C0103
+                x = max(x, int(p.attrib['x2']))
                 self.__paredes[(x, y)] |= Direccion.NORTE
                 self.__paredes[(x, y + 1)] |= Direccion.SUR
             elif 'y2' in p.attrib:
-                y = max(y, int(p.attrib['y2']))  # pylint: disable=C0103
+                y = max(y, int(p.attrib['y2']))
                 self.__paredes[(x, y)] |= Direccion.ESTE
                 self.__paredes[(x + 1, y)] |= Direccion.OESTE
 
     @property
-    def x(self):  # pylint: disable=C0103
+    def x(self):
         """La posición x inicial de Karel."""
         return self.__x
 
     @property
-    def y(self):  # pylint: disable=C0103
+    def y(self):
         """La posición y inicial de Karel."""
         return self.__y
 
     @property
-    def w(self):  # pylint: disable=C0103
+    def w(self):
         """El ancho del mundo."""
         return self.__w
 
     @property
-    def h(self):  # pylint: disable=C0103
+    def h(self):
         """"El alto del mundo."""
         return self.__h
 
@@ -292,12 +292,12 @@ class KarelOutput(object):
                     self.__instrucciones[k] = int(instrucciones.attrib[k])
 
     @property
-    def x(self):  # pylint: disable=C0103
+    def x(self):
         """La posición x final de Karel. None si no se hizo dump posición."""
         return self.__x
 
     @property
-    def y(self):  # pylint: disable=C0103
+    def y(self):
         """La posición y final de Karel. None si no se hizo dump posición."""
         return self.__y
 
