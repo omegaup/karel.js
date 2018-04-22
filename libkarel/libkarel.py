@@ -74,32 +74,31 @@ class KarelInput(object):
 
         self.__paredes = defaultdict(int)
 
-        # pylint: disable=W0105
-        """Las paredes se representan como el segmento que une
-        dos puntos (x1,y1), (x2,y2) en el plano.
+        # Las paredes se representan como el segmento que une
+        # dos puntos (x1,y1), (x2,y2) en el plano.
 
-        Pensemos en el caso de una pared horizontal. Sin pérdida de
-        generalidad, sea x1 > x2. El diagrama ilustra este caso:
+        # Pensemos en el caso de una pared horizontal. Sin pérdida de
+        # generalidad, sea x1 > x2. El diagrama ilustra este caso:
 
-               pared
-                 |
-        (x2, y2) v (x1, y1)
-           * --------- *
+        #        pared
+        #          |
+        # (x2, y2) v (x1, y1)
+        #    * --------- *
 
-           |           |
-              (x1, y1) <- celda con una pared al norte
-           |           |
+        #    |           |
+        #       (x1, y1) <- celda con una pared al norte
+        #    |           |
 
-           * - - - - - *
+        #    * - - - - - *
 
-        El código asigna x = max(x1, x2), y = y1 = y2.
-        Eso basta para saber cuáles son las dos celdas adyacentes
-        a la pared. El caso vertical es análogo.
+        # El código asigna x = max(x1, x2), y = y1 = y2.
+        # Eso basta para saber cuáles son las dos celdas adyacentes
+        # a la pared. El caso vertical es análogo.
 
-        En el XML se distingue del caso vertical u horizontal
-        por la existencia o no de los atributos x2, y2, ya que
-        se obvia el que está repetido.
-        """
+        # En el XML se distingue del caso vertical u horizontal
+        # por la existencia o no de los atributos x2, y2, ya que
+        # se obvia el que está repetido.
+
         for x in range(1, self.__w + 1):  # pylint: disable=C0103
             self.__paredes[(x, 0)] |= Direccion.NORTE
             self.__paredes[(x, 1)] |= Direccion.SUR
