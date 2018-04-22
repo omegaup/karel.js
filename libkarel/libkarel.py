@@ -115,11 +115,11 @@ class KarelInput(object):
             x = int(pared.attrib['x1'])
             y = int(pared.attrib['y1'])
 
-            if 'x2' in p.attrib:
+            if 'x2' in pared.attrib:
                 x = max(x, int(pared.attrib['x2']))
                 self.__paredes[(x, y)] |= Direccion.NORTE
                 self.__paredes[(x, y + 1)] |= Direccion.SUR
-            elif 'y2' in p.attrib:
+            elif 'y2' in pared.attrib:
                 y = max(y, int(pared.attrib['y2']))
                 self.__paredes[(x, y)] |= Direccion.ESTE
                 self.__paredes[(x + 1, y)] |= Direccion.OESTE
