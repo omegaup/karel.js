@@ -5,6 +5,7 @@
 
 import xml.etree.ElementTree as ET
 import sys
+from collections import defaultdict
 
 
 def load():
@@ -25,6 +26,14 @@ def load_dict():
     with open('data.out', 'r') as data_out:
         result['case_output'] = KarelOutput(data_out.read())
     return result
+
+
+class Direccion(object):
+    """Constantes para las máscara de bits de las paredes del mundo"""
+    OESTE = 1
+    NORTE = 2
+    ESTE = 4
+    SUR = 8
 
 
 class KarelInput(object):
@@ -58,9 +67,62 @@ class KarelInput(object):
             } for x in self.root.findall('mundos/mundo/monton')]
         self.__zumbadores = {(x['x'], x['y']): x['zumbadores']
                              for x in lista_zumbadores}
+
         lista_dump = [{k: int(x.attrib[k]) for k in x.attrib} for x in
                       self.root.findall('mundos/mundo/posicionDump')]
         self.__dump = set((x['x'], x['y']) for x in lista_dump)
+
+        self.__paredes = defaultdict(int)
+
+        # Las paredes se representan como el segmento que une
+        # dos puntos (x1,y1), (x2,y2) en el plano.
+        #
+        # Pensemos en el caso de una pared horizontal. Sin pérdida de
+        # generalidad, sea x1 > x2. El diagrama ilustra este caso:
+        #
+        #        pared
+        #          |
+        # (x2, y2) v (x1, y1)
+        #    * --------- *
+        #
+        #    |           |
+        #       (x1, y1) <- celda con una pared al norte
+        #    |           |
+        #
+        #    * - - - - - *
+        #
+        # El código asigna x = max(x1, x2), y = y1 = y2.
+        # Eso basta para saber cuáles son las dos celdas adyacentes
+        # a la pared. El caso vertical es análogo.
+        #
+        # En el XML se distingue del caso vertical u horizontal
+        # por la existencia o no de los atributos x2, y2, ya que
+        # se obvia el que está repetido.
+
+        for x in range(1, self.__w + 1):
+            self.__paredes[(x, 0)] |= Direccion.NORTE
+            self.__paredes[(x, 1)] |= Direccion.SUR
+            self.__paredes[(x, self.__h)] |= Direccion.NORTE
+            self.__paredes[(x, self.__h + 1)] |= Direccion.SUR
+
+        for y in range(1, self.__h + 1):
+            self.__paredes[(0, y)] |= Direccion.ESTE
+            self.__paredes[(1, y)] |= Direccion.OESTE
+            self.__paredes[(self.__w, y)] |= Direccion.ESTE
+            self.__paredes[(self.__w + 1, y)] |= Direccion.OESTE
+
+        for pared in self.root.findall('mundos/mundo/pared'):
+            x = int(pared.attrib['x1'])
+            y = int(pared.attrib['y1'])
+
+            if 'x2' in pared.attrib:
+                x = max(x, int(pared.attrib['x2']))
+                self.__paredes[(x, y)] |= Direccion.NORTE
+                self.__paredes[(x, y + 1)] |= Direccion.SUR
+            elif 'y2' in pared.attrib:
+                y = max(y, int(pared.attrib['y2']))
+                self.__paredes[(x, y)] |= Direccion.ESTE
+                self.__paredes[(x + 1, y)] |= Direccion.OESTE
 
     @property
     def x(self):
@@ -147,6 +209,26 @@ class KarelInput(object):
         if zumbadores == 'INFINITO':
             return zumbadores
         return int(zumbadores)
+
+    @property
+    def mapa_paredes(self):
+        """Un diccionario con las paredes del mundo.
+
+        Cada llave (x, y) tiene como valor una máscara de bits
+        con las paredes adyacentes a esa casilla.
+
+        Las direcciones de la máscara están descritas en Direccion.
+        """
+        return defaultdict(self.__paredes)
+
+    def paredes(self, casilla_x, casilla_y):
+        """Regresa una máscara de bits con las direcciones en
+        las que hay una pared en la casilla (x, y).
+
+        Las direcciones de la máscara están descritas en Direccion.
+        """
+
+        return self.__paredes[(casilla_x, casilla_y)]
 
     @property
     def lista_dump(self):

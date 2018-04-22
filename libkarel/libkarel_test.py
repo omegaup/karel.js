@@ -6,6 +6,7 @@
 import unittest
 
 import libkarel
+from libkarel import Direccion
 
 
 class TestLibKarelInput(unittest.TestCase):
@@ -51,6 +52,38 @@ class TestLibKarelInput(unittest.TestCase):
         # API público
         self.assertEqual(karel_in.zumbadores(1, 1), 0)
         self.assertEqual(karel_in.dump(1, 1), False)
+
+    def test_walls(self):
+        """Prueba de las paredes."""
+
+        karel_in = libkarel.KarelInput('''
+<ejecucion>
+  <condiciones instruccionesMaximasAEjecutar="10000000" longitudStack="65000"></condiciones>
+  <mundos>
+    <mundo nombre="mundo_0" ancho="3" alto="2">
+      <pared x1="1" y1="0" y2="1"></pared>
+      <pared x1="1" y1="1" x2="2"></pared>
+      <pared x1="2" y1="1" y2="2"></pared>
+    </mundo>
+  </mundos>
+  <programas tipoEjecucion="CONTINUA" intruccionesCambioContexto="1" milisegundosParaPasoAutomatico="0">
+    <programa nombre="p1" ruta="{$2$}" mundoDeEjecucion="mundo_0" xKarel="1" yKarel="1" direccionKarel="NORTE" mochilaKarel="0"></programa>
+  </programas>
+</ejecucion>
+        ''')
+
+        self.assertEqual(karel_in.paredes(1, 1),
+                         Direccion.SUR | Direccion.OESTE | Direccion.ESTE)
+        self.assertEqual(karel_in.paredes(2, 1),
+                         Direccion.SUR | Direccion.OESTE | Direccion.NORTE)
+        self.assertEqual(karel_in.paredes(3, 1),
+                         Direccion.SUR | Direccion.ESTE)
+        self.assertEqual(karel_in.paredes(1, 2),
+                         Direccion.NORTE | Direccion.OESTE)
+        self.assertEqual(karel_in.paredes(2, 2),
+                         Direccion.SUR | Direccion.ESTE | Direccion.NORTE)
+        self.assertEqual(karel_in.paredes(3, 2),
+                         Direccion.NORTE | Direccion.OESTE | Direccion.ESTE)
 
 
 class TestLibKarelOutput(unittest.TestCase):
