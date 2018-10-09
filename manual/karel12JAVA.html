@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta charset="UTF-8">
   <title>La sentencia define-nueva-instruccion/como</title>
 </head>
 <body style="background-image: url(./workbook.gif);">
   <center>
-    <h2>Parámetros en funciones &nbsp;</h2>
+    <h2>Par&aacute;metros en funciones &nbsp;</h2>
   </center>
   <p>Hemos visto ya la sentencia <strong>iterate</strong> que nos ayuda a iterar un bloque de
-  código un determinado número de veces, pero siempre teníamos que colocar un número fijo en la
-  sentencia, ¿te has puesto a pensar que pasaría si por ejemplo necesitara una instrucción que
-  volteara a Karel 180°? Pues la respuesta natural sería "haz una instrucción que haga que Karel
-  gire dos veces". Pero... ¿crees que sería posible usar la instrucción que hicimos anteriormente
+  c&oacute;digo un determinado n&uacute;mero de veces, pero siempre ten&iacute;amos que colocar un n&uacute;mero fijo en la
+  sentencia, &iquest;te has puesto a pensar que pasar&iacute;a si por ejemplo necesitara una instrucci&oacute;n que
+  volteara a Karel 180°? Pues la respuesta natural ser&iacute;a "haz una instrucci&oacute;n que haga que Karel
+  gire dos veces". Pero... &iquest;crees que ser&iacute;a posible usar la instrucci&oacute;n que hicimos anteriormente
   <strong>turnright()</strong>? Si existiese alguna forma de que en vez de poner 3 en la sentencia
-  <strong>iterate</strong> pusiesemos un número variable, podríamos usar la instrucción tanto para
+  <strong>iterate</strong> pusiesemos un n&uacute;mero variable, podr&iacute;amos usar la instrucci&oacute;n tanto para
   girar a la derecha como para dar media vuelta.</p>
-  <p>¡Pues si existe! Primero retomemos el código para girar a la derecha:</p>
+  <p>&iexcl;Pues si existe! Primero retomemos el c&oacute;digo para girar a la derecha:</p>
   <p>...</p>
   <p>void turnright() {</p>
   <p>&nbsp;&nbsp;&nbsp;iterate(3) {</p>
@@ -23,17 +24,17 @@
   <p>&nbsp;&nbsp;&nbsp;}</p>
   <p>}</p>
   <p>...</p>
-  <p>Ahora, todas las nuevas instrucciones declaradas pueden además llevar un parámetro, ¿pero que
-  es un parámetro?, pues es un numerito que le podemos mandar a la instrucción cuando la llamamos,
-  y como cuando declaramos la instrucción no sabemos con que número la vamos a llamar, reemplazamos
-  el número por una palabra. ¿Alguna vez has oído la frase "los primeros n números"?, pues
-  precisamente eso son los parámetros. Podemos en vez de n poner 1, 2 ó 3, quedando "los primeros 3
-  números" por ejemplo. Este parámetro puede tener el nombre que sea, siempre y cuando la primer
-  letra no sea un número y el nombre del parámetro no sea el mismo que una palabra del lenguaje,
+  <p>Ahora, todas las nuevas instrucciones declaradas pueden adem&aacute;s llevar un par&aacute;metro, &iquest;pero que
+  es un par&aacute;metro?, pues es un numerito que le podemos mandar a la instrucci&oacute;n cuando la llamamos,
+  y como cuando declaramos la instrucci&oacute;n no sabemos con que n&uacute;mero la vamos a llamar, reemplazamos
+  el n&uacute;mero por una palabra. &iquest;Alguna vez has o&iacute;do la frase "los primeros n n&uacute;meros"?, pues
+  precisamente eso son los par&aacute;metros. Podemos en vez de n poner 1, 2 &oacute; 3, quedando "los primeros 3
+  n&uacute;meros" por ejemplo. Este par&aacute;metro puede tener el nombre que sea, siempre y cuando la primer
+  letra no sea un n&uacute;mero y el nombre del par&aacute;metro no sea el mismo que una palabra del lenguaje,
   por ejemplo no se puede llamar if, iterate, move, etc.</p>
-  <p>Este parámetro se puede usar en cualquier lugar dentro de la definición de la instrucción, en
-  cualquier sentencia o instrucción que necesite un número (justo como la sentencia iterate).
-  Redefinamos ahora la instrucción turnright como la instruccion turn:</p>
+  <p>Este par&aacute;metro se puede usar en cualquier lugar dentro de la definici&oacute;n de la instrucci&oacute;n, en
+  cualquier sentencia o instrucci&oacute;n que necesite un n&uacute;mero (justo como la sentencia iterate).
+  Redefinamos ahora la instrucci&oacute;n turnright como la instruccion turn:</p>
   <p>...</p>
   <p>void turn(n) {</p>
   <p>&nbsp;&nbsp;&nbsp;iterate(n) {</p>
@@ -41,22 +42,22 @@
   <p>&nbsp;&nbsp;&nbsp;}</p>
   <p>}</p>
   <p>...</p>
-  <p>De esta forma si escribimos en nuestro código "turn(3);" Karel girará a la derecha, si
-  escribimos "turn(2);" dará media vuelta, si escribimos "turn(1);" girará a la izquierda y si
-  escribimos "turn(0);" no hará nada.</p>
-  <p>Aqui puedes ver como se escribe una instrucción con un parámetro en general:</p>
+  <p>De esta forma si escribimos en nuestro c&oacute;digo "turn(3);" Karel girar&aacute; a la derecha, si
+  escribimos "turn(2);" dar&aacute; media vuelta, si escribimos "turn(1);" girar&aacute; a la izquierda y si
+  escribimos "turn(0);" no har&aacute; nada.</p>
+  <p>Aqui puedes ver como se escribe una instrucci&oacute;n con un par&aacute;metro en general:</p>
   <p>...</p>
   <p>void xxx (yyy) {</p>
   <p>&nbsp;&nbsp;&nbsp;zzz</p>
   <p>}</p>
   <p>...</p>
-  <p>donde xxx es el nombre de la instrucción, yyy es el nombre del parámetro y zzz es cualquier
-  número de instrucciones.</p>
-  <p><strong>Ejercicio 9:</strong> Escribe una nueva instrucción que avance a Karel el número de
-  veces que se le mande como parámetro. Debes de evitar que Karel choque con alguna pared.</p>
-  <p>¿Tienes dudas? Usa como base el código de la instrucción gira.</p>
+  <p>donde xxx es el nombre de la instrucci&oacute;n, yyy es el nombre del par&aacute;metro y zzz es cualquier
+  n&uacute;mero de instrucciones.</p>
+  <p><strong>Ejercicio 9:</strong> Escribe una nueva instrucci&oacute;n que avance a Karel el n&uacute;mero de
+  veces que se le mande como par&aacute;metro. Debes de evitar que Karel choque con alguna pared.</p>
+  <p>&iquest;Tienes dudas? Usa como base el c&oacute;digo de la instrucci&oacute;n gira.</p>
   <center>
-    <h2>Parámetros en funciones &nbsp;</h2>
+    <h2>Par&aacute;metros en funciones &nbsp;</h2>
     <h2 align="left"><a href="KarelJAVA.html">Regresar</a></h2>
   </center>
 </body>
