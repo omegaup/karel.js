@@ -19,7 +19,7 @@ addons:
       - pep8
       - python2.7
       - pylint
-      - python3
+      - python3.5
       - python3-pip
 
 before_install:
@@ -32,13 +32,13 @@ before_install:
   - export PATH=$PATH:$PWD/geckodriver:$PWD/chromedriver
   - pip install --user six
   - pip install --user https://github.com/google/closure-linter/zipball/master
-  - pip3 install --user selenium
-  - pip3 install --user pytest
+  - python3.5 -m pip install --user selenium==3.13.0
+  - python3.5 -m pip install --user pytest
 
 script:
   - npm test
   - python2.7 libkarel/libkarel_test.py
-  - python3 -m pytest test/ --browser=firefox
+  - python3.5 -m pytest test/ --browser=firefox
   - pylint --rcfile=libkarel/.pylintrc libkarel/libkarel.py libkarel/libkarel_test.py
   - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py test/conftest.py test/test_webdriver.py
   - hook_tools/lint.py validate --all
