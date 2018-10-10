@@ -17,7 +17,6 @@ addons:
     packages:
       - clang-format-3.7
       - pep8
-      - python2.7
       - pylint
       - python3.5
       - python3-pip
@@ -37,8 +36,6 @@ before_install:
 
 script:
   - npm test
-  - python2.7 libkarel/libkarel_test.py
   - python3.5 -m pytest test/ --browser=firefox
-  - pylint --rcfile=libkarel/.pylintrc libkarel/libkarel.py libkarel/libkarel_test.py
-  - pep8 --ignore=E501 libkarel/libkarel.py libkarel/libkarel_test.py test/conftest.py test/test_webdriver.py
+  - pep8 --ignore=E501 test/conftest.py test/test_webdriver.py
   - hook_tools/lint.py validate --all
