@@ -48,6 +48,8 @@ describe('draw worlds', function() {
       this.timeout(10000);
 
       var problemDir = 'test/problems/' + problem + '/';
+      var solutionPath = problemDir + 'sol.txt';
+
       fs.readdirSync(problemDir + 'cases')
           .forEach(function(casename) {
             if (!casename.endsWith('.in')) return;
@@ -56,7 +58,7 @@ describe('draw worlds', function() {
 
             var world = fs.readFileSync(inPath, {encoding: 'utf-8'});
 
-            util.Draw(world, pngPath);
+            util.Draw(world, pngPath, {run: solutionPath});
 
             assert(fs.existsSync(pngPath));
           });
