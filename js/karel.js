@@ -156,7 +156,7 @@ Runtime.prototype.load = function(opcodes) {
   var function_map = {};
   self.function_names = [];
   var function_idx = 0;
-  self.program = new Int16Array(new ArrayBuffer(opcodes.length * 6));
+  self.program = new Int32Array(new ArrayBuffer(opcodes.length * 3 * 4));
   for (var i = 0; i < opcodes.length; i++) {
     self.program[3 * i] = opcode_mapping.indexOf(opcodes[i][0]);
     if (opcodes[i].length > 1) {
@@ -192,7 +192,7 @@ Runtime.prototype.reset = function() {
     fp: -1,
     line: -1,
     ic: 0,
-    stack: new Int32Array(new ArrayBuffer(0xffff * 16 + 40)),
+    stack: new Int32Array(new ArrayBuffer((0xffff * 16 + 40) * 4)),
     stackSize: 0,
 
     // Instruction counts
@@ -529,17 +529,13 @@ Runtime.prototype.next = function() {
     }
 
     if (self.debug) {
-      var subarray = [];
-      for (var i = 0; i <= self.state.sp; i++) {
-        subarray.push(self.state.stack[i]);
-      }
       var copy = {
         pc: self.state.pc,
-        sp: self.state.sp,
-        fp: self.state.fp,
+        stackSize: self.state.stackSize,
+        expressionStack: Array.from(
+            self.state.stack.slice(self.state.fp + 4, self.state.sp + 1)),
         line: self.state.line,
         ic: self.state.ic,
-        stack: subarray,
         running: self.state.running
       };
       self.fireEvent(
@@ -568,12 +564,9 @@ World.prototype.reset = function() {
   self.init(self.w, self.h);
 };
 
-World.prototype.init = function(w, h) {
+World.prototype.createMaps = function() {
   var self = this;
 
-  self.w = w;
-  self.h = h;
-  self.runtime = new Runtime(self);
   if (ArrayBuffer) {
     var len = (self.w + 2) * (self.h + 2);
     self.map = new Int32Array(new ArrayBuffer(len * 4));
@@ -583,7 +576,6 @@ World.prototype.init = function(w, h) {
     self.map = [];
     self.currentMap = [];
     self.wallMap = [];
-
     for (var i = 0; i <= self.h; i++) {
       for (var j = 0; j <= self.w; j++) {
         self.map.push(0);
@@ -593,7 +585,67 @@ World.prototype.init = function(w, h) {
     }
   }
 
+};
+
+World.prototype.init = function(w, h) {
+  var self = this;
+
+  self.w = w;
+  self.h = h;
+  self.runtime = new Runtime(self);
+  self.createMaps();
+
   self.clear();
+};
+
+World.prototype.resize = function(w, h) {
+  var self = this;
+
+  // Eliminamos las paredes del borde
+  for (var i = 1; i <= self.h; i++) {
+    self.wallMap[self.w * i + 1] &= ~(1 << 0);
+    self.wallMap[self.w * (i + 1)] &= ~(1 << 2);
+  }
+  for (var j = 1; j <= self.w; j++) {
+    self.wallMap[self.w * self.h + j] &= ~(1 << 1);
+    self.wallMap[self.w + j] &= ~(1 << 3);
+  }
+
+  var oldW = self.w;
+  var oldH = self.h;
+  var oldMap = self.map;
+  var oldCurrentMap = self.oldCurrentMap;
+  var oldWallMap = self.wallMap;
+  var oldDumpCells = self.dumpCells;
+
+  self.w = w;
+  self.h = h;
+  self.createMaps();
+  self.addBorderWalls();
+
+  // Copiamos todas las paredes y zumbadores
+  for (var i = 1; i <= oldH; i++) {
+    for (var j = 1; j <= oldW; j++) {
+      self.setCellWalls(i, j, oldWallMap[oldW * i + j]);
+      self.setBuzzers(i, j, oldMap[oldW * i + j]);
+    }
+  }
+
+  // Vaciamos dumpCells y la llenamos de nuevo
+  self.dumpCells = [];
+  for (var dumpPos = 0; dumpPos < oldDumpCells.length; dumpPos++) {
+    if (oldDumpCells[dumpPos][0] <= self.h &&
+        oldDumpCells[dumpPos][1] <= self.w) {
+      self.setDumpCell(oldDumpCells[dumpPos][0], oldDumpCells[dumpPos][1],
+                       true);
+    }
+  }
+
+  // Checamos si karel sigue dentro del mundo
+  if (self.start_i > self.h) self.start_i = self.i = self.h;
+  if (self.start_j > self.w) self.start_j = self.j = self.w;
+
+  self.dirty = true;
 };
 
 World.prototype.clear = function() {
@@ -607,15 +659,7 @@ World.prototype.clear = function() {
     self.map[i] = self.currentMap[i] = 0;
   }
 
-  for (var i = 1; i <= self.h; i++) {
-    self.addWall(i, 1, 0);
-    self.addWall(i, self.w, 2);
-  }
-
-  for (var j = 1; j <= self.w; j++) {
-    self.addWall(self.h, j, 1);
-    self.addWall(1, j, 3);
-  }
+  self.addBorderWalls();
 
   self.orientation = 1;
   self.startOrientation = 1;
@@ -755,15 +799,37 @@ World.prototype.toggleWall = function(i, j, orientation) {
 
   if (orientation === 0 && j > 1) {
     self.wallMap[self.w * i + (j - 1)] ^= (1 << 2);
-  } else if (orientation === 1 && i <= self.h) {
+  } else if (orientation === 1 && i < self.h) {
     self.wallMap[self.w * (i + 1) + j] ^= (1 << 3);
-  } else if (orientation === 2 && j <= self.w) {
+  } else if (orientation === 2 && j < self.w) {
     self.wallMap[self.w * i + (j + 1)] ^= (1 << 0);
   } else if (orientation === 3 && i > 1) {
     self.wallMap[self.w * (i - 1) + j] ^= (1 << 1);
   }
 
   self.dirty = true;
+};
+
+World.prototype.addBorderWalls = function() {
+  var self = this;
+
+  for (var i = 1; i <= self.h; i++) {
+    self.addWall(i, 1, 0);
+    self.addWall(i, self.w, 2);
+  }
+
+  for (var j = 1; j <= self.w; j++) {
+    self.addWall(self.h, j, 1);
+    self.addWall(1, j, 3);
+  }
+};
+
+World.prototype.setCellWalls = function(i, j, wallMask) {
+  var self = this;
+
+  for (var pos = 0; pos < 4; pos++) {
+    if (wallMask & (1 << pos)) self.addWall(i, j, pos);
+  }
 };
 
 World.prototype.addWall = function(i, j, orientation) {
@@ -776,9 +842,9 @@ World.prototype.addWall = function(i, j, orientation) {
 
   if (orientation === 0 && j > 1)
     self.wallMap[self.w * i + (j - 1)] |= (1 << 2);
-  else if (orientation === 1 && i <= self.h)
+  else if (orientation === 1 && i < self.h)
     self.wallMap[self.w * (i + 1) + j] |= (1 << 3);
-  else if (orientation === 2 && j <= self.w)
+  else if (orientation === 2 && j < self.w)
     self.wallMap[self.w * i + (j + 1)] |= (1 << 0);
   else if (orientation === 3 && i > 1)
     self.wallMap[self.w * (i - 1) + j] |= (1 << 1);
@@ -832,6 +898,8 @@ World.prototype.setDumpCell = function(i, j, dumpState) {
   var self = this;
   var dumpPos = -1;
 
+  if (0 > i || i > self.h || 0 > j || j > self.w) return;
+
   for (dumpPos = 0; dumpPos < self.dumpCells.length; dumpPos++) {
     if (self.dumpCells[dumpPos][0] == i && self.dumpCells[dumpPos][1] == j) {
       break;
@@ -852,6 +920,8 @@ World.prototype.setDumpCell = function(i, j, dumpState) {
 World.prototype.toggleDumpCell = function(i, j) {
   var self = this;
   var dumpPos = 0;
+
+  if (0 > i || i > self.h || 0 > j || j > self.w) return;
 
   for (; dumpPos < self.dumpCells.length; dumpPos++) {
     if (self.dumpCells[dumpPos][0] == i && self.dumpCells[dumpPos][1] == j) {
@@ -928,6 +998,8 @@ World.prototype.load = function(doc) {
         self.addWall(alto, j, 1);
         self.addWall(1, j, 3);
       }
+
+      self.resize(ancho, alto);
     },
 
     condiciones: function(condiciones) {
@@ -961,7 +1033,14 @@ World.prototype.load = function(doc) {
     monton: function(monton) {
       var i = parseInt(monton.getAttribute('y'), 10);
       var j = parseInt(monton.getAttribute('x'), 10);
-      self.setBuzzers(i, j, parseInt(monton.getAttribute('zumbadores'), 10));
+      var zumbadores = monton.getAttribute('zumbadores');
+      if (zumbadores == 'INFINITO') {
+        zumbadores = -1;
+      } else {
+        zumbadores = parseInt(zumbadores, 10);
+        if (isNaN(zumbadores)) zumbadores = 0;
+      }
+      self.setBuzzers(i, j, zumbadores);
     },
 
     pared: function(pared) {
@@ -1355,7 +1434,8 @@ World.prototype.rotate = function(orientation) {
 World.prototype.setBagBuzzers = function(buzzers) {
   var self = this;
 
-  self.bagBuzzers = self.startBagBuzzers = buzzers == 0xffff ? -1 : buzzers;
+  if (isNaN(buzzers)) buzzers = 0;
+  self.bagBuzzers = self.startBagBuzzers = (buzzers == 0xffff ? -1 : buzzers);
   self.dirty = true;
 };
 
