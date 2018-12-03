@@ -6,10 +6,10 @@ var fs = require('fs');
 // .height = how many rows to render
 // .width = how many columns to render
 // .run = the path to a karel program to run before rendering
-var Draw = function(worldString, outputFile, opts){
+var Draw = function(worldString, outputFile, opts) {
   var DOMParser = require('xmldom').DOMParser;
   var WorldRender = require('../js/mundo.js').WorldRender;
-  var { createCanvas } = require('canvas');
+  var {createCanvas} = require('canvas');
 
   var worldXml = new DOMParser().parseFromString(worldString, 'text/xml');
   var out = fs.createWriteStream(outputFile, {encoding: 'binary'});
@@ -17,16 +17,17 @@ var Draw = function(worldString, outputFile, opts){
   var world = new karel.World(100, 100);
   world.load(worldXml);
 
-  if (opts.run){
+  if (opts.run) {
     var file = fs.readFileSync(opts.run, {encoding: 'utf-8'});
     var compiled = null;
     if (opts.run.endsWith('.kx')) {
-        compiled = JSON.parse(file);
+      compiled = JSON.parse(file);
     } else {
-        compiled = karel.compile(file);
+      compiled = karel.compile(file);
     }
     world.runtime.load(compiled);
-    while (world.runtime.step());
+    while (world.runtime.step())
+      ;
   }
 
   var height = parseInt(opts.height || world.h);

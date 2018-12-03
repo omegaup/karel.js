@@ -51,7 +51,7 @@ describe('draw worlds', function() {
       var solutionPath = problemDir + 'sol.txt';
 
       fs.readdirSync(problemDir + 'cases')
-          .slice(0, 1) // only test one case
+          .slice(0, 1)  // only test one case
           .forEach(function(casename) {
             if (!casename.endsWith('.in')) return;
             var inPath = problemDir + 'cases/' + casename;
