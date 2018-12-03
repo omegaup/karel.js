@@ -73,7 +73,7 @@ describe('import old mdo+kec', function() {
   oldCases.forEach(function(casename) {
     if (!casename.endsWith('.in')) return;
 
-    it(casename, function() {
+    it(casename.slice(0, -3), function() {
       var inPath = 'test/mdokec/' + casename;
       var mdoPath = inPath.slice(0, -3) + '.mdo';
       var kecPath = inPath.slice(0, -3) + '.kec';
