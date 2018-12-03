@@ -221,8 +221,8 @@ var WorldRender = function(context, worldHeight, worldWidth) {
       a++;
     }
 
-    if (typeof $ !== 'undefined') {
-      $('#mochila').val(world.bagBuzzers);
+    if (typeof document !== 'undefined') {
+      document.getElementById('mochila').value = world.bagBuzzers;
     }
 
     if (this.polygon) {
@@ -382,7 +382,7 @@ var WorldRender = function(context, worldHeight, worldWidth) {
   };
 };
 
-if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
+if (typeof exports !== 'undefined') {
   exports.WorldRender = WorldRender;
   exports.Kind = Kind;
 }

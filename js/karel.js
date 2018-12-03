@@ -986,19 +986,6 @@ World.prototype.load = function(doc) {
         return;
       }
 
-      self.XMLheight = alto;
-      self.XMLwidth = ancho;
-
-      for (var i = 1; i <= alto; i++) {
-        self.addWall(i, 1, 0);
-        self.addWall(i, ancho, 2);
-      }
-
-      for (var j = 1; j <= ancho; j++) {
-        self.addWall(alto, j, 1);
-        self.addWall(1, j, 3);
-      }
-
       self.resize(ancho, alto);
     },
 

@@ -33,7 +33,7 @@
     }
   },
   "bin": {
-    "kareljs": "./js/cli.js"
+    "kareljs": "./cmd/kareljs"
   },
   "repository": {
     "type": "git",
@@ -46,9 +46,9 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "nomnom": "^1.8.1",
+    "commander": "^2.9.0",
     "xmldom": "^0.1.27",
-    "canvas-prebuilt": "^1.6"
+    "canvas": "^2.1.0"
   },
   "keywords": [
     "karel"
