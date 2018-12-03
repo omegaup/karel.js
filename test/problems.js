@@ -2,6 +2,7 @@ var assert = require('assert');
 var fs = require('fs');
 var karel = require('../js/karel.js');
 var DOMParser = require('xmldom').DOMParser;
+var util = require('../js/util.js');
 
 describe('problems', function() {
   var problems = fs.readdirSync('test/problems');
@@ -33,6 +34,31 @@ describe('problems', function() {
             var expectedOutput = fs.readFileSync(outPath, {encoding: 'utf-8'})
                                      .replace(/\s+/g, '');
             assert.equal(output, expectedOutput);
+          });
+    });
+  });
+});
+
+describe('draw worlds', function() {
+  var problems = fs.readdirSync('test/problems');
+
+  problems.forEach(function(problem) {
+    it(problem, function() {
+      // 10s timeout per problem.
+      this.timeout(10000);
+
+      var problemDir = 'test/problems/' + problem + '/';
+      fs.readdirSync(problemDir + 'cases')
+          .forEach(function(casename) {
+            if (!casename.endsWith('.in')) return;
+            var inPath = problemDir + 'cases/' + casename;
+            var pngPath = inPath.slice(0, -3) + '.png';
+
+            var world = fs.readFileSync(inPath, {encoding: 'utf-8'});
+
+            util.Draw(world, pngPath);
+
+            assert.assert(fs.existsSync(pngPath));
           });
     });
   });

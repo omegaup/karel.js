@@ -6,8 +6,6 @@ var program = require('commander');
 var fs = require('fs');
 var version = require('../package.json').version;
 var karel = require('../js/karel.js');
-var WorldRender = require('../js/mundo.js').WorldRender;
-var { createCanvas } = require('canvas');
 
 function readStdin() {
   return new Promise(function(resolve, reject) {
@@ -75,34 +73,9 @@ program
 .option('-w, --width <width>', 'width to draw, in cells')
 .option('-h, --height <height>', 'height to draw, in cells')
 .action(function(options){
-  var DOMParser = require('xmldom').DOMParser;
-
   readStdin()
     .then(stdin => {
-      var worldXml = new DOMParser().parseFromString(stdin, 'text/xml');
-      var out = fs.createWriteStream(options.output, {encoding: 'binary'});
-
-      var world = new karel.World(100, 100);
-      world.load(worldXml);
-
-      var height = parseInt(options.height || world.h);
-      var width = parseInt(options.width || world.w);
-
-      var imgheight = 30 * (height + 1) + 15;
-      var imgwidth = 30 * (width + 1) + 15;
-
-      var canvas = createCanvas(imgwidth, imgheight);
-      var stream = canvas.pngStream();
-
-      stream.on('data', function(chunk) { out.write(chunk); });
-
-      stream.on('end', function() { out.end(); });
-
-      var ctx = canvas.getContext('2d');
-
-      var renderer = new WorldRender(ctx, world.h, world.w);
-
-      renderer.paint(world, imgwidth, imgheight);
+      require("../js/util.js").Draw(stdin, options.output, options.width, options.height);
     });
 });
 
