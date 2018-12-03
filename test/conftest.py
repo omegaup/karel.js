@@ -145,7 +145,7 @@ def driver(request, browser):
         if request.config.option.headless:
             options.add_argument('-headless')
         browser = webdriver.Firefox(capabilities=firefox_capabilities,
-                                    firefox_options=options)
+                                    options=options)
     browser.set_window_size(*_WINDOW_SIZE)
 
     browser.implicitly_wait(_DEFAULT_TIMEOUT)
