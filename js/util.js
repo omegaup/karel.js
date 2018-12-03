@@ -6,13 +6,16 @@ var fs = require('fs');
 // .height = how many rows to render
 // .width = how many columns to render
 // .run = the path to a karel program to run before rendering
+// Returns a promise that resolves when the file is done writing.
 var Draw = function(worldString, outputFile, opts) {
   var DOMParser = require('xmldom').DOMParser;
   var WorldRender = require('../js/mundo.js').WorldRender;
   var {createCanvas} = require('canvas');
 
   var worldXml = new DOMParser().parseFromString(worldString, 'text/xml');
+
   var out = fs.createWriteStream(outputFile, {encoding: 'binary'});
+  var doneWriting = new Promise(resolve => out.on('finish', resolve));
 
   var world = new karel.World(100, 100);
   world.load(worldXml);
@@ -48,6 +51,8 @@ var Draw = function(worldString, outputFile, opts) {
   var renderer = new WorldRender(ctx, world.h, world.w);
 
   renderer.paint(world, imgwidth, imgheight);
+
+  return doneWriting;
 };
 
 if (typeof exports !== 'undefined') {

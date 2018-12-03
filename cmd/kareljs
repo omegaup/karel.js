@@ -76,7 +76,7 @@ program
 .action(function(options){
   readStdin()
     .then(stdin => {
-      require("../js/util.js").Draw(stdin, options.output, options);
+      return require("../js/util.js").Draw(stdin, options.output, options);
     });
 });
 

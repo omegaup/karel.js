@@ -50,19 +50,21 @@ describe('draw worlds', function() {
       var problemDir = 'test/problems/' + problem + '/';
       var solutionPath = problemDir + 'sol.txt';
 
-      fs.readdirSync(problemDir + 'cases')
-          .slice(0, 1)  // only test one case
-          .forEach(function(casename) {
-            if (!casename.endsWith('.in')) return;
-            var inPath = problemDir + 'cases/' + casename;
-            var pngPath = inPath.slice(0, -3) + '.png';
+      var allDoneWriting =
+          fs.readdirSync(problemDir + 'cases')
+              .slice(0, 1)  // only test one case
+              .map(function(casename) {
+                if (!casename.endsWith('.in')) return;
+                var inPath = problemDir + 'cases/' + casename;
+                var pngPath = inPath.slice(0, -3) + '.png';
 
-            var world = fs.readFileSync(inPath, {encoding: 'utf-8'});
+                var world = fs.readFileSync(inPath, {encoding: 'utf-8'});
 
-            util.Draw(world, pngPath, {run: solutionPath});
+                return util.Draw(world, pngPath, {run: solutionPath})
+                    .finally(() => assert(fs.existsSync(pngPath)));
+              });
 
-            assert(fs.existsSync(pngPath));
-          });
+      return Promise.all(allDoneWriting);
     });
   });
 });
