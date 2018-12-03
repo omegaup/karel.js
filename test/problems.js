@@ -71,8 +71,9 @@ describe('import old mdo+kec', function() {
   var oldCases = fs.readdirSync('test/mdokec');
 
   oldCases.forEach(function(casename) {
+    if (!casename.endsWith('.in')) return;
+
     it(casename, function() {
-      if (!casename.endsWith('.in')) return;
       var inPath = 'test/mdokec/' + casename;
       var mdoPath = inPath.slice(0, -3) + '.mdo';
       var kecPath = inPath.slice(0, -3) + '.kec';
