@@ -58,7 +58,7 @@ describe('draw worlds', function() {
 
             util.Draw(world, pngPath);
 
-            assert.assert(fs.existsSync(pngPath));
+            assert(fs.existsSync(pngPath));
           });
     });
   });
