@@ -78,10 +78,10 @@ describe('import old mdo+kec', function() {
 
     var world = util.ImportMdoKec(mdoPath, kecPath);
 
-    var output = world.save();
+    var output = world.save().replace(/\s+/g, '');
 
-    var expectedOutput = fs.readFileSync(inPath, {encoding: 'utf-8'})
-                             .replace(/\s+/g, '');
+    var expectedOutput =
+        fs.readFileSync(inPath, {encoding: 'utf-8'}).replace(/\s+/g, '');
 
     assert.equal(output, expectedOutput);
   });
