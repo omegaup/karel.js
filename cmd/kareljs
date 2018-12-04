@@ -77,7 +77,7 @@ program
 .action(function(options){
   readStdin()
     .then(stdin => {
-      util.Draw(stdin, options.output, options);
+      return util.Draw(stdin, options.output, options);
     });
 });
 
