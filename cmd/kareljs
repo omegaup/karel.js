@@ -66,6 +66,20 @@ program
     });
 });
 
+program
+.command('draw')
+.description('Reads a world .in from stdin and renders it as a png.')
+.option('-o, --output <outputfile>', 'output file. Default is world.png', 'world.png')
+.option('-r, --run <sourcefile>', 'run a karel program before rendering the world')
+.option('-w, --width <width>', 'width to draw, in cells')
+.option('-h, --height <height>', 'height to draw, in cells')
+.action(function(options){
+  readStdin()
+    .then(stdin => {
+      return require("../js/util.js").Draw(stdin, options.output, options);
+    });
+});
+
 program.parse(process.argv);
 
 // vim: set expandtab:ts=2:sw=2

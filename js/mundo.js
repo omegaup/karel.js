@@ -221,7 +221,9 @@ var WorldRender = function(context, worldHeight, worldWidth) {
       a++;
     }
 
-    $('#mochila').val(world.bagBuzzers);
+    if (typeof document !== 'undefined') {
+      document.getElementById('mochila').value = world.bagBuzzers;
+    }
 
     if (this.polygon) {
       context.fillStyle = '#ff0000';
@@ -378,4 +380,9 @@ var WorldRender = function(context, worldHeight, worldWidth) {
 
     return {row: row, column: column, kind: kind, x: x, y: y};
   };
+};
+
+if (typeof exports !== 'undefined') {
+  exports.WorldRender = WorldRender;
+  exports.Kind = Kind;
 }

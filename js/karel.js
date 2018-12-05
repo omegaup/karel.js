@@ -985,6 +985,7 @@ World.prototype.load = function(doc) {
       if (!alto || !ancho) {
         return;
       }
+
       self.resize(ancho, alto);
     },
 
