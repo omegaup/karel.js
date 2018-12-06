@@ -68,3 +68,26 @@ describe('draw worlds', function() {
     });
   });
 });
+
+describe('import old mdo+kec', function() {
+  var oldCases = fs.readdirSync('test/mdokec');
+
+  oldCases.forEach(function(casename) {
+    if (!casename.endsWith('.in')) return;
+
+    it(casename.slice(0, -3), function() {
+      var inPath = 'test/mdokec/' + casename;
+      var mdoPath = inPath.slice(0, -3) + '.mdo';
+      var kecPath = inPath.slice(0, -3) + '.kec';
+
+      var world = util.ImportMdoKec(mdoPath, kecPath);
+
+      var output = world.save().replace(/\s+/g, '');
+
+      var expectedOutput =
+          fs.readFileSync(inPath, {encoding: 'utf-8'}).replace(/\s+/g, '');
+
+      assert.equal(output, expectedOutput);
+    });
+  });
+});

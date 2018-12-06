@@ -6,6 +6,7 @@ var program = require('commander');
 var fs = require('fs');
 var version = require('../package.json').version;
 var karel = require('../js/karel.js');
+var util = require("../js/util.js");
 
 function readStdin() {
   return new Promise(function(resolve, reject) {
@@ -76,8 +77,15 @@ program
 .action(function(options){
   readStdin()
     .then(stdin => {
-      return require("../js/util.js").Draw(stdin, options.output, options);
+      return util.Draw(stdin, options.output, options);
     });
+});
+
+program
+.command('convert <mdo> <kec>')
+.description('Converts a .kec with its .mdo into a karel.js XML.')
+.action(function(mdoPath, kecPath){
+  process.stdout.write(util.ImportMdoKec(mdoPath, kecPath).save());
 });
 
 program.parse(process.argv);

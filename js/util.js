@@ -55,6 +55,23 @@ var Draw = function(worldString, outputFile, opts) {
   return doneWriting;
 };
 
+// Takes the path to a pair of .mdo and .kec files and returns a karel.js world.
+var ImportMdoKec = function(mdoPath, kecPath) {
+  var bufferToUint16Array = function(b) {
+    return new Uint16Array(b.buffer, b.byteOffset,
+                           b.byteLength / Uint16Array.BYTES_PER_ELEMENT);
+  };
+
+  var mdo = bufferToUint16Array(fs.readFileSync(mdoPath));
+  var kec = bufferToUint16Array(fs.readFileSync(kecPath));
+
+  var world = new karel.World(100, 100);
+  world.import(mdo, kec);
+
+  return world;
+};
+
 if (typeof exports !== 'undefined') {
   exports.Draw = Draw;
+  exports.ImportMdoKec = ImportMdoKec;
 }
