@@ -88,6 +88,14 @@ program
   process.stdout.write(util.ImportMdoKec(mdoPath, kecPath).save());
 });
 
+program
+.command('detect-language')
+.description('Reads a karel program from stdin and guesses its language.')
+.action(function(){
+  readStdin().then(code => karel.detectLanguage(code))
+             .then(language => console.log(language));
+});
+
 program.parse(process.argv);
 
 // vim: set expandtab:ts=2:sw=2
