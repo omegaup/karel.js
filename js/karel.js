@@ -1,18 +1,19 @@
 if (typeof Event === 'undefined') {
-  var Event = function(type) { this.type = type; };
+  var Event = function (type) {
+    this.type = type;
+  };
 }
-
 
 /**
  * A class that implements the W3C DOM's EventTarget interface.
  * http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget
  */
-var EventTarget = function() {
+var EventTarget = function () {
   var self = this;
   self.listeners = {};
 };
 
-EventTarget.prototype.addEventListener = function(type, listener) {
+EventTarget.prototype.addEventListener = function (type, listener) {
   var self = this;
   if (!self.listeners.hasOwnProperty(type)) {
     self.listeners[type] = [];
@@ -20,7 +21,7 @@ EventTarget.prototype.addEventListener = function(type, listener) {
   self.listeners[type].push(listener);
 };
 
-EventTarget.prototype.removeEventListener = function(type, listener) {
+EventTarget.prototype.removeEventListener = function (type, listener) {
   var self = this;
   if (self.listeners.hasOwnProperty(type)) {
     var index = self.listeners[type].indexOf(listener);
@@ -30,7 +31,7 @@ EventTarget.prototype.removeEventListener = function(type, listener) {
   }
 };
 
-EventTarget.prototype.dispatchEvent = function(evt) {
+EventTarget.prototype.dispatchEvent = function (evt) {
   var self = this;
   if (self.listeners.hasOwnProperty(evt._type)) {
     for (var i = 0; i < self.listeners[evt._type].length; i++) {
@@ -39,7 +40,7 @@ EventTarget.prototype.dispatchEvent = function(evt) {
   }
 };
 
-EventTarget.prototype.fireEvent = function(type, properties) {
+EventTarget.prototype.fireEvent = function (type, properties) {
   var self = this;
 
   var evt = null;
@@ -68,7 +69,6 @@ EventTarget.prototype.fireEvent = function(type, properties) {
   self.dispatchEvent(evt);
 };
 
-
 /**
  * A class that holds the state of computation and executes opcodes.
  *
@@ -77,7 +77,7 @@ EventTarget.prototype.fireEvent = function(type, properties) {
  * All opcodes are represented as an array where the first element is the
  * opcode name, followed by zero or one parameters.
  */
-var Runtime = function(world) {
+var Runtime = function (world) {
   var self = this;
 
   self.debug = false;
@@ -118,7 +118,7 @@ Runtime.CALL = 25;
 Runtime.RET = 26;
 Runtime.PARAM = 27;
 
-Runtime.prototype.load = function(opcodes) {
+Runtime.prototype.load = function (opcodes) {
   var self = this;
   var opcode_mapping = [
     'HALT',
@@ -148,7 +148,7 @@ Runtime.prototype.load = function(opcodes) {
     'INC',
     'CALL',
     'RET',
-    'PARAM'
+    'PARAM',
   ];
   var error_mapping = ['WALL', 'WORLDUNDERFLOW', 'BAGUNDERFLOW', 'INSTRUCTION'];
 
@@ -178,12 +178,12 @@ Runtime.prototype.load = function(opcodes) {
   self.reset();
 };
 
-Runtime.prototype.start = function() {
+Runtime.prototype.start = function () {
   var self = this;
-  self.fireEvent('start', {target: self, world: self.world});
+  self.fireEvent('start', { target: self, world: self.world });
 };
 
-Runtime.prototype.reset = function() {
+Runtime.prototype.reset = function () {
   var self = this;
 
   self.state = {
@@ -203,19 +203,19 @@ Runtime.prototype.reset = function() {
 
     // Flags
     jumped: false,
-    running: true
+    running: true,
   };
 
   if (self.debug) {
     self.fireEvent('debug', {
       target: self,
       message: JSON.stringify(self.raw_opcodes),
-      debugType: 'program'
+      debugType: 'program',
     });
   }
 };
 
-Runtime.prototype.step = function() {
+Runtime.prototype.step = function () {
   var self = this;
 
   while (self.state.running) {
@@ -227,7 +227,7 @@ Runtime.prototype.step = function() {
       self.next();
     } finally {
       if (!self.state.running) {
-        self.fireEvent('stop', {target: self, world: self.world});
+        self.fireEvent('stop', { target: self, world: self.world });
       }
     }
   }
@@ -235,7 +235,7 @@ Runtime.prototype.step = function() {
   return self.state.running;
 };
 
-Runtime.prototype.next = function() {
+Runtime.prototype.next = function () {
   var self = this;
 
   if (!self.state.running) return;
@@ -262,9 +262,12 @@ Runtime.prototype.next = function() {
     if (self.debug) {
       self.fireEvent('debug', {
         target: self,
-        message: JSON.stringify(self.program[3 * self.state.pc] + ' ' +
-                                self.raw_opcodes[self.state.pc]),
-        debugType: 'opcode'
+        message: JSON.stringify(
+          self.program[3 * self.state.pc] +
+            ' ' +
+            self.raw_opcodes[self.state.pc],
+        ),
+        debugType: 'opcode',
       });
     }
 
@@ -287,8 +290,10 @@ Runtime.prototype.next = function() {
         }
         self.world.dirty = true;
         self.state.turnLeftCount++;
-        if (self.world.maxTurnLeft >= 0 &&
-            self.state.turnLeftCount > self.world.maxTurnLeft) {
+        if (
+          self.world.maxTurnLeft >= 0 &&
+          self.state.turnLeftCount > self.world.maxTurnLeft
+        ) {
           self.state.running = false;
           self.state.error = 'INSTRUCTION';
         }
@@ -330,37 +335,36 @@ Runtime.prototype.next = function() {
 
       case Runtime.NOT: {
         self.state.stack[self.state.sp] =
-            (self.state.stack[self.state.sp] === 0) ? 1 : 0;
+          self.state.stack[self.state.sp] === 0 ? 1 : 0;
         break;
       }
 
       case Runtime.AND: {
         op2 = self.state.stack[self.state.sp--];
         op1 = self.state.stack[self.state.sp--];
-        self.state.stack[++self.state.sp] = (op1 & op2) ? 1 : 0;
+        self.state.stack[++self.state.sp] = op1 & op2 ? 1 : 0;
         break;
       }
 
       case Runtime.OR: {
         op2 = self.state.stack[self.state.sp--];
         op1 = self.state.stack[self.state.sp--];
-        self.state.stack[++self.state.sp] = (op1 | op2) ? 1 : 0;
+        self.state.stack[++self.state.sp] = op1 | op2 ? 1 : 0;
         break;
       }
 
       case Runtime.EQ: {
         op2 = self.state.stack[self.state.sp--];
         op1 = self.state.stack[self.state.sp--];
-        self.state.stack[++self.state.sp] = (op1 == op2) ? 1 : 0;
+        self.state.stack[++self.state.sp] = op1 == op2 ? 1 : 0;
         break;
       }
 
       case Runtime.EZ: {
         if (self.state.stack[self.state.sp--] === 0) {
-          self.state.error =
-              ['WALL',
-               'WORLDUNDERFLOW',
-               'BAGUNDERFLOW'][self.program[3 * self.state.pc + 1]];
+          self.state.error = ['WALL', 'WORLDUNDERFLOW', 'BAGUNDERFLOW'][
+            self.program[3 * self.state.pc + 1]
+          ];
           self.state.running = false;
         }
         break;
@@ -386,8 +390,10 @@ Runtime.prototype.next = function() {
         self.world.j += dj[self.world.orientation];
         self.world.dirty = true;
         self.state.moveCount++;
-        if (self.world.maxMove >= 0 &&
-            self.state.moveCount > self.world.maxMove) {
+        if (
+          self.world.maxMove >= 0 &&
+          self.state.moveCount > self.world.maxMove
+        ) {
           self.state.running = false;
           self.state.error = 'INSTRUCTION';
         }
@@ -395,13 +401,15 @@ Runtime.prototype.next = function() {
       }
 
       case Runtime.WORLDBUZZERS: {
-        self.state.stack[++self.state.sp] =
-            (self.world.buzzers(world.i, world.j));
+        self.state.stack[++self.state.sp] = self.world.buzzers(
+          world.i,
+          world.j,
+        );
         break;
       }
 
       case Runtime.BAGBUZZERS: {
-        self.state.stack[++self.state.sp] = (self.world.bagBuzzers);
+        self.state.stack[++self.state.sp] = self.world.bagBuzzers;
         break;
       }
 
@@ -409,8 +417,10 @@ Runtime.prototype.next = function() {
         self.state.ic++;
         self.world.pickBuzzer(self.world.i, self.world.j);
         self.state.pickBuzzerCount++;
-        if (self.world.maxPickBuzzer >= 0 &&
-            self.state.pickBuzzerCount > self.world.maxPickBuzzer) {
+        if (
+          self.world.maxPickBuzzer >= 0 &&
+          self.state.pickBuzzerCount > self.world.maxPickBuzzer
+        ) {
           self.state.running = false;
           self.state.error = 'INSTRUCTION';
         }
@@ -421,8 +431,10 @@ Runtime.prototype.next = function() {
         self.state.ic++;
         self.world.leaveBuzzer(self.world.i, self.world.j);
         self.state.leaveBuzzerCount++;
-        if (self.world.maxLeaveBuzzer >= 0 &&
-            self.state.leaveBuzzerCount > self.world.maxLeaveBuzzer) {
+        if (
+          self.world.maxLeaveBuzzer >= 0 &&
+          self.state.leaveBuzzerCount > self.world.maxLeaveBuzzer
+        ) {
           self.state.running = false;
           self.state.error = 'INSTRUCTION';
         }
@@ -476,10 +488,10 @@ Runtime.prototype.next = function() {
           self.state.error = 'STACK';
         } else if (!self.disableStackEvents) {
           self.fireEvent('call', {
-            'function': fname,
+            function: fname,
             param: param,
             line: self.state.line,
-            target: self
+            target: self,
           });
         }
         break;
@@ -495,15 +507,16 @@ Runtime.prototype.next = function() {
         self.state.fp = self.state.stack[self.state.fp];
         self.state.stackSize--;
         if (!self.disableStackEvents) {
-          self.fireEvent('return', {target: self});
+          self.fireEvent('return', { target: self });
         }
         break;
       }
 
       case Runtime.PARAM: {
         self.state.stack[++self.state.sp] =
-            self.state
-                .stack[self.state.fp + 3 + self.program[3 * self.state.pc + 1]];
+          self.state.stack[
+            self.state.fp + 3 + self.program[3 * self.state.pc + 1]
+          ];
         break;
       }
 
@@ -513,7 +526,7 @@ Runtime.prototype.next = function() {
           self.fireEvent('debug', {
             target: self,
             message: 'Missing opcode ' + self.raw_opcodes[self.state.pc][0],
-            debugType: 'opcode'
+            debugType: 'opcode',
           });
         }
 
@@ -533,14 +546,17 @@ Runtime.prototype.next = function() {
         pc: self.state.pc,
         stackSize: self.state.stackSize,
         expressionStack: Array.from(
-            self.state.stack.slice(self.state.fp + 4, self.state.sp + 1)),
+          self.state.stack.slice(self.state.fp + 4, self.state.sp + 1),
+        ),
         line: self.state.line,
         ic: self.state.ic,
-        running: self.state.running
+        running: self.state.running,
       };
-      self.fireEvent(
-          'debug',
-          {target: self, message: JSON.stringify(copy), debugType: 'state'});
+      self.fireEvent('debug', {
+        target: self,
+        message: JSON.stringify(copy),
+        debugType: 'state',
+      });
     }
   } catch (e) {
     self.state.running = false;
@@ -552,19 +568,19 @@ Runtime.prototype.next = function() {
   return true;
 };
 
-var World = function(w, h) {
+var World = function (w, h) {
   var self = this;
 
   self.init(w, h);
 };
 
-World.prototype.reset = function() {
+World.prototype.reset = function () {
   var self = this;
 
   self.init(self.w, self.h);
 };
 
-World.prototype.createMaps = function() {
+World.prototype.createMaps = function () {
   var self = this;
 
   if (ArrayBuffer) {
@@ -584,10 +600,9 @@ World.prototype.createMaps = function() {
       }
     }
   }
-
 };
 
-World.prototype.init = function(w, h) {
+World.prototype.init = function (w, h) {
   var self = this;
 
   self.w = w;
@@ -598,7 +613,7 @@ World.prototype.init = function(w, h) {
   self.clear();
 };
 
-World.prototype.resize = function(w, h) {
+World.prototype.resize = function (w, h) {
   var self = this;
 
   // Eliminamos las paredes del borde
@@ -634,10 +649,15 @@ World.prototype.resize = function(w, h) {
   // Vaciamos dumpCells y la llenamos de nuevo
   self.dumpCells = [];
   for (var dumpPos = 0; dumpPos < oldDumpCells.length; dumpPos++) {
-    if (oldDumpCells[dumpPos][0] <= self.h &&
-        oldDumpCells[dumpPos][1] <= self.w) {
-      self.setDumpCell(oldDumpCells[dumpPos][0], oldDumpCells[dumpPos][1],
-                       true);
+    if (
+      oldDumpCells[dumpPos][0] <= self.h &&
+      oldDumpCells[dumpPos][1] <= self.w
+    ) {
+      self.setDumpCell(
+        oldDumpCells[dumpPos][0],
+        oldDumpCells[dumpPos][1],
+        true,
+      );
     }
   }
 
@@ -648,7 +668,7 @@ World.prototype.resize = function(w, h) {
   self.dirty = true;
 };
 
-World.prototype.clear = function() {
+World.prototype.clear = function () {
   var self = this;
 
   for (var i = 0; i < self.wallMap.length; i++) {
@@ -703,20 +723,20 @@ World.ERROR_MAPPING = {
   WALL: 'MOVIMIENTO INVALIDO',
   WORLDUNDERFLOW: 'ZUMBADOR INVALIDO',
   STACK: 'STACK OVERFLOW',
-  INSTRUCTION: 'LIMITE DE INSTRUCCIONES'
+  INSTRUCTION: 'LIMITE DE INSTRUCCIONES',
 };
 
-World.prototype.validate = function(script, callbacks) {
+World.prototype.validate = function (script, callbacks) {
   var self = this;
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     var sandbox = $.sandbox({
       url: 'sandbox.html',
       // timeout: 2000,
       input: {
         script: 'data:application/javascript,' + encodeURIComponent(script),
-        mundo: self.save()
+        mundo: self.save(),
       },
-      callback: function(data, error) {
+      callback: function (data, error) {
         if (error !== undefined) {
           sandbox.terminate();
           sandbox = null;
@@ -730,12 +750,12 @@ World.prototype.validate = function(script, callbacks) {
             callbacks(data);
           }
         }
-      }
+      },
     });
   });
 };
 
-World.prototype.preValidate = function(callbacks) {
+World.prototype.preValidate = function (callbacks) {
   var self = this;
 
   var promises = [];
@@ -744,9 +764,13 @@ World.prototype.preValidate = function(callbacks) {
     promises.push(self.validate(self.preValidators[idx], callbacks));
   }
 
-  return new Promise(function(resolve, reject) {
-    Promise.all(promises).then(function(results) {
-      if (results.every(function(x) { return !!x; })) {
+  return new Promise(function (resolve, reject) {
+    Promise.all(promises).then(function (results) {
+      if (
+        results.every(function (x) {
+          return !!x;
+        })
+      ) {
         resolve(promises.length);
       } else {
         reject('');
@@ -755,7 +779,7 @@ World.prototype.preValidate = function(callbacks) {
   });
 };
 
-World.prototype.postValidate = function(callbacks) {
+World.prototype.postValidate = function (callbacks) {
   var self = this;
 
   var promises = [];
@@ -764,9 +788,13 @@ World.prototype.postValidate = function(callbacks) {
     promises.push(self.validate(self.postValidators[idx], callbacks));
   }
 
-  return new Promise(function(resolve, reject) {
-    Promise.all(promises).then(function(results) {
-      if (results.every(function(x) { return !!x; })) {
+  return new Promise(function (resolve, reject) {
+    Promise.all(promises).then(function (results) {
+      if (
+        results.every(function (x) {
+          return !!x;
+        })
+      ) {
         resolve(promises.length);
       } else {
         reject('');
@@ -775,42 +803,52 @@ World.prototype.postValidate = function(callbacks) {
   });
 };
 
-World.prototype.walls = function(i, j) {
+World.prototype.walls = function (i, j) {
   var self = this;
 
   if (0 > i || i > self.h || 0 > j || j > self.w) return 0;
   return self.wallMap[self.w * i + j];
 };
 
-World.prototype.toggleWall = function(i, j, orientation) {
+World.prototype.toggleWall = function (i, j, orientation) {
   var self = this;
 
-  if (j == 1 && orientation === 0 || i == 1 && orientation == 3 ||
-      i == self.h && orientation == 1 || j == self.w && orientation == 2) {
+  if (
+    (j == 1 && orientation === 0) ||
+    (i == 1 && orientation == 3) ||
+    (i == self.h && orientation == 1) ||
+    (j == self.w && orientation == 2)
+  ) {
     return;
   }
 
-  if (orientation < 0 || orientation >= 4 || 0 > i || i > self.h || 0 > j ||
-      j > self.w)
+  if (
+    orientation < 0 ||
+    orientation >= 4 ||
+    0 > i ||
+    i > self.h ||
+    0 > j ||
+    j > self.w
+  )
     return;
   // Needed to prevent Karel from traversing walls from one direction, but not
   // from the other.
-  self.wallMap[self.w * i + j] ^= (1 << orientation);
+  self.wallMap[self.w * i + j] ^= 1 << orientation;
 
   if (orientation === 0 && j > 1) {
-    self.wallMap[self.w * i + (j - 1)] ^= (1 << 2);
+    self.wallMap[self.w * i + (j - 1)] ^= 1 << 2;
   } else if (orientation === 1 && i < self.h) {
-    self.wallMap[self.w * (i + 1) + j] ^= (1 << 3);
+    self.wallMap[self.w * (i + 1) + j] ^= 1 << 3;
   } else if (orientation === 2 && j < self.w) {
-    self.wallMap[self.w * i + (j + 1)] ^= (1 << 0);
+    self.wallMap[self.w * i + (j + 1)] ^= 1 << 0;
   } else if (orientation === 3 && i > 1) {
-    self.wallMap[self.w * (i - 1) + j] ^= (1 << 1);
+    self.wallMap[self.w * (i - 1) + j] ^= 1 << 1;
   }
 
   self.dirty = true;
 };
 
-World.prototype.addBorderWalls = function() {
+World.prototype.addBorderWalls = function () {
   var self = this;
 
   for (var i = 1; i <= self.h; i++) {
@@ -824,7 +862,7 @@ World.prototype.addBorderWalls = function() {
   }
 };
 
-World.prototype.setCellWalls = function(i, j, wallMask) {
+World.prototype.setCellWalls = function (i, j, wallMask) {
   var self = this;
 
   for (var pos = 0; pos < 4; pos++) {
@@ -832,43 +870,48 @@ World.prototype.setCellWalls = function(i, j, wallMask) {
   }
 };
 
-World.prototype.addWall = function(i, j, orientation) {
+World.prototype.addWall = function (i, j, orientation) {
   var self = this;
 
-  if (orientation < 0 || orientation >= 4 || 0 > i || i > self.h || 0 > j ||
-      j > self.w)
+  if (
+    orientation < 0 ||
+    orientation >= 4 ||
+    0 > i ||
+    i > self.h ||
+    0 > j ||
+    j > self.w
+  )
     return;
-  self.wallMap[self.w * i + j] |= (1 << orientation);
+  self.wallMap[self.w * i + j] |= 1 << orientation;
 
-  if (orientation === 0 && j > 1)
-    self.wallMap[self.w * i + (j - 1)] |= (1 << 2);
+  if (orientation === 0 && j > 1) self.wallMap[self.w * i + (j - 1)] |= 1 << 2;
   else if (orientation === 1 && i < self.h)
-    self.wallMap[self.w * (i + 1) + j] |= (1 << 3);
+    self.wallMap[self.w * (i + 1) + j] |= 1 << 3;
   else if (orientation === 2 && j < self.w)
-    self.wallMap[self.w * i + (j + 1)] |= (1 << 0);
+    self.wallMap[self.w * i + (j + 1)] |= 1 << 0;
   else if (orientation === 3 && i > 1)
-    self.wallMap[self.w * (i - 1) + j] |= (1 << 1);
+    self.wallMap[self.w * (i - 1) + j] |= 1 << 1;
 
   self.dirty = true;
 };
 
-World.prototype.setBuzzers = function(i, j, count) {
+World.prototype.setBuzzers = function (i, j, count) {
   var self = this;
 
   if (0 > i || i > self.h || 0 > j || j > self.w) return;
   self.map[self.w * i + j] = self.currentMap[self.w * i + j] =
-      (count == 0xffff) ? -1 : count;
+    count == 0xffff ? -1 : count;
   self.dirty = true;
 };
 
-World.prototype.buzzers = function(i, j) {
+World.prototype.buzzers = function (i, j) {
   var self = this;
 
   if (0 > i || i > self.h || 0 > j || j > self.w) return 0;
   return self.currentMap[self.w * i + j];
 };
 
-World.prototype.pickBuzzer = function(i, j) {
+World.prototype.pickBuzzer = function (i, j) {
   var self = this;
 
   if (0 > i || i > self.h || 0 > j || j > self.w) return;
@@ -881,7 +924,7 @@ World.prototype.pickBuzzer = function(i, j) {
   self.dirty = true;
 };
 
-World.prototype.leaveBuzzer = function(i, j) {
+World.prototype.leaveBuzzer = function (i, j) {
   var self = this;
 
   if (0 > i || i > self.h || 0 > j || j > self.w) return;
@@ -894,7 +937,7 @@ World.prototype.leaveBuzzer = function(i, j) {
   self.dirty = true;
 };
 
-World.prototype.setDumpCell = function(i, j, dumpState) {
+World.prototype.setDumpCell = function (i, j, dumpState) {
   var self = this;
   var dumpPos = -1;
 
@@ -917,7 +960,7 @@ World.prototype.setDumpCell = function(i, j, dumpState) {
   self.dumps[World.DUMP_WORLD] = self.dumpCells.length !== 0;
 };
 
-World.prototype.toggleDumpCell = function(i, j) {
+World.prototype.toggleDumpCell = function (i, j) {
   var self = this;
   var dumpPos = 0;
 
@@ -938,7 +981,7 @@ World.prototype.toggleDumpCell = function(i, j) {
   self.dumps[World.DUMP_WORLD] = self.dumpCells.length !== 0;
 };
 
-World.prototype.getDumpCell = function(i, j) {
+World.prototype.getDumpCell = function (i, j) {
   var self = this;
   var dumpPos = -1;
 
@@ -951,29 +994,29 @@ World.prototype.getDumpCell = function(i, j) {
   return false;
 };
 
-World.prototype.getDumps = function(d) {
+World.prototype.getDumps = function (d) {
   var self = this;
   return self.dumps.hasOwnProperty(d.toLowerCase()) && self.dumps[d];
 };
 
-World.prototype.setDumps = function(d, v) {
+World.prototype.setDumps = function (d, v) {
   var self = this;
   self.dumps[d] = v;
 };
 
-World.prototype.toggleDumps = function(d) {
+World.prototype.toggleDumps = function (d) {
   var self = this;
 
   self.setDumps(d, !self.getDumps(d));
 };
 
-World.prototype.load = function(doc) {
+World.prototype.load = function (doc) {
   var self = this;
 
   self.clear();
 
   var rules = {
-    mundo: function(mundo) {
+    mundo: function (mundo) {
       var alto = mundo.getAttribute('alto');
       var ancho = mundo.getAttribute('ancho');
 
@@ -989,16 +1032,17 @@ World.prototype.load = function(doc) {
       self.resize(ancho, alto);
     },
 
-    condiciones: function(condiciones) {
+    condiciones: function (condiciones) {
       self.maxInstructions =
-          parseInt(condiciones.getAttribute('instruccionesMaximasAEjecutar'),
-                   10) ||
-          10000000;
+        parseInt(
+          condiciones.getAttribute('instruccionesMaximasAEjecutar'),
+          10,
+        ) || 10000000;
       self.maxStackSize =
-          parseInt(condiciones.getAttribute('longitudStack'), 10) || 65000;
+        parseInt(condiciones.getAttribute('longitudStack'), 10) || 65000;
     },
 
-    comando: function(comando) {
+    comando: function (comando) {
       var name = comando.getAttribute('nombre');
       var val = parseInt(comando.getAttribute('maximoNumeroDeEjecuciones'), 10);
 
@@ -1017,7 +1061,7 @@ World.prototype.load = function(doc) {
       }
     },
 
-    monton: function(monton) {
+    monton: function (monton) {
       var i = parseInt(monton.getAttribute('y'), 10);
       var j = parseInt(monton.getAttribute('x'), 10);
       var zumbadores = monton.getAttribute('zumbadores');
@@ -1030,7 +1074,7 @@ World.prototype.load = function(doc) {
       self.setBuzzers(i, j, zumbadores);
     },
 
-    pared: function(pared) {
+    pared: function (pared) {
       var i = parseInt(pared.getAttribute('y1'), 10) + 1;
       var j = parseInt(pared.getAttribute('x1'), 10) + 1;
 
@@ -1053,25 +1097,25 @@ World.prototype.load = function(doc) {
       }
     },
 
-    despliega: function(despliega) {
+    despliega: function (despliega) {
       self.dumps[despliega.getAttribute('tipo').toLowerCase()] = true;
     },
 
-    posicionDump: function(dump) {
+    posicionDump: function (dump) {
       self.dumpCells.push([
         parseInt(dump.getAttribute('y'), 10),
-        parseInt(dump.getAttribute('x'), 10)
+        parseInt(dump.getAttribute('x'), 10),
       ]);
     },
 
-    validador: function(validador) {
+    validador: function (validador) {
       var src = null;
       if (validador.getAttribute('src')) {
         src = $.ajax({
-                 type: 'GET',
-                 url: validador.getAttribute('src'),
-                 async: false
-               }).responseText;
+          type: 'GET',
+          url: validador.getAttribute('src'),
+          async: false,
+        }).responseText;
       } else {
         src = validador.firstChild.nodeValue;
       }
@@ -1082,29 +1126,36 @@ World.prototype.load = function(doc) {
       }
     },
 
-    programa: function(programa) {
+    programa: function (programa) {
       var xKarel = parseInt(
-          programa.getAttribute('xKarel') || programa.getAttribute('xkarel'),
-          10);
+        programa.getAttribute('xKarel') || programa.getAttribute('xkarel'),
+        10,
+      );
       var yKarel = parseInt(
-          programa.getAttribute('yKarel') || programa.getAttribute('ykarel'),
-          10);
+        programa.getAttribute('yKarel') || programa.getAttribute('ykarel'),
+        10,
+      );
       self.di = self.h / 2 - yKarel;
       self.dj = self.w / 2 - xKarel;
-      self.rotate(programa.getAttribute('direccionKarel') ||
-                  programa.getAttribute('direccionkarel'));
-      self.worldName = programa.getAttribute('mundoDeEjecucion') ||
-                       programa.getAttribute('mundodeejecucion');
+      self.rotate(
+        programa.getAttribute('direccionKarel') ||
+          programa.getAttribute('direccionkarel'),
+      );
+      self.worldName =
+        programa.getAttribute('mundoDeEjecucion') ||
+        programa.getAttribute('mundodeejecucion');
       self.programName = programa.getAttribute('nombre');
       self.move(yKarel, xKarel);
-      var bagBuzzers = programa.getAttribute('mochilaKarel') ||
-                       programa.getAttribute('mochilakarel') || 0;
+      var bagBuzzers =
+        programa.getAttribute('mochilaKarel') ||
+        programa.getAttribute('mochilakarel') ||
+        0;
       if (bagBuzzers == 'INFINITO') {
         self.setBagBuzzers(-1);
       } else {
         self.setBagBuzzers(parseInt(bagBuzzers));
       }
-    }
+    },
   };
 
   function traverse(node) {
@@ -1114,8 +1165,10 @@ World.prototype.load = function(doc) {
     }
 
     for (var i = 0; i < node.childNodes.length; i++) {
-      if (node.childNodes.item(i).nodeType ===
-          (node.ELEMENT_NODE || DOMNode.ELEMENT_NODE)) {
+      if (
+        node.childNodes.item(i).nodeType ===
+        (node.ELEMENT_NODE || DOMNode.ELEMENT_NODE)
+      ) {
         traverse(node.childNodes.item(i));
       }
     }
@@ -1126,7 +1179,7 @@ World.prototype.load = function(doc) {
   self.reset();
 };
 
-World.prototype.serialize = function(node, name, indentation) {
+World.prototype.serialize = function (node, name, indentation) {
   var self = this;
 
   var result = '';
@@ -1184,29 +1237,29 @@ World.prototype.serialize = function(node, name, indentation) {
   return result;
 };
 
-World.prototype.save = function() {
+World.prototype.save = function () {
   var self = this;
 
   var result = {
     condiciones: {
       '#attributes': {
         instruccionesMaximasAEjecutar: self.maxInstructions,
-        longitudStack: self.maxStackSize
-      }
+        longitudStack: self.maxStackSize,
+      },
     },
     mundos: {
       mundo: {
-        '#attributes': {nombre: self.worldName, ancho: self.w, alto: self.h},
+        '#attributes': { nombre: self.worldName, ancho: self.w, alto: self.h },
         monton: [],
         pared: [],
-        posicionDump: []
-      }
+        posicionDump: [],
+      },
     },
     programas: {
       '#attributes': {
         tipoEjecucion: 'CONTINUA',
         intruccionesCambioContexto: 1,
-        milisegundosParaPasoAutomatico: 0
+        milisegundosParaPasoAutomatico: 0,
       },
       programa: {
         '#attributes': {
@@ -1216,11 +1269,11 @@ World.prototype.save = function() {
           xKarel: self.j,
           yKarel: self.i,
           direccionKarel: ['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation],
-          mochilaKarel: self.bagBuzzers == -1 ? 'INFINITO' : self.bagBuzzers
+          mochilaKarel: self.bagBuzzers == -1 ? 'INFINITO' : self.bagBuzzers,
         },
-        despliega: []
-      }
-    }
+        despliega: [],
+      },
+    },
   };
 
   for (var i = 1; i <= self.h; i++) {
@@ -1228,8 +1281,11 @@ World.prototype.save = function() {
       var buzzers = self.buzzers(i, j);
       if (buzzers !== 0) {
         result.mundos.mundo.monton.push({
-          '#attributes':
-              {x: j, y: i, zumbadores: buzzers == -1 ? 'INFINITO' : buzzers}
+          '#attributes': {
+            x: j,
+            y: i,
+            zumbadores: buzzers == -1 ? 'INFINITO' : buzzers,
+          },
         });
       }
     }
@@ -1244,11 +1300,13 @@ World.prototype.save = function() {
 
         if ((walls & k) == k) {
           if (k == 2) {
-            result.mundos.mundo.pared.push(
-                {'#attributes': {x1: j - 1, y1: i, x2: j}});
+            result.mundos.mundo.pared.push({
+              '#attributes': { x1: j - 1, y1: i, x2: j },
+            });
           } else if (k == 4) {
-            result.mundos.mundo.pared.push(
-                {'#attributes': {x1: j, y1: i - 1, y2: i}});
+            result.mundos.mundo.pared.push({
+              '#attributes': { x1: j, y1: i - 1, y2: i },
+            });
           }
         }
       }
@@ -1256,14 +1314,16 @@ World.prototype.save = function() {
   }
 
   for (var i = 0; i < self.dumpCells.length; i++) {
-    result.mundos.mundo.posicionDump.push(
-        {'#attributes': {x: self.dumpCells[i][1], y: self.dumpCells[i][0]}});
+    result.mundos.mundo.posicionDump.push({
+      '#attributes': { x: self.dumpCells[i][1], y: self.dumpCells[i][0] },
+    });
   }
 
   for (var p in self.dumps) {
     if (self.dumps.hasOwnProperty(p) && self.dumps[p]) {
-      result.programas.programa.despliega.push(
-          {'#attributes': {tipo: p.toUpperCase()}});
+      result.programas.programa.despliega.push({
+        '#attributes': { tipo: p.toUpperCase() },
+      });
     }
   }
 
@@ -1272,17 +1332,17 @@ World.prototype.save = function() {
     for (var i = 0; i < self.preValidators.length; i++) {
       result.validadores.push({
         validador: {
-          '#attributes': {tipo: 'pre'},
-          '#text': '<![CDATA[' + self.preValidators[i] + ']]>'
-        }
+          '#attributes': { tipo: 'pre' },
+          '#text': '<![CDATA[' + self.preValidators[i] + ']]>',
+        },
       });
     }
     for (var i = 0; i < self.postValidators.length; i++) {
       result.validadores.push({
         validador: {
-          '#attributes': {tipo: 'post'},
-          '#text': '<![CDATA[' + self.postValidators[i] + ']]>'
-        }
+          '#attributes': { tipo: 'post' },
+          '#text': '<![CDATA[' + self.postValidators[i] + ']]>',
+        },
       });
     }
   }
@@ -1290,14 +1350,14 @@ World.prototype.save = function() {
   return self.serialize(result, 'ejecucion', 0);
 };
 
-World.prototype.output = function() {
+World.prototype.output = function () {
   var self = this;
 
   var result = {};
 
   if (self.dumps[World.DUMP_WORLD] || self.dumps[World.DUMP_ALL_BUZZERS]) {
     result.mundos = {
-      mundo: {'#attributes': {nombre: self.worldName}, linea: []}
+      mundo: { '#attributes': { nombre: self.worldName }, linea: [] },
     };
 
     var dumpCells = {};
@@ -1313,8 +1373,10 @@ World.prototype.output = function() {
       var line = '';
 
       for (var j = 1; j <= self.w; j++) {
-        if ((dumpCells[i] && dumpCells[i][j]) ||
-            self.dumps[World.DUMP_ALL_BUZZERS]) {
+        if (
+          (dumpCells[i] && dumpCells[i][j]) ||
+          self.dumps[World.DUMP_ALL_BUZZERS]
+        ) {
           if (self.buzzers(i, j) !== 0) {
             if (printCoordinate) {
               line += '(' + j + ') ';
@@ -1328,68 +1390,79 @@ World.prototype.output = function() {
 
       if (line !== '') {
         result.mundos.mundo.linea.push({
-          '#attributes': {fila: i, compresionDeCeros: 'true'},
-          '#text': line
+          '#attributes': { fila: i, compresionDeCeros: 'true' },
+          '#text': line,
         });
       }
     }
   }
 
-  result.programas = {programa: {'#attributes': {nombre: self.programName}}};
+  result.programas = {
+    programa: { '#attributes': { nombre: self.programName } },
+  };
 
-  result.programas.programa['#attributes'].resultadoEjecucion =
-      self.errorMap(self.runtime.state.error);
+  result.programas.programa['#attributes'].resultadoEjecucion = self.errorMap(
+    self.runtime.state.error,
+  );
 
   if (self.dumps[World.DUMP_POSITION]) {
-    result.programas.programa.karel = {'#attributes': {x: self.j, y: self.i}};
+    result.programas.programa.karel = {
+      '#attributes': { x: self.j, y: self.i },
+    };
   }
 
   if (self.dumps[World.DUMP_ORIENTATION]) {
-    result.programas.programa.karel =
-        result.programas.programa.karel || {'#attributes': {}};
-    result.programas.programa.karel['#attributes'].direccion =
-        ['OESTE', 'NORTE', 'ESTE', 'SUR'][self.orientation];
+    result.programas.programa.karel = result.programas.programa.karel || {
+      '#attributes': {},
+    };
+    result.programas.programa.karel['#attributes'].direccion = [
+      'OESTE',
+      'NORTE',
+      'ESTE',
+      'SUR',
+    ][self.orientation];
   }
 
   if (self.dumps[World.DUMP_BAG]) {
-    result.programas.programa.karel =
-        result.programas.programa.karel || {'#attributes': {}};
+    result.programas.programa.karel = result.programas.programa.karel || {
+      '#attributes': {},
+    };
     result.programas.programa.karel['#attributes'].mochila =
-        self.bagBuzzers == -1 ? 'INFINITO' : self.bagBuzzers;
+      self.bagBuzzers == -1 ? 'INFINITO' : self.bagBuzzers;
   }
 
   if (self.dumps[World.DUMP_MOVE]) {
-    result.programas.programa.instrucciones =
-        result.programas.programa.instrucciones || {'#attributes': {}};
+    result.programas.programa.instrucciones = result.programas.programa
+      .instrucciones || { '#attributes': {} };
     result.programas.programa.instrucciones['#attributes'].avanza =
-        self.runtime.state.moveCount;
+      self.runtime.state.moveCount;
   }
 
   if (self.dumps[World.DUMP_LEFT]) {
-    result.programas.programa.instrucciones =
-        result.programas.programa.instrucciones || {'#attributes': {}};
+    result.programas.programa.instrucciones = result.programas.programa
+      .instrucciones || { '#attributes': {} };
     result.programas.programa.instrucciones['#attributes'].gira_izquierda =
-        self.runtime.state.turnLeftCount;
+      self.runtime.state.turnLeftCount;
   }
 
   if (self.dumps[World.DUMP_PICK_BUZZER]) {
-    result.programas.programa.instrucciones =
-        result.programas.programa.instrucciones || {'#attributes': {}};
+    result.programas.programa.instrucciones = result.programas.programa
+      .instrucciones || { '#attributes': {} };
     result.programas.programa.instrucciones['#attributes'].coge_zumbador =
-        self.runtime.state.pickBuzzerCount;
+      self.runtime.state.pickBuzzerCount;
   }
 
   if (self.dumps[World.DUMP_LEAVE_BUZZER]) {
-    result.programas.programa.instrucciones =
-        result.programas.programa.instrucciones || {'#attributes': {}};
+    result.programas.programa.instrucciones = result.programas.programa
+      .instrucciones || { '#attributes': {} };
     result.programas.programa.instrucciones['#attributes'].deja_zumbador =
-        self.runtime.state.leaveBuzzerCount;
+      self.runtime.state.leaveBuzzerCount;
   }
 
   return self.serialize(result, 'resultados', 0);
 };
 
-World.prototype.errorMap = function(s) {
+World.prototype.errorMap = function (s) {
   if (!s) return 'FIN PROGRAMA';
   if (World.ERROR_MAPPING.hasOwnProperty(s)) {
     return World.ERROR_MAPPING[s];
@@ -1398,7 +1471,7 @@ World.prototype.errorMap = function(s) {
   }
 };
 
-World.prototype.move = function(i, j) {
+World.prototype.move = function (i, j) {
   var self = this;
 
   self.i = self.start_i = i;
@@ -1406,27 +1479,29 @@ World.prototype.move = function(i, j) {
   self.dirty = true;
 };
 
-World.prototype.rotate = function(orientation) {
+World.prototype.rotate = function (orientation) {
   var self = this;
 
   var orientations = ['OESTE', 'NORTE', 'ESTE', 'SUR'];
   if (!orientation) {
     orientation = orientations[(self.orientation + 1) % 4];
   }
-  self.orientation = self.startOrientation =
-      Math.max(0, orientations.indexOf(orientation));
+  self.orientation = self.startOrientation = Math.max(
+    0,
+    orientations.indexOf(orientation),
+  );
   self.dirty = true;
 };
 
-World.prototype.setBagBuzzers = function(buzzers) {
+World.prototype.setBagBuzzers = function (buzzers) {
   var self = this;
 
   if (isNaN(buzzers)) buzzers = 0;
-  self.bagBuzzers = self.startBagBuzzers = (buzzers == 0xffff ? -1 : buzzers);
+  self.bagBuzzers = self.startBagBuzzers = buzzers == 0xffff ? -1 : buzzers;
   self.dirty = true;
 };
 
-World.prototype.reset = function() {
+World.prototype.reset = function () {
   var self = this;
 
   self.orientation = self.startOrientation;
@@ -1442,15 +1517,20 @@ World.prototype.reset = function() {
   self.dirty = true;
 };
 
-World.prototype.import = function(mdo, kec) {
+World.prototype.import = function (mdo, kec) {
   var self = this;
 
   if (mdo.length < 20 || kec.length < 30) {
     throw new Error('Invalid file format');
   }
 
-  if (mdo[0] != 0x414b || mdo[1] != 0x4552 || mdo[2] != 0x204c ||
-      mdo[3] != 0x4d4f || mdo[4] != 0x2e49) {
+  if (
+    mdo[0] != 0x414b ||
+    mdo[1] != 0x4552 ||
+    mdo[2] != 0x204c ||
+    mdo[3] != 0x4d4f ||
+    mdo[4] != 0x2e49
+  ) {
     throw new Error('Invalid magic number');
   }
 
@@ -1509,8 +1589,11 @@ World.prototype.import = function(mdo, kec) {
     decodeWalls(mdo[i], mdo[i + 1], mdo[i + 2]);
   }
 
-  for (var i = 15 + 3 * wallcount; i < 15 + 3 * (wallcount + heapcount);
-       i += 3) {
+  for (
+    var i = 15 + 3 * wallcount;
+    i < 15 + 3 * (wallcount + heapcount);
+    i += 3
+  ) {
     self.setBuzzers(mdo[i + 1], mdo[i], mdo[i + 2]);
   }
 
@@ -1528,7 +1611,7 @@ function detectLanguage(code) {
     /^{[^}]*}/,
     /^\(\*([^*]|\*[^)])*\*\)/,
     /^[^a-zA-Z0-9_-]+/,
-    /^[a-zA-Z0-9_-]+/
+    /^[a-zA-Z0-9_-]+/,
   ];
   var i = 0;
 

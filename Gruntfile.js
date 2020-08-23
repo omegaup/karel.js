@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jison: {
@@ -9,7 +9,7 @@ module.exports = function(grunt) {
         },
         files: {
           'js/karelpascal.js': 'gramaticas/karelpascal.jison',
-        }
+        },
       },
       karelJava: {
         options: {
@@ -18,7 +18,7 @@ module.exports = function(grunt) {
         },
         files: {
           'js/kareljava.js': 'gramaticas/kareljava.jison',
-        }
+        },
       },
       karelRuby: {
         options: {
@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         },
         files: {
           'js/karelruby.js': 'gramaticas/karelruby.jison',
-        }
+        },
       },
     },
     jshint: {
@@ -55,14 +55,14 @@ module.exports = function(grunt) {
           'js/karelpascal.js',
           'js/karelruby.js',
           'js/karel.js',
-          'js/karelide.js'
+          'js/karelide.js',
         ],
         dest: 'js/karel-distrib.js',
-      }
+      },
     },
     uglify: {
       dist: {
-        files: {'js/karel-distrib.min.js': ['js/karel-distrib.js']},
+        files: { 'js/karel-distrib.min.js': ['js/karel-distrib.js'] },
       },
     },
   });

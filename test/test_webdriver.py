@@ -1,15 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+# type: ignore
 
 '''Run Selenium end-to-end tests.'''
 
 import os.path
 import re
 
-from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.wait import WebDriverWait
 
 _DEFAULT_TIMEOUT = 5  # seconds
 _ROOT = os.path.abspath(os.path.join(__file__, '..', '..'))
