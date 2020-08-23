@@ -7,21 +7,21 @@ var fs = require('fs');
 // .width = how many columns to render
 // .run = the path to a karel program to run before rendering
 // Returns a promise that resolves when the file is done writing.
-var Draw = function(worldString, outputFile, opts) {
+var Draw = function (worldString, outputFile, opts) {
   var DOMParser = require('xmldom').DOMParser;
   var WorldRender = require('../js/mundo.js').WorldRender;
-  var {createCanvas} = require('canvas');
+  var { createCanvas } = require('canvas');
 
   var worldXml = new DOMParser().parseFromString(worldString, 'text/xml');
 
-  var out = fs.createWriteStream(outputFile, {encoding: 'binary'});
-  var doneWriting = new Promise(resolve => out.on('finish', resolve));
+  var out = fs.createWriteStream(outputFile, { encoding: 'binary' });
+  var doneWriting = new Promise((resolve) => out.on('finish', resolve));
 
   var world = new karel.World(100, 100);
   world.load(worldXml);
 
   if (opts.run) {
-    var file = fs.readFileSync(opts.run, {encoding: 'utf-8'});
+    var file = fs.readFileSync(opts.run, { encoding: 'utf-8' });
     var compiled = null;
     if (opts.run.endsWith('.kx')) {
       compiled = JSON.parse(file);
@@ -29,8 +29,7 @@ var Draw = function(worldString, outputFile, opts) {
       compiled = karel.compile(file);
     }
     world.runtime.load(compiled);
-    while (world.runtime.step())
-      ;
+    while (world.runtime.step());
   }
 
   var height = parseInt(opts.height || world.h);
@@ -42,9 +41,13 @@ var Draw = function(worldString, outputFile, opts) {
   var canvas = createCanvas(imgwidth, imgheight);
   var stream = canvas.pngStream();
 
-  stream.on('data', function(chunk) { out.write(chunk); });
+  stream.on('data', function (chunk) {
+    out.write(chunk);
+  });
 
-  stream.on('end', function() { out.end(); });
+  stream.on('end', function () {
+    out.end();
+  });
 
   var ctx = canvas.getContext('2d');
 
@@ -56,10 +59,13 @@ var Draw = function(worldString, outputFile, opts) {
 };
 
 // Takes the path to a pair of .mdo and .kec files and returns a karel.js world.
-var ImportMdoKec = function(mdoPath, kecPath) {
-  var bufferToUint16Array = function(b) {
-    return new Uint16Array(b.buffer, b.byteOffset,
-                           b.byteLength / Uint16Array.BYTES_PER_ELEMENT);
+var ImportMdoKec = function (mdoPath, kecPath) {
+  var bufferToUint16Array = function (b) {
+    return new Uint16Array(
+      b.buffer,
+      b.byteOffset,
+      b.byteLength / Uint16Array.BYTES_PER_ELEMENT,
+    );
   };
 
   var mdo = bufferToUint16Array(fs.readFileSync(mdoPath));

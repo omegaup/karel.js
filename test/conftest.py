@@ -1,19 +1,18 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+# type: ignore
 
 '''Fixtures for Selenium end-to-end tests.'''
 
 import contextlib
 import json
 import os.path
-import pytest
-import re
 import sys
 import time
 import urllib
 
+import pytest
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.wait import WebDriverWait
 
 
@@ -25,7 +24,7 @@ _SUCCESS = True
 _WINDOW_SIZE = (1920, 1080)
 
 
-class Driver(object):
+class Driver:
     '''Wraps the state needed to run a test.'''
 
     def __init__(self, browser, wait, url):
@@ -76,7 +75,7 @@ class Driver(object):
 def pytest_pyfunc_call(pyfuncitem):
     '''Takes a screenshot and grabs console logs on test failures.'''
 
-    global _SUCCESS
+    global _SUCCESS  # pylint: disable=global-statement
 
     outcome = yield
 
@@ -86,23 +85,28 @@ def pytest_pyfunc_call(pyfuncitem):
     if 'driver' not in pyfuncitem.funcargs:
         return
     try:
-        driver = pyfuncitem.funcargs['driver']
+        local_driver = pyfuncitem.funcargs['driver']
         try:
-            logs = driver.browser.get_log('browser')
-        except:
+            logs = local_driver.browser.get_log('browser')
+        # pylint: disable=bare-except
+        except:  # noqa: bare-except
             # geckodriver does not support getting logs:
             # https://github.com/mozilla/geckodriver/issues/284
             logs = []
         if _CI:
-            print(logs, self.driver.get_screenshot_as_base64(), file=sys.stderr)
+            print(logs,
+                  local_driver.get_screenshot_as_base64(),
+                  file=sys.stderr)
             return
         results_dir = os.path.join(_DIRNAME, 'results')
         os.makedirs(results_dir, exist_ok=True)
-        driver.browser.get_screenshot_as_file(
+        local_driver.browser.get_screenshot_as_file(
             os.path.join(results_dir, 'webdriver_%s.png' % pyfuncitem.name))
-        with open(os.path.join(results_dir, 'webdriver_%s.log' % pyfuncitem.name), 'w') as f:
+        with open(
+                os.path.join(results_dir,
+                             'webdriver_%s.log' % pyfuncitem.name), 'w') as f:
             json.dump(logs, f, indent=2)
-    except Exception as ex:
+    except Exception as ex:  # pylint: disable=broad-except
         print(ex)
 
 
@@ -132,20 +136,18 @@ def driver(request, browser):
 
     if browser == 'chrome':
         options = webdriver.ChromeOptions()
-        options.binary_location = '/usr/bin/google-chrome'
-        options.add_experimental_option('prefs', {'intl.accept_languages': 'en_US'})
+        options.add_experimental_option('prefs',
+                                        {'intl.accept_languages': 'en_US'})
         options.add_argument('--lang=en-US')
         if request.config.option.headless:
             options.add_argument('--headless')
-        browser = webdriver.Chrome(chrome_options=options)
+        browser = webdriver.Chrome(options=options)
     else:
-        firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
-        firefox_capabilities['marionette'] = True
         options = webdriver.firefox.options.Options()
+        options.set_capability('marionette', True)
         if request.config.option.headless:
             options.add_argument('-headless')
-        browser = webdriver.Firefox(capabilities=firefox_capabilities,
-                                    options=options)
+        browser = webdriver.Firefox(options=options)
     browser.set_window_size(*_WINDOW_SIZE)
 
     browser.implicitly_wait(_DEFAULT_TIMEOUT)

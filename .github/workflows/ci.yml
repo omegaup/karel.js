@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request: {}
+  push:
+    branches:
+      - master
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install JavaScript dependencies
+        run: npm install
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --user setuptools
+          python3 -m pip install --user wheel
+          python3 -m pip install --user \
+            selenium \
+            pytest
+
+      - name: Run karel.js tests
+        run: npm test
+
+      - name: Run Webdriver tests
+        run: python3 -m pytest test/ --browser=firefox --browser=chrome
+
+  lint:
+    runs-on: ubuntu-latest
+
+    env:
+      HOOK_TOOLS_VERSION: 20200816
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Get docker container
+        run: docker pull omegaup/hook_tools:${{ env.HOOK_TOOLS_VERSION }}
+
+      - name: Run linters
+        run: |
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            --volume "${PWD}:/src" \
+            omegaup/hook_tools:${{ env.HOOK_TOOLS_VERSION }} validate --all
