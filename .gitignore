@@ -10,3 +10,4 @@ karel-distrib.js
 karel-distrib.min.js
 test/.cache/
 test/results/
+test/**/*.png

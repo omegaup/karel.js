@@ -2,11 +2,10 @@
 
 "use strict";
 
-var program = require('commander');
-var fs = require('fs');
-var version = require('../package.json').version;
-var karel = require('../js/karel.js');
-var util = require("../js/util.js");
+const program = require('commander');
+const fs = require('fs');
+const version = require('../package.json').version;
+const { karel, util } = require('../js/index.js');
 
 function readStdin() {
   return new Promise(function(resolve, reject) {
@@ -26,14 +25,14 @@ program
 .description('Compiles source file')
 .option('-o, --output [outputfile]', 'Specifies the output file (default sourcefile.kx)')
   .action(function(sourcefile, options){
-    var path = require('path'); 
+    var path = require('path');
     if (!options.output) {
       options.output = path.parse(sourcefile).name + '.kx';
-    }    
-    
+    }
+
     var file = fs.readFileSync(sourcefile, {encoding: 'utf-8'});
     var compiled = karel.compile(file);
-  
+
     fs.writeFileSync(options.output, JSON.stringify(compiled));
   });
 
