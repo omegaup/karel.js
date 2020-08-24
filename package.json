@@ -1,7 +1,8 @@
 {
-  "name": "karel.js",
-  "version": "0.3.0",
+  "name": "karel",
+  "version": "1.0.0",
   "description": "Compilador y evaluador de Karel en javascript",
+  "main": "js/index.js",
   "scripts": {
     "start": "electron index.js",
     "test": "mocha",
