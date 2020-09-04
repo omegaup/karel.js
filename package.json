@@ -11,9 +11,9 @@
     "clean:osx": "rm -rf ./dist/osx",
     "clean:linux": "rm -rf ./dist/linux",
     "pack": "npm run clean && npm run pack:osx && npm run pack:win",
-    "pack:osx": "npm run clean:osx && ./node_modules/electron-packager/cli.js . --out=dist/osx --platform=darwin --arch=x64 --electron-version=1.3.15 --icon=img/osx_icon.icns --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
-    "pack:win": "npm run clean:win && ./node_modules/electron-packager/cli.js . \"karel.js\" --out=dist/win --platform=win32 --arch=ia32 --electron-version=1.3.15 --icon=img/win_icon.ico --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
-    "pack:linux": "npm run clean:linux && ./node_modules/electron-packager/cli.js . --out=dist/linux --platform=linux --arch=x64 --electron-version=1.3.15 --icon=img --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
+    "pack:osx": "npm run clean:osx && ./node_modules/electron-packager/bin/electron-packager.js . --out=dist/osx --platform=darwin --arch=x64 --electron-version=1.3.15 --icon=img/osx_icon.icns --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
+    "pack:win": "npm run clean:win && ./node_modules/electron-packager/bin/electron-packager.js . \"karel.js\" --out=dist/win --platform=win32 --arch=ia32 --electron-version=1.3.15 --icon=img/win_icon.ico --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
+    "pack:linux": "npm run clean:linux && ./node_modules/electron-packager/bin/electron-packager.js . --out=dist/linux --platform=linux --arch=x64 --electron-version=1.3.15 --icon=img --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
     "build": "npm run build:bundle && npm run build:osx && npm run build:win",
     "build:bundle": "./node_modules/webpack/bin/webpack.js",
     "build:osx": "npm run pack:osx && ./node_modules/electron-builder/out/cli/build-cli.js --platform=mac",
@@ -21,7 +21,7 @@
     "build:linux": "npm run pack:linux && ./node_modules/electron-builder/out/cli/build-cli.js --platform=linux"
   },
   "build": {
-    "electronVersion": "1.3.15",
+    "electronVersion": "10.1.1",
     "mac": {
       "icon": "img/osx_icon.icns"
     },
@@ -47,27 +47,31 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "commander": "^2.9.0",
-    "xmldom": "^0.1.27",
-    "canvas": "^2.1.0"
+    "canvas": "^2.6.1",
+    "commander": "^6.1.0",
+    "xmldom": "^0.1.27"
   },
   "keywords": [
     "karel"
   ],
   "devDependencies": {
-    "electron": "9.2.1",
-    "electron-builder": "^17.1.1",
-    "electron-packager": "^8.6.0",
-    "extract-zip": "1.6.0",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "babel-loader": "^8.1.0",
+    "electron": "^10.1.1",
+    "electron-builder": "^22.8.1",
+    "electron-packager": "^15.1.0",
     "grunt": "^1.0.1",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "^2.3.0",
     "grunt-jison": "^1.3.3",
     "jison": "^0.4.17",
-    "mocha": "^3.3.0",
+    "mocha": "^8.1.3",
+    "node-loader": "^1.0.1",
     "shebang-loader": "0.0.1",
     "tmp": "0.0.31",
-    "webpack": "^2.4.1"
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   }
 }
