@@ -10,18 +10,19 @@
     "clean:win": "rm -rf ./dist/win",
     "clean:osx": "rm -rf ./dist/osx",
     "clean:linux": "rm -rf ./dist/linux",
-    "pack": "npm run clean && npm run pack:osx && npm run pack:win",
-    "pack:osx": "npm run clean:osx && ./node_modules/electron-packager/bin/electron-packager.js . --out=dist/osx --platform=darwin --arch=x64 --electron-version=1.3.15 --icon=img/osx_icon.icns --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
-    "pack:win": "npm run clean:win && ./node_modules/electron-packager/bin/electron-packager.js . \"karel.js\" --out=dist/win --platform=win32 --arch=ia32 --electron-version=1.3.15 --icon=img/win_icon.ico --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
-    "pack:linux": "npm run clean:linux && ./node_modules/electron-packager/bin/electron-packager.js . --out=dist/linux --platform=linux --arch=x64 --electron-version=1.3.15 --icon=img --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
-    "build": "npm run build:bundle && npm run build:osx && npm run build:win",
+    "pack": "npm run clean && npm run pack:linux && npm run pack:osx && npm run pack:win",
+    "pack:osx": "npm run clean:osx && ./node_modules/electron-packager/bin/electron-packager.js . --out=dist/osx --platform=darwin --arch=x64 --icon=img/osx_icon.icns --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
+    "pack:win": "npm run clean:win && ./node_modules/electron-packager/bin/electron-packager.js . \"karel.js\" --out=dist/win --platform=win32 --arch=ia32 --icon=img/win_icon.ico --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
+    "pack:linux": "npm run clean:linux && ./node_modules/electron-packager/bin/electron-packager.js . --out=dist/linux --platform=linux --arch=x64 --icon=img --ignore=dist --ignore=Gruntfile.js --ignore='\\.yml' --ignore=webpack.config.js --ignore=test",
+    "build": "npm run clean && npm run build:bundle && npm run build:linux && npm run build:win",
     "build:bundle": "./node_modules/webpack/bin/webpack.js",
-    "build:osx": "npm run pack:osx && ./node_modules/electron-builder/out/cli/build-cli.js --platform=mac",
-    "build:win": "npm run pack:win && ./node_modules/electron-builder/out/cli/build-cli.js --platform=win",
-    "build:linux": "npm run pack:linux && ./node_modules/electron-builder/out/cli/build-cli.js --platform=linux"
+    "build:osx": "npm run pack:osx && ./node_modules/electron-builder/out/cli/cli.js --mac --prepackaged=dist/osx",
+    "build:win": "npm run pack:win && ./node_modules/electron-builder/out/cli/cli.js --win --prepackaged=dist/win --ia32",
+    "build:linux": "npm run pack:linux && ./node_modules/electron-builder/out/cli/cli.js --linux --prepackaged=dist/linux"
   },
   "build": {
     "electronVersion": "10.1.1",
+    "appId": "com.omegaup.karel",
     "mac": {
       "icon": "img/osx_icon.icns"
     },

@@ -8,7 +8,7 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
         run: python3 -m pytest test/ --browser=firefox --browser=chrome
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     env:
       HOOK_TOOLS_VERSION: 20200816
