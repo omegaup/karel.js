@@ -32,6 +32,14 @@ jobs:
       - name: Run Webdriver tests
         run: python3 -m pytest test/ --browser=firefox --browser=chrome
 
+      - name: Build C++ karel
+        run: |
+          sudo apt-get install llvm
+          (cd cpp && make karel)
+
+      - name: Run karel tests
+        run: (cd cpp && make test)
+
   lint:
     runs-on: ubuntu-20.04
 

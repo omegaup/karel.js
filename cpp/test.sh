@@ -1,9 +1,13 @@
 #!/bin/bash
 
-for problem in ../test/problems/*; do
+set -e
+
+ROOT="$(git rev-parse --show-toplevel)"
+
+for problem in "${ROOT}/test/problems/"*; do
 	echo $(basename "${problem}")
-	../cmd/kareljs compile "${problem}/sol.txt" -o sol.kx || die
+	"${ROOT}/cmd/kareljs" compile "${problem}/sol.txt" -o "${ROOT}/cpp/sol.kx"
 	for casename in "${problem}/cases"/*.in; do
-		./karel sol.kx < "${casename}" | diff -Naurw --ignore-blank-lines "${casename%.in}.out" -
+		"${ROOT}/cpp/karel" "${ROOT}/cpp/sol.kx" < "${casename}" | diff -Naurw --ignore-blank-lines "${casename%.in}.out" -
 	done
 done

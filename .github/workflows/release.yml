@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+
+  release:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Get the version
+        id: get-version
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+
+      - name: Install dependencies
+        run: |
+          npm install
+          sudo apt-get -y install llvm
+
+      - name: Build CLI karel
+        run: |
+          npm run build:bundle
+          tar cJf dist/karel.js.tar.xz '--transform=s/dist\///' dist/*.js dist/*.node
+
+      - name: Build distributable .zip
+        run: |
+          zip --recurse-paths dist/karel.zip \
+            cmd/ css/ gramaticas/ img/ js/ lib/ manual/ LICENSE ayuda.html \
+            sandbox.html README.md index.html
+
+      - name: Build C++ karel
+        run: |
+          (cd cpp && make karel)
+
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get-version.outputs.version }}
+          release_name: ${{ steps.get-version.outputs.version }}
+          draft: false
+          prerelease: false
+
+      - name: Upload karel.zip Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./dist/karel.zip
+          asset_name: karel.zip
+          asset_content_type: application/octet-stream
+
+      - name: Upload karel.js.tar.xz Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./dist/karel.js.tar.xz
+          asset_name: karel.js.tar.xz
+          asset_content_type: application/octet-stream
+
+      - name: Upload karel Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./cpp/karel
+          asset_name: karel
+          asset_content_type: application/octet-stream
