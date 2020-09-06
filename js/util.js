@@ -14,7 +14,10 @@ var Draw = function (worldString, outputFile, opts) {
 
   var worldXml = new DOMParser().parseFromString(worldString, 'text/xml');
 
-  var out = fs.createWriteStream(outputFile, { encoding: 'binary' });
+  var out =
+    outputFile == '-' || outputFile == '/dev/stdout'
+      ? process.stdout
+      : fs.createWriteStream(outputFile, { encoding: 'binary' });
   var doneWriting = new Promise((resolve) => out.on('finish', resolve));
 
   var world = new karel.World(100, 100);
