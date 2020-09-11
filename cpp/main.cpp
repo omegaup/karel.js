@@ -16,6 +16,9 @@
 
 namespace {
 
+constexpr const std::string_view kFlagPrefix("--");
+constexpr const std::string_view kDumpFlagPrefix("dump=");
+
 std::vector<uint8_t> ReadFully(int fd) {
   constexpr size_t kChunkSize = 4096;
   std::vector<std::unique_ptr<uint8_t[]>> chunks;
@@ -237,7 +240,165 @@ class World {
     return std::make_optional<World>(std::move(world));
   }
 
-  void Dump(karel::RunResult result) const {
+  void Dump() const {
+    xml::Writer writer(STDOUT_FILENO);
+
+    auto ejecucion = writer.CreateElement("ejecucion");
+    {
+      auto condiciones = ejecucion.CreateElement("condiciones");
+      condiciones.AddAttribute("instruccionesMaximasAEjecutar",
+                               StringPrintf("%zd", runtime_.instruction_limit));
+      condiciones.AddAttribute("longitudStack",
+                               StringPrintf("%zd", runtime_.stack_limit));
+
+      if (runtime_.forward_limit != std::numeric_limits<size_t>::max()) {
+        auto comando = condiciones.CreateElement("comando");
+        comando.AddAttribute("nombre", "AVANZA");
+        comando.AddAttribute("maximoNumeroDeEjecuciones",
+                             StringPrintf("%zu", runtime_.forward_limit));
+      }
+      if (runtime_.left_limit != std::numeric_limits<size_t>::max()) {
+        auto comando = condiciones.CreateElement("comando");
+        comando.AddAttribute("nombre", "GIRA_IZQUIERDA");
+        comando.AddAttribute("maximoNumeroDeEjecuciones",
+                             StringPrintf("%zu", runtime_.left_limit));
+      }
+      if (runtime_.pickbuzzer_limit != std::numeric_limits<size_t>::max()) {
+        auto comando = condiciones.CreateElement("comando");
+        comando.AddAttribute("nombre", "COGE_ZUMBADOR");
+        comando.AddAttribute("maximoNumeroDeEjecuciones",
+                             StringPrintf("%zu", runtime_.pickbuzzer_limit));
+      }
+      if (runtime_.leavebuzzer_limit != std::numeric_limits<size_t>::max()) {
+        auto comando = condiciones.CreateElement("comando");
+        comando.AddAttribute("nombre", "DEJA_ZUMBADOR");
+        comando.AddAttribute("maximoNumeroDeEjecuciones",
+                             StringPrintf("%zu", runtime_.leavebuzzer_limit));
+      }
+    }
+    {
+      auto mundos = ejecucion.CreateElement("mundos");
+      auto mundo = mundos.CreateElement("mundo");
+      mundo.AddAttribute("nombre", "mundo_0");
+      mundo.AddAttribute("ancho", StringPrintf("%zd", runtime_.width));
+      mundo.AddAttribute("alto", StringPrintf("%zd", runtime_.height));
+
+      for (size_t x = 0; x < width_; ++x) {
+        for (size_t y = 0; y < height_; ++y) {
+          if (!runtime_.buzzers[coordinates(x, y)])
+            continue;
+          auto monton = mundo.CreateElement("monton");
+          monton.AddAttribute("x", StringPrintf("%zd", x + 1));
+          monton.AddAttribute("y", StringPrintf("%zd", y + 1));
+          if (runtime_.buzzers[coordinates(x, y)] == karel::kInfinity) {
+            monton.AddAttribute("zumbadores", "INFINITO");
+          } else {
+            monton.AddAttribute(
+                "zumbadores",
+                StringPrintf("%u", runtime_.buzzers[coordinates(x, y)]));
+          }
+        }
+      }
+
+      for (size_t x = 0; x < width_; ++x) {
+        for (size_t y = 0; y < height_; ++y) {
+          if (y + 1 < height_ && walls_[coordinates(x, y)] & (1 << 1)) {
+            auto pared = mundo.CreateElement("pared");
+            pared.AddAttribute("x1", StringPrintf("%zu", x));
+            pared.AddAttribute("y1", StringPrintf("%zu", y + 1));
+            pared.AddAttribute("x2", StringPrintf("%zu", x + 1));
+          }
+          if (x + 1 < width_ && walls_[coordinates(x, y)] & (1 << 2)) {
+            auto pared = mundo.CreateElement("pared");
+            pared.AddAttribute("x1", StringPrintf("%zu", x + 1));
+            pared.AddAttribute("y1", StringPrintf("%zu", y));
+            pared.AddAttribute("y2", StringPrintf("%zu", y + 1));
+          }
+        }
+      }
+
+      for (size_t x = 0; x < width_; ++x) {
+        for (size_t y = 0; y < height_; ++y) {
+          if (!buzzer_dump_[coordinates(x, y)])
+            continue;
+          auto posicionDump = mundo.CreateElement("posicionDump");
+          posicionDump.AddAttribute("x", StringPrintf("%zd", x + 1));
+          posicionDump.AddAttribute("y", StringPrintf("%zd", y + 1));
+        }
+      }
+    }
+    {
+      auto programas = ejecucion.CreateElement("programas");
+      programas.AddAttribute("tipoEjecucion", "CONTINUA");
+      programas.AddAttribute("intruccionesCambioContexto", "1");
+      programas.AddAttribute("milisegundosParaPasoAutomatico", "0");
+
+      auto programa = programas.CreateElement("programa");
+      programa.AddAttribute("nombre", "p1");
+      programa.AddAttribute("ruta", "{$2$}");
+      programa.AddAttribute("mundoDeEjecucion", "mundo_0");
+      programa.AddAttribute("xKarel", StringPrintf("%zd", runtime_.x + 1));
+      programa.AddAttribute("yKarel", StringPrintf("%zd", runtime_.y + 1));
+      switch (runtime_.orientation) {
+        case 0:
+          programa.AddAttribute("direccionKarel", "OESTE");
+          break;
+        case 1:
+          programa.AddAttribute("direccionKarel", "NORTE");
+          break;
+        case 2:
+          programa.AddAttribute("direccionKarel", "ESTE");
+          break;
+        case 3:
+          programa.AddAttribute("direccionKarel", "SUR");
+          break;
+      }
+      if (runtime_.bag == karel::kInfinity)
+        programa.AddAttribute("mochilaKarel", "INFINITO");
+      else
+        programa.AddAttribute("mochilaKarel",
+                              StringPrintf("%zu", runtime_.bag));
+
+      if (dump_world_) {
+        auto despliega = programa.CreateElement("despliega");
+        despliega.AddAttribute("tipo", "MUNDO");
+      }
+      if (dump_universe_) {
+        auto despliega = programa.CreateElement("despliega");
+        despliega.AddAttribute("tipo", "UNIVERSO");
+      }
+      if (dump_orientation_) {
+        auto despliega = programa.CreateElement("despliega");
+        despliega.AddAttribute("tipo", "ORIENTACION");
+      }
+      if (dump_position_) {
+        auto despliega = programa.CreateElement("despliega");
+        despliega.AddAttribute("tipo", "POSICION");
+      }
+      if (dump_bag_) {
+        auto despliega = programa.CreateElement("despliega");
+        despliega.AddAttribute("tipo", "MOCHILA");
+      }
+      if (dump_forward_) {
+        auto despliega = programa.CreateElement("despliega");
+        despliega.AddAttribute("tipo", "AVANZA");
+      }
+      if (dump_left_) {
+        auto despliega = programa.CreateElement("despliega");
+        despliega.AddAttribute("tipo", "GIRA_IZQUIERDA");
+      }
+      if (dump_leavebuzzer_) {
+        auto despliega = programa.CreateElement("despliega");
+        despliega.AddAttribute("tipo", "DEJA_ZUMBADOR");
+      }
+      if (dump_pickbuzzer_) {
+        auto despliega = programa.CreateElement("despliega");
+        despliega.AddAttribute("tipo", "COGE_ZUMBADOR");
+      }
+    }
+  }
+
+  void DumpResult(karel::RunResult result) const {
     {
       xml::Writer writer(STDOUT_FILENO);
 
@@ -398,13 +559,44 @@ class World {
   DISALLOW_COPY_AND_ASSIGN(World);
 };
 
+[[noreturn]] void Usage(const std::string_view program_name) {
+  LOG(ERROR) << "Usage: " << program_name
+             << " [--dump={world,result}] program.kx < world.in > world.out";
+  exit(1);
+}
+
 }  // namespace
 
 int main(int argc, char* argv[]) {
-  if (argc < 2) {
-    LOG(ERROR) << "Usage: " << argv[0] << " program.kx < world.in > world.out";
-    return -1;
+  bool dump_result = true;
+
+  for (int i = 1; i < argc; ++i) {
+    std::string_view arg = argv[i];
+    if (arg.find(kFlagPrefix) != 0)
+      continue;
+    arg.remove_prefix(kFlagPrefix.size());
+
+    if (arg.find(kDumpFlagPrefix) == 0) {
+      arg.remove_prefix(kDumpFlagPrefix.size());
+      if (arg == "world")
+        dump_result = false;
+      else if (arg == "result")
+        dump_result = true;
+      else
+        Usage(argv[0]);
+    } else {
+      Usage(argv[0]);
+    }
+
+    // Shift all arguments by one.
+    --argc;
+    for (int j = i; j < argc; ++j)
+      argv[j] = argv[j + 1];
+    --i;
   }
+
+  if (argc < 2)
+    Usage(argv[0]);
 
   ScopedFD program_fd(open(argv[1], O_RDONLY));
   if (!program_fd) {
@@ -422,7 +614,10 @@ int main(int argc, char* argv[]) {
     return -1;
 
   auto result = karel::Run(program.value(), world->runtime());
-  world->Dump(result);
+  if (dump_result)
+    world->DumpResult(result);
+  else
+    world->Dump();
 
   return static_cast<int32_t>(result);
 }
