@@ -1,6 +1,6 @@
 CFLAGS:=-Werror -Wall -fno-exceptions
 LDFLAGS:=-static
-CXXFLAGS:=-std=c++14
+CXXFLAGS:=-std=c++17
 LLVM_CXXFLAGS:=$(shell llvm-config --cxxflags)
 LLVM_LDFLAGS:=$(shell llvm-config --ldflags --system-libs --libs core --link-static)
 BINS:=karel karel.js karel-asm.js

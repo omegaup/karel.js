@@ -3,11 +3,11 @@
 
 #include <sys/mman.h>
 
-#include <experimental/optional>
-#include <experimental/string_view>
 #include <memory>
-#include <string>
+#include <optional>
 #include <sstream>
+#include <string>
+#include <string_view>
 
 #include "macros.h"
 
@@ -50,26 +50,24 @@ class ScopedMmap {
 
 std::string StringPrintf(const char* format, ...);
 
-bool WriteFileDescriptor(int fd, std::experimental::string_view str);
+bool WriteFileDescriptor(int fd, std::string_view str);
 
 template <typename T>
-std::experimental::optional<T> ParseString(std::experimental::string_view str) {
+std::optional<T> ParseString(std::string_view str) {
   T value;
   std::istringstream is{std::string(str)};
   if (!is || !(is >> value))
-    return std::experimental::nullopt;
+    return std::nullopt;
   return value;
 }
 
 template <>
-std::experimental::optional<uint32_t> ParseString(
-    std::experimental::string_view str);
+std::optional<uint32_t> ParseString(std::string_view str);
 
 template <typename T>
-std::experimental::optional<T> ParseString(
-    std::experimental::optional<std::experimental::string_view> str) {
+std::optional<T> ParseString(std::optional<std::string_view> str) {
   if (!str)
-    return std::experimental::nullopt;
+    return std::nullopt;
   return ParseString<T>(str.value());
 }
 

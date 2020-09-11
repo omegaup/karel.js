@@ -23,24 +23,21 @@ Buffer::~Buffer() {
 }
 
 void Buffer::Flush() {
-  WriteFileDescriptor(fd_,
-                      std::experimental::string_view(buffer_.get(), size_));
+  WriteFileDescriptor(fd_, std::string_view(buffer_.get(), size_));
   size_ = 0;
 }
 
 Writer::Writer(int fd) : buffer_{fd} {}
 Writer::~Writer() = default;
 
-Writer::Element Writer::CreateElement(
-    std::experimental::string_view name,
-    std::experimental::optional<std::experimental::string_view> content) {
+Writer::Element Writer::CreateElement(std::string_view name,
+                                      std::optional<std::string_view> content) {
   return Writer::Element(this, name, std::move(content));
 }
 
-Writer::Element::Element(
-    Writer* writer,
-    std::experimental::string_view name,
-    std::experimental::optional<std::experimental::string_view> content)
+Writer::Element::Element(Writer* writer,
+                         std::string_view name,
+                         std::optional<std::string_view> content)
     : writer_(writer), name_(name), depth_(writer_->PushDepth()) {
   if (content)
     content_ = std::string(content.value());
@@ -80,8 +77,8 @@ Writer::Element::~Element() {
 }
 
 Writer::Element Writer::Element::CreateElement(
-    std::experimental::string_view name,
-    std::experimental::optional<std::experimental::string_view> content) {
+    std::string_view name,
+    std::optional<std::string_view> content) {
   if (open_) {
     writer_->buffer_.Add(">\n");
     open_ = false;
@@ -89,8 +86,8 @@ Writer::Element Writer::Element::CreateElement(
   return Writer::Element(writer_, name, std::move(content));
 }
 
-void Writer::Element::AddAttribute(std::experimental::string_view name,
-                                   std::experimental::string_view value) {
+void Writer::Element::AddAttribute(std::string_view name,
+                                   std::string_view value) {
   if (!open_)
     return;
   writer_->buffer_.Add(' ');
@@ -154,21 +151,20 @@ Reader::Element::Element(const char* name, const char** attrs)
 Reader::Element::Element(Element&&) = default;
 Reader::Element::~Element() = default;
 
-std::experimental::string_view Reader::Element::GetName() {
+std::string_view Reader::Element::GetName() {
   return name_;
 }
 
-std::experimental::optional<std::experimental::string_view>
-Reader::Element::GetAttribute(std::experimental::string_view name,
-                              bool required) {
+std::optional<std::string_view> Reader::Element::GetAttribute(
+    std::string_view name,
+    bool required) {
   for (size_t i = 0; attrs_[i]; i += 2) {
     if (name == attrs_[i])
-      return std::experimental::make_optional<std::experimental::string_view>(
-          attrs_[i + 1]);
+      return std::make_optional<std::string_view>(attrs_[i + 1]);
   }
   if (required)
     LOG(ERROR) << "Failed to find " << name;
-  return std::experimental::nullopt;
+  return std::nullopt;
 }
 
 }  // namespace xml

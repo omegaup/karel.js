@@ -8,27 +8,25 @@ namespace json {
 
 namespace {
 
-std::experimental::optional<std::unique_ptr<Value>> ParseValue(
-    const char** ptr,
-    const char* const end);
+std::optional<std::unique_ptr<Value>> ParseValue(const char** ptr,
+                                                 const char* const end);
 
-std::experimental::optional<std::unique_ptr<Value>> ParseList(
-    const char** ptr,
-    const char* const end) {
+std::optional<std::unique_ptr<Value>> ParseList(const char** ptr,
+                                                const char* const end) {
   if (**ptr != '[') {
     LOG(ERROR) << "Invalid list entry";
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
   (*ptr)++;
   std::vector<std::unique_ptr<Value>> list;
   while (*ptr != end) {
     auto entry = ParseValue(ptr, end);
     if (!entry)
-      return std::experimental::nullopt;
+      return std::nullopt;
     list.emplace_back(std::move(entry.value()));
     if (*ptr == end) {
       LOG(ERROR) << "Unterminated list";
-      return std::experimental::nullopt;
+      return std::nullopt;
     }
     switch (**ptr) {
       case ',':
@@ -37,44 +35,42 @@ std::experimental::optional<std::unique_ptr<Value>> ParseList(
         break;
       case ']':
         (*ptr)++;
-        return std::experimental::optional<std::unique_ptr<Value>>(
+        return std::optional<std::unique_ptr<Value>>(
             std::make_unique<ListValue>(std::move(list)));
       default:
         LOG(ERROR) << "Invalid list separator " << **ptr;
-        return std::experimental::nullopt;
+        return std::nullopt;
     }
   }
   LOG(ERROR) << "Invalid list state";
-  return std::experimental::nullopt;
+  return std::nullopt;
 }
 
-std::experimental::optional<std::unique_ptr<Value>> ParseString(
-    const char** ptr,
-    const char* const end) {
+std::optional<std::unique_ptr<Value>> ParseString(const char** ptr,
+                                                  const char* const end) {
   if (**ptr != '"') {
     LOG(ERROR) << "Invalid string entry";
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
   const char* string_begin = ++(*ptr);
   for (size_t length = 0; *ptr != end; length++, (*ptr)++) {
     switch (**ptr) {
       case '"':
         (*ptr)++;
-        return std::experimental::optional<std::unique_ptr<Value>>(
+        return std::optional<std::unique_ptr<Value>>(
             std::make_unique<StringValue>(
-                std::experimental::string_view(string_begin, length)));
+                std::string_view(string_begin, length)));
       case '\\':
         (*ptr)++;
         break;
     }
   }
   LOG(ERROR) << "Invalid string state";
-  return std::experimental::nullopt;
+  return std::nullopt;
 }
 
-std::experimental::optional<std::unique_ptr<Value>> ParseInt(
-    const char** ptr,
-    const char* const end) {
+std::optional<std::unique_ptr<Value>> ParseInt(const char** ptr,
+                                               const char* const end) {
   int32_t sign = 1;
   if (**ptr == '-') {
     sign = -1;
@@ -88,15 +84,14 @@ std::experimental::optional<std::unique_ptr<Value>> ParseInt(
       break;
     }
   }
-  return std::experimental::optional<std::unique_ptr<Value>>(
+  return std::optional<std::unique_ptr<Value>>(
       std::make_unique<IntValue>(sign * value));
 }
 
-std::experimental::optional<std::unique_ptr<Value>> ParseValue(
-    const char** ptr,
-    const char* const end) {
+std::optional<std::unique_ptr<Value>> ParseValue(const char** ptr,
+                                                 const char* const end) {
   if (*ptr == end)
-    return std::experimental::nullopt;
+    return std::nullopt;
 
   switch (**ptr) {
     case ' ':
@@ -154,14 +149,13 @@ void StringValue::dump(std::ostream& os) const {
   os << '"' << value_ << '"';
 }
 
-std::experimental::optional<std::unique_ptr<Value>> Parse(
-    std::experimental::string_view json) {
+std::optional<std::unique_ptr<Value>> Parse(std::string_view json) {
   const char* ptr = json.data();
   const char* end = ptr + json.size();
   auto result = ParseValue(&ptr, end);
   if (ptr != end) {
     LOG(ERROR) << "Unconsumed state";
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
   return result;
 }

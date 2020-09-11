@@ -1,14 +1,14 @@
 #include "karel.h"
 
-#include <experimental/string_view>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <stack>
 #include <string>
 
-#include "logging.h"
 #include "json.h"
+#include "logging.h"
 #include "util.h"
 
 namespace karel {
@@ -32,8 +32,7 @@ std::string Stringify(const std::vector<int32_t>& expression_stack) {
   return buffer.str();
 }
 
-std::experimental::optional<Opcode> ParseOpcode(
-    std::experimental::string_view name) {
+std::optional<Opcode> ParseOpcode(std::string_view name) {
   if (name == "HALT")
     return Opcode::HALT;
   if (name == "LINE")
@@ -91,11 +90,10 @@ std::experimental::optional<Opcode> ParseOpcode(
   if (name == "PARAM")
     return Opcode::PARAM;
   LOG(ERROR) << "Invalid mnemonic: " << name;
-  return std::experimental::nullopt;
+  return std::nullopt;
 }
 
-std::experimental::optional<RunResult> ParseRunResult(
-    std::experimental::string_view name) {
+std::optional<RunResult> ParseRunResult(std::string_view name) {
   if (name == "OK")
     return RunResult::OK;
   if (name == "INSTRUCTION")
@@ -109,25 +107,23 @@ std::experimental::optional<RunResult> ParseRunResult(
   if (name == "STACK")
     return RunResult::STACK;
   LOG(ERROR) << "Invalid run result: " << name;
-  return std::experimental::nullopt;
+  return std::nullopt;
 }
 
-std::experimental::optional<Instruction> ParseInstruction(
-    const json::ListValue& value) {
+std::optional<Instruction> ParseInstruction(const json::ListValue& value) {
   if (value.value().size() == 0) {
     LOG(ERROR) << "Empty instruction " << value;
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
   if (value.value()[0]->GetType() != json::Type::STRING) {
     LOG(ERROR) << "Non-string mnemonic " << value;
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
-  std::experimental::string_view opcode_name =
-      value.value()[0]->AsString().value();
+  std::string_view opcode_name = value.value()[0]->AsString().value();
   auto opcode = ParseOpcode(opcode_name);
   if (!opcode) {
     LOG(ERROR) << "Invalid opcode " << value;
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 
   Instruction ins{opcode.value(), 0};
@@ -157,7 +153,7 @@ std::experimental::optional<Instruction> ParseInstruction(
       // nullary
       if (value.value().size() != 1) {
         LOG(ERROR) << "Unexpected argument to " << value;
-        return std::experimental::nullopt;
+        return std::nullopt;
       }
       return ins;
 
@@ -169,11 +165,11 @@ std::experimental::optional<Instruction> ParseInstruction(
       // unary
       if (value.value().size() != 2) {
         LOG(ERROR) << "Unexpected arguments to " << value;
-        return std::experimental::nullopt;
+        return std::nullopt;
       }
       if (value.value()[1]->GetType() != json::Type::INT) {
         LOG(ERROR) << "Invalid argument to " << value;
-        return std::experimental::nullopt;
+        return std::nullopt;
       }
       ins.arg = value.value()[1]->AsInt().value();
       return ins;
@@ -182,15 +178,15 @@ std::experimental::optional<Instruction> ParseInstruction(
       // unary, string
       if (value.value().size() != 2) {
         LOG(ERROR) << "Unexpected arguments to " << value;
-        return std::experimental::nullopt;
+        return std::nullopt;
       }
       if (value.value()[1]->GetType() != json::Type::STRING) {
         LOG(ERROR) << "Invalid argument to " << value;
-        return std::experimental::nullopt;
+        return std::nullopt;
       }
       auto result = ParseRunResult(value.value()[1]->AsString().value());
       if (!result) {
-        return std::experimental::nullopt;
+        return std::nullopt;
       }
       ins.arg = static_cast<int32_t>(result.value());
       return ins;
@@ -200,11 +196,11 @@ std::experimental::optional<Instruction> ParseInstruction(
       // binary
       if (value.value().size() != 3) {
         LOG(ERROR) << "Unexpected arguments to " << value;
-        return std::experimental::nullopt;
+        return std::nullopt;
       }
       if (value.value()[1]->GetType() != json::Type::INT) {
         LOG(ERROR) << "Invalid argument to " << value;
-        return std::experimental::nullopt;
+        return std::nullopt;
       }
       ins.arg = value.value()[1]->AsInt().value();
       return ins;
@@ -221,16 +217,16 @@ struct StackFrame {
 
 }  // namespace
 
-std::experimental::optional<std::vector<Instruction>> ParseInstructions(
-    std::experimental::string_view program) {
+std::optional<std::vector<Instruction>> ParseInstructions(
+    std::string_view program) {
   auto parsed_json = json::Parse(program);
   if (!parsed_json) {
     LOG(ERROR) << "Invalid JSON";
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
   if ((*parsed_json)->GetType() != json::Type::LIST) {
     LOG(ERROR) << "Invalid program " << *parsed_json.value();
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
   const json::ListValue& list_value = (*parsed_json)->AsList();
 
@@ -238,11 +234,11 @@ std::experimental::optional<std::vector<Instruction>> ParseInstructions(
   for (const auto& entry : list_value.value()) {
     if (entry->GetType() != json::Type::LIST) {
       LOG(ERROR) << "Invalid instruction " << *entry;
-      return std::experimental::nullopt;
+      return std::nullopt;
     }
     auto instruction = ParseInstruction(entry->AsList());
     if (!instruction)
-      return std::experimental::nullopt;
+      return std::nullopt;
     instructions.emplace_back(std::move(instruction.value()));
   }
 

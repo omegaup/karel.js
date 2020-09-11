@@ -1,7 +1,7 @@
-#include <experimental/optional>
-#include <experimental/string_view>
 #include <iosfwd>
 #include <memory>
+#include <optional>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -64,11 +64,11 @@ class ListValue : public Value {
 
 class StringValue : public Value {
  public:
-  explicit StringValue(std::experimental::string_view value) : value_(value) {}
+  explicit StringValue(std::string_view value) : value_(value) {}
 
   Type GetType() const override { return Type::STRING; }
 
-  std::experimental::string_view value() const { return value_; }
+  std::string_view value() const { return value_; }
 
  private:
   void dump(std::ostream& os) const override;
@@ -78,8 +78,8 @@ class StringValue : public Value {
   DISALLOW_COPY_AND_ASSIGN(StringValue);
 };
 
-std::experimental::optional<std::unique_ptr<Value>> Parse(
-    std::experimental::string_view json);
+std::optional<std::unique_ptr<Value>> Parse(
+    std::string_view json);
 
 std::ostream& operator<<(std::ostream& os, const Value& value);
 

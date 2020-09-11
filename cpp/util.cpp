@@ -3,11 +3,11 @@
 #include <stdarg.h>
 #include <unistd.h>
 
-#include <utility>
 #include <fstream>
+#include <utility>
 
-#include "logging.h"
 #include "karel.h"
+#include "logging.h"
 
 ScopedFD::ScopedFD(int fd) : fd_(fd) {}
 
@@ -76,7 +76,7 @@ std::string StringPrintf(const char* format, ...) {
   return std::string(path, ret);
 }
 
-bool WriteFileDescriptor(int fd, std::experimental::string_view str) {
+bool WriteFileDescriptor(int fd, std::string_view str) {
   const char* ptr = str.data();
   size_t remaining = str.size();
   ssize_t bytes_written;
@@ -90,13 +90,12 @@ bool WriteFileDescriptor(int fd, std::experimental::string_view str) {
 }
 
 template <>
-std::experimental::optional<uint32_t> ParseString(
-    std::experimental::string_view str) {
+std::optional<uint32_t> ParseString(std::string_view str) {
   if (str == "INFINITO")
     return karel::kInfinity;
   uint32_t value;
   std::istringstream is{std::string(str)};
   if (!is || !(is >> value))
-    return std::experimental::nullopt;
+    return std::nullopt;
   return value;
 }

@@ -1,9 +1,9 @@
 #include <cstring>
-#include <experimental/optional>
-#include <experimental/string_view>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "macros.h"
@@ -21,7 +21,7 @@ class Buffer {
     if (Full())
       Flush();
   }
-  void Add(std::experimental::string_view str) {
+  void Add(std::string_view str) {
     memcpy(buffer_.get() + size_, str.data(), str.size());
     size_ += str.size();
     if (Full())
@@ -48,31 +48,26 @@ class Writer {
     ~Element();
 
     Element CreateElement(
-        std::experimental::string_view name,
-        std::experimental::optional<std::experimental::string_view> content =
-            std::experimental::nullopt);
-    void AddAttribute(std::experimental::string_view name,
-                      std::experimental::string_view value);
+        std::string_view name,
+        std::optional<std::string_view> content = std::nullopt);
+    void AddAttribute(std::string_view name, std::string_view value);
 
    private:
     friend class Writer;
-    Element(
-        Writer* writer,
-        std::experimental::string_view name,
-        std::experimental::optional<std::experimental::string_view> content);
+    Element(Writer* writer,
+            std::string_view name,
+            std::optional<std::string_view> content);
 
     Writer* writer_ = nullptr;
     std::string name_;
     size_t depth_;
     bool open_ = true;
-    std::experimental::optional<std::string> content_;
+    std::optional<std::string> content_;
     DISALLOW_COPY_AND_ASSIGN(Element);
   };
 
-  Element CreateElement(
-      std::experimental::string_view name,
-      std::experimental::optional<std::experimental::string_view> content =
-          std::experimental::nullopt);
+  Element CreateElement(std::string_view name,
+                        std::optional<std::string_view> content = std::nullopt);
 
  private:
   friend class Element;
@@ -96,10 +91,9 @@ class Reader {
     ~Element();
     Element(Element&&);
 
-    std::experimental::string_view GetName();
-    std::experimental::optional<std::experimental::string_view> GetAttribute(
-        std::experimental::string_view name,
-        bool required = false);
+    std::string_view GetName();
+    std::optional<std::string_view> GetAttribute(std::string_view name,
+                                                 bool required = false);
 
    private:
     friend class Reader;

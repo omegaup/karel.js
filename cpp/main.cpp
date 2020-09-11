@@ -2,6 +2,13 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <algorithm>
+#include <memory>
+#include <optional>
+#include <string_view>
+#include <utility>
+#include <vector>
+
 #include "karel.h"
 #include "logging.h"
 #include "util.h"
@@ -74,10 +81,10 @@ class World {
     return walls_[coordinates(x, y)];
   }
 
-  static std::experimental::optional<World> Parse(int fd) {
+  static std::optional<World> Parse(int fd) {
     World world;
     if (!xml::Reader().Parse(fd, [&world](xml::Reader::Element node) -> bool {
-          const std::experimental::string_view name = node.GetName();
+          const std::string_view name = node.GetName();
           if (name == "mundo") {
             auto width = ParseString<uint32_t>(node.GetAttribute("ancho")),
                  height = ParseString<uint32_t>(node.GetAttribute("alto"));
@@ -224,10 +231,10 @@ class World {
 
           return true;
         })) {
-      return std::experimental::nullopt;
+      return std::nullopt;
     }
 
-    return std::experimental::make_optional<World>(std::move(world));
+    return std::make_optional<World>(std::move(world));
   }
 
   void Dump(karel::RunResult result) const {
@@ -258,8 +265,8 @@ class World {
           if (line.tellp() == 0)
             continue;
 
-          auto linea = mundo.CreateElement(
-              "linea", std::experimental::string_view(line.str()));
+          auto linea =
+              mundo.CreateElement("linea", std::string_view(line.str()));
           linea.AddAttribute("fila", StringPrintf("%zd", y + 1));
           linea.AddAttribute("compresionDeCeros", "true");
         }
@@ -347,7 +354,7 @@ class World {
  private:
   World() = default;
 
-  void Init(size_t width, size_t height, std::experimental::string_view name) {
+  void Init(size_t width, size_t height, std::string_view name) {
     width_ = width;
     height_ = height;
     name_ = std::string(name);
@@ -405,7 +412,7 @@ int main(int argc, char* argv[]) {
     return -1;
   }
   auto program_str = ReadFully(program_fd.get());
-  auto program = karel::ParseInstructions(std::experimental::string_view(
+  auto program = karel::ParseInstructions(std::string_view(
       reinterpret_cast<const char*>(program_str.data()), program_str.size()));
   if (!program)
     return -1;
