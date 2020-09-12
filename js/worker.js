@@ -1,7 +1,7 @@
 (function () {
   self.importScripts('karel.js');
-  self.importScripts('../tinyxmlsax.js');
-  self.importScripts('../tinyxmlw3cdom.js');
+  self.importScripts('../lib/tinyxmlsax.js');
+  self.importScripts('../lib/tinyxmlw3cdom.js');
 
   var callbacks = {
     error: function (msg) {
