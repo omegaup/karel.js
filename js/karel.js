@@ -898,7 +898,7 @@ World.prototype.addWall = function (i, j, orientation) {
 World.prototype.setBuzzers = function (i, j, count) {
   var self = this;
 
-  if (0 > i || i > self.h || 0 > j || j > self.w) return;
+  if (0 >= i || i > self.h || 0 >= j || j > self.w) return;
   self.map[self.w * i + j] = self.currentMap[self.w * i + j] =
     count == 0xffff ? -1 : count;
   self.dirty = true;
@@ -907,7 +907,7 @@ World.prototype.setBuzzers = function (i, j, count) {
 World.prototype.buzzers = function (i, j) {
   var self = this;
 
-  if (0 > i || i > self.h || 0 > j || j > self.w) return 0;
+  if (0 >= i || i > self.h || 0 >= j || j > self.w) return 0;
   return self.currentMap[self.w * i + j];
 };
 
