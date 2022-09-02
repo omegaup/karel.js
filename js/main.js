@@ -904,6 +904,7 @@ $(document).ready(function () {
   });
   $('#pascalsyntax').click(function (event) {
     // editor.getSession().setMode("ace/mode/karelpascal");
+    editor.setOption('mode','karelpascal');
     editor.setValue(
       'iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aquí }\n        apagate;\n    termina-ejecucion\nfinalizar-programa',
       1,
@@ -912,6 +913,7 @@ $(document).ready(function () {
   });
   $('#javasyntax').click(function (event) {
     // editor.getSession().setMode("ace/mode/kareljava");
+    editor.setOption('mode','kareljava');
     editor.setValue(
       'class program {\n    program () {\n        // TODO poner codigo aqui\n        turnoff();\n    }\n}',
       1,
