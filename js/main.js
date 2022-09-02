@@ -56,6 +56,18 @@ $(document).ready(function () {
     );
   }
 
+  function setMode(mode) {
+    editor.setOption('mode',mode);
+  }
+
+  function setKarelPascal(mode) {
+    setMode('karelpascal')
+  }
+
+  function setKarelJava(mode) {
+    setMode('kareljava')
+  }
+
   function setTheme(theme) {
     if (codeMirrorThemes.indexOf(theme) === -1) return;
     editor.setOption('theme', theme);
@@ -69,9 +81,11 @@ $(document).ready(function () {
 
     switch (language) {
       case 'pascal':
+        setKarelPascal();
         return { parser: new karelpascal.Parser(), name: 'pascal' };
         break;
       case 'java':
+        setKarelJava();
         return { parser: new kareljava.Parser(), name: 'java' };
         break;
       case 'ruby':
@@ -904,16 +918,16 @@ $(document).ready(function () {
   });
   $('#pascalsyntax').click(function (event) {
     // editor.getSession().setMode("ace/mode/karelpascal");
-    editor.setOption('mode','karelpascal');
+    setKarelPascal();
     editor.setValue(
       'iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aquí }\n        apagate;\n    termina-ejecucion\nfinalizar-programa',
       1,
-    );
-    editor.focus();
-  });
-  $('#javasyntax').click(function (event) {
-    // editor.getSession().setMode("ace/mode/kareljava");
-    editor.setOption('mode','kareljava');
+      );
+      editor.focus();
+    });
+    $('#javasyntax').click(function (event) {
+      // editor.getSession().setMode("ace/mode/kareljava");
+    setKarelJava();
     editor.setValue(
       'class program {\n    program () {\n        // TODO poner codigo aqui\n        turnoff();\n    }\n}',
       1,
