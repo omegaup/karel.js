@@ -60,12 +60,15 @@ $(document).ready(function () {
     editor.setOption('mode',mode);
   }
 
-  function setKarelPascal(mode) {
-    setMode('karelpascal')
-  }
-
-  function setKarelJava(mode) {
-    setMode('kareljava')
+  function setLanguage(language) {
+    switch (language) {
+      case 'pascal':
+        setMode('karelpascal')
+        break;
+      case 'java':    
+        setMode('kareljava')
+        break;
+    }
   }
 
   function setTheme(theme) {
@@ -78,14 +81,12 @@ $(document).ready(function () {
 
   function getParser(str) {
     language = detectLanguage(str);
-
+    setLanguage(language);
     switch (language) {
       case 'pascal':
-        setKarelPascal();
         return { parser: new karelpascal.Parser(), name: 'pascal' };
         break;
       case 'java':
-        setKarelJava();
         return { parser: new kareljava.Parser(), name: 'java' };
         break;
       case 'ruby':
@@ -409,6 +410,7 @@ $(document).ready(function () {
     var restoredSource = sessionStorage.getItem('karel.js:karelsource');
     if (restoredSource) {
       editor.setValue(restoredSource);
+      setLanguage(detectLanguage(editor.getValue()));      
     }
     var restoredWorld = sessionStorage.getItem('karel.js:karelworld');
     if (restoredWorld) {
