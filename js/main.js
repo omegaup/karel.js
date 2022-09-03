@@ -707,7 +707,7 @@ $(document).ready(function () {
 
   function stopAutoStep() {
     if (interval) {
-      clearInterval(interval)
+      clearInterval(interval);
       interval = null;
     }
   }
