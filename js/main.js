@@ -463,21 +463,6 @@ $(document).ready(function () {
     }
   }
 
-  function startAutoStep(delay) {
-    if (typeof delay === 'undefined') {
-      delay = $('#retraso_txt').val();
-    }
-    stopAutoStep();
-    interval = setInterval(step, delay);
-  }
-
-  function stopAutoStep() {
-    if (interval) {
-      clearInterval(interval)
-      interval = null;
-    }
-  }
-
   function compile() {
     if (sessionStorage) {
       sessionStorage.setItem('karel.js:karelsource', editor.getValue());
@@ -710,6 +695,21 @@ $(document).ready(function () {
         });
       },
     );
+  }
+
+  function startAutoStep(delay) {
+    if (typeof delay === 'undefined') {
+      delay = $('#retraso_txt').val();
+    }
+    stopAutoStep();
+    interval = setInterval(step, delay);
+  }
+
+  function stopAutoStep() {
+    if (interval) {
+      clearInterval(interval)
+      interval = null;
+    }
   }
 
   $('#futuro').click(function (event) {
