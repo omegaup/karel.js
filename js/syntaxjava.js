@@ -6,7 +6,7 @@ CodeMirror.defineMode('kareljava', function () {
       return obj;
     }
     var keywords = words(
-      'class if else iterate while',
+      'class if else iterate while void define program',
     );
     var indent = words(
       '{',
