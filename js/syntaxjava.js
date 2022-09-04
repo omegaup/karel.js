@@ -6,7 +6,7 @@ CodeMirror.defineMode('kareljava', function () {
       return obj;
     }
     var keywords = words(
-      'class if else iterate while void define program',
+      'class if else iterate while void define program return',
     );
     var indent = words(
       '{',
@@ -15,7 +15,7 @@ CodeMirror.defineMode('kareljava', function () {
     var builtin = words(
       'move turnleft turnoff putbeeper pickbeeper',
     );
-    var operator = words('&& || ! iszero pred succ');
+    var operator = words('iszero pred succ');
     var atoms = words(
       'frontIsClear frontIsBlocked leftIsClear leftIsBlocked rightIsClear rightIsBlocked nextToABeeper notNextToABeeper anyBeepersInBeeperBag noBeepersInBeeperBag facingNorth facingSouth facingEast facingWest notFacingNorth notFacingSouth notFacingEast notFacingWest',
     );
@@ -32,6 +32,9 @@ CodeMirror.defineMode('kareljava', function () {
       }
       if (/[\(\);]/.test(ch)) {
         return null;
+      }
+      if (/[\!\&\|]/.test(ch)) {
+        return 'operator';
       }
       if (/\d/.test(ch)) {
         stream.eatWhile(/[\w\.]/);
