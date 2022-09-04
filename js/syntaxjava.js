@@ -6,14 +6,14 @@ CodeMirror.defineMode('kareljava', function () {
       return obj;
     }
     var keywords = words(
-      'class if else iterate while void define program return',
+      'class if else iterate while void define program',
     );
     var indent = words(
       '{',
     );
     var dedent = words('}');
     var builtin = words(
-      'move turnleft turnoff putbeeper pickbeeper',
+      'move turnleft turnoff putbeeper pickbeeper return',
     );
     var operator = words('iszero pred succ');
     var atoms = words(
