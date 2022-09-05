@@ -130,7 +130,7 @@ def pytest_generate_tests(metafunc):
                              scope='session')
 
 
-@pytest.yield_fixture(scope='session')
+@pytest.fixture
 def driver(request, browser):
     '''Run tests using the selenium webdriver.'''
 
@@ -139,14 +139,11 @@ def driver(request, browser):
         options.add_experimental_option('prefs',
                                         {'intl.accept_languages': 'en_US'})
         options.add_argument('--lang=en-US')
-        if request.config.option.headless:
-            options.add_argument('--headless')
+        options.headless = True
         browser = webdriver.Chrome(options=options)
     else:
         options = webdriver.firefox.options.Options()
-        options.set_capability('marionette', True)
-        if request.config.option.headless:
-            options.add_argument('-headless')
+        options.headless = True
         browser = webdriver.Firefox(options=options)
     browser.set_window_size(*_WINDOW_SIZE)
 
