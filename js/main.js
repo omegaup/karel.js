@@ -436,8 +436,7 @@ $(document).ready(function () {
       $('#mensajes').trigger('info', {
         mensaje: 'Breakpoint en la línea ' + (linea_actual + 1),
       });
-      clearInterval(interval);
-      interval = null;
+      stopAutoStep();
       $('#ejecutar em').removeClass('icon-pause').addClass('icon-play');
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
@@ -451,8 +450,7 @@ $(document).ready(function () {
     }
 
     if (!mundo.runtime.state.running) {
-      clearInterval(interval);
-      interval = null;
+      stopAutoStep();
       mensaje_final();
       highlightCurrentLine();
       // Aún no se permite editar el mundo, pero se podrá si se regresa a su
@@ -699,6 +697,21 @@ $(document).ready(function () {
     );
   }
 
+  function startAutoStep(delay) {
+    if (typeof delay === 'undefined') {
+      delay = $('#retraso_txt').val();
+    }
+    stopAutoStep();
+    interval = setInterval(step, delay);
+  }
+
+  function stopAutoStep() {
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
   $('#futuro').click(function (event) {
     if (!mundo_editable) {
       futuro();
@@ -837,7 +850,7 @@ $(document).ready(function () {
                 });
               }
               mundo.runtime.start();
-              interval = setInterval(step, $('#retraso_txt').val());
+              startAutoStep();
             },
             function (message) {
               $('#mensajes').trigger('error', {
@@ -851,10 +864,10 @@ $(document).ready(function () {
         }
       } else {
         $('#ejecutar').trigger('lock');
-        interval = setInterval(step, $('#retraso_txt').val());
+        startAutoStep();
       }
     } else {
-      clearInterval(interval);
+      stopAutoStep();
       $('#ejecutar em').removeClass('icon-pause').addClass('icon-play');
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
@@ -924,8 +937,7 @@ $(document).ready(function () {
       valor -= 50;
       $('#retraso_txt').val(valor);
       if (interval) {
-        clearInterval(interval);
-        interval = setInterval(step, $('#retraso_txt').val());
+        startAutoStep();
       }
     }
   });
@@ -935,8 +947,7 @@ $(document).ready(function () {
       valor += 50;
       $('#retraso_txt').val(valor);
       if (interval) {
-        clearInterval(interval);
-        interval = setInterval(step, $('#retraso_txt').val());
+        startAutoStep();
       }
     }
   });
@@ -945,8 +956,7 @@ $(document).ready(function () {
     if (valor < 0 || valor > 1000) {
       $('#retraso_txt').val(500);
       if (interval) {
-        clearInterval(interval);
-        interval = setInterval(step, $('#retraso_txt').val());
+        startAutoStep();
       }
     }
   });
