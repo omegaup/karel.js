@@ -8,6 +8,7 @@ import os.path
 import re
 
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
 
 _DEFAULT_TIMEOUT = 5  # seconds
 _ROOT = os.path.abspath(os.path.join(__file__, '..', '..'))
@@ -28,14 +29,14 @@ def _init(driver, world, code, delay=1):
     '''Replaces the current program code with |code|.'''
 
     driver.browser.execute_script('window.state.init(%r, %r);' % (world, code))
-    driver.browser.find_element_by_id('retraso_txt').clear()
-    driver.browser.find_element_by_id('retraso_txt').send_keys(str(delay))
+    driver.browser.find_element(By.ID, 'retraso_txt').clear()
+    driver.browser.find_element(By.ID, 'retraso_txt').send_keys(str(delay))
 
 
 def _clean_state(driver):
     '''Cleans the state of the runtime.'''
 
-    driver.browser.find_element_by_id('worldclean').click()
+    driver.browser.find_element(By.ID, 'worldclean').click()
     driver.browser.execute_script('window.state.cleanLog();')
 
 
@@ -45,9 +46,9 @@ def _wait_for_log_message(driver, message):
     try:
         driver.wait.until(lambda _: re.search(
             r'^.*%s.*$' % re.escape(message),
-            driver.browser.find_element_by_css_selector('#mensajes>p').text))
+            driver.browser.find_element(By.CSS_SELECTOR, '#mensajes>p').text))
     except TimeoutException as timeout:
-        timeout.msg = driver.browser.find_element_by_id('mensajes').text
+        timeout.msg = driver.browser.find_element(By.ID, 'mensajes').text
         raise timeout
 
 
@@ -69,28 +70,28 @@ finalizar-programa''')
 
     # Compile.
     _clean_state(driver)
-    driver.browser.find_element_by_id('compilar').click()
+    driver.browser.find_element(By.ID, 'compilar').click()
     _wait_for_log_message(driver, 'Programa compilado (sintaxis pascal)',)
 
     # Execute.
     _clean_state(driver)
-    driver.browser.find_element_by_id('ejecutar').click()
+    driver.browser.find_element(By.ID, 'ejecutar').click()
     _wait_for_log_message(driver, 'Ejecución terminada')
     driver.assert_script_equal('window.state.mundo.i', 2)
     driver.assert_script_equal('window.state.mundo.j', 1)
 
     # Step-by-step.
     _clean_state(driver)
-    driver.browser.find_element_by_id('paso').click()
-    driver.browser.find_element_by_id('paso').click()
-    driver.browser.find_element_by_id('paso').click()
+    driver.browser.find_element(By.ID, 'paso').click()
+    driver.browser.find_element(By.ID, 'paso').click()
+    driver.browser.find_element(By.ID, 'paso').click()
     _wait_for_log_message(driver, 'Ejecución terminada',)
     driver.assert_script_equal('window.state.mundo.i', 2)
     driver.assert_script_equal('window.state.mundo.j', 1)
 
     # See-the-future.
     _clean_state(driver)
-    driver.browser.find_element_by_id('futuro').click()
+    driver.browser.find_element(By.ID, 'futuro').click()
     _wait_for_log_message(driver, 'Ejecución terminada',)
     driver.assert_script_equal('window.state.mundo.i', 2)
     driver.assert_script_equal('window.state.mundo.j', 1)
