@@ -57,16 +57,16 @@ $(document).ready(function () {
   }
 
   function setMode(mode) {
-    editor.setOption('mode',mode);
+    editor.setOption('mode', mode);
   }
 
   function setLanguage(language) {
     switch (language) {
       case 'pascal':
-        setMode('karelpascal')
+        setMode('karelpascal');
         break;
-      case 'java':    
-        setMode('kareljava')
+      case 'java':
+        setMode('kareljava');
         break;
     }
   }
@@ -410,7 +410,7 @@ $(document).ready(function () {
     var restoredSource = sessionStorage.getItem('karel.js:karelsource');
     if (restoredSource) {
       editor.setValue(restoredSource);
-      setLanguage(detectLanguage(editor.getValue()));      
+      setLanguage(detectLanguage(editor.getValue()));
     }
     var restoredWorld = sessionStorage.getItem('karel.js:karelworld');
     if (restoredWorld) {
@@ -936,10 +936,10 @@ $(document).ready(function () {
     editor.setValue(
       'iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aquí }\n        apagate;\n    termina-ejecucion\nfinalizar-programa',
       1,
-      );
-      editor.focus();
-    });
-    $('#javasyntax').click(function (event) {
+    );
+    editor.focus();
+  });
+  $('#javasyntax').click(function (event) {
     setLanguage('java');
     editor.setValue(
       'class program {\n    program () {\n        // TODO poner codigo aqui\n        turnoff();\n    }\n}',
