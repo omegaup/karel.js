@@ -932,7 +932,6 @@ $(document).ready(function () {
     editor.focus();
   });
   $('#pascalsyntax').click(function (event) {
-    // editor.getSession().setMode("ace/mode/karelpascal");
     setLanguage('pascal');
     editor.setValue(
       'iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aquí }\n        apagate;\n    termina-ejecucion\nfinalizar-programa',
@@ -941,7 +940,6 @@ $(document).ready(function () {
       editor.focus();
     });
     $('#javasyntax').click(function (event) {
-      // editor.getSession().setMode("ace/mode/kareljava");
     setLanguage('java');
     editor.setValue(
       'class program {\n    program () {\n        // TODO poner codigo aqui\n        turnoff();\n    }\n}',
