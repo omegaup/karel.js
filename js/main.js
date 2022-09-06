@@ -56,6 +56,21 @@ $(document).ready(function () {
     );
   }
 
+  function setMode(mode) {
+    editor.setOption('mode', mode);
+  }
+
+  function setLanguage(language) {
+    switch (language) {
+      case 'pascal':
+        setMode('karelpascal');
+        break;
+      case 'java':
+        setMode('kareljava');
+        break;
+    }
+  }
+
   function setTheme(theme) {
     if (codeMirrorThemes.indexOf(theme) === -1) return;
     editor.setOption('theme', theme);
@@ -66,7 +81,7 @@ $(document).ready(function () {
 
   function getParser(str) {
     language = detectLanguage(str);
-
+    setLanguage(language);
     switch (language) {
       case 'pascal':
         return { parser: new karelpascal.Parser(), name: 'pascal' };
@@ -395,6 +410,7 @@ $(document).ready(function () {
     var restoredSource = sessionStorage.getItem('karel.js:karelsource');
     if (restoredSource) {
       editor.setValue(restoredSource);
+      setLanguage(detectLanguage(editor.getValue()));
     }
     var restoredWorld = sessionStorage.getItem('karel.js:karelworld');
     if (restoredWorld) {
@@ -916,7 +932,7 @@ $(document).ready(function () {
     editor.focus();
   });
   $('#pascalsyntax').click(function (event) {
-    // editor.getSession().setMode("ace/mode/karelpascal");
+    setLanguage('pascal');
     editor.setValue(
       'iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aquí }\n        apagate;\n    termina-ejecucion\nfinalizar-programa',
       1,
@@ -924,7 +940,7 @@ $(document).ready(function () {
     editor.focus();
   });
   $('#javasyntax').click(function (event) {
-    // editor.getSession().setMode("ace/mode/kareljava");
+    setLanguage('java');
     editor.setValue(
       'class program {\n    program () {\n        // TODO poner codigo aqui\n        turnoff();\n    }\n}',
       1,
