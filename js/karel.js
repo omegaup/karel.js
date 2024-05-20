@@ -85,7 +85,7 @@ var Runtime = function (world) {
   self.disableStackEvents = false;
 
   self.load([['HALT']]);
-  self.events = new EventTarget()
+  self.events = new EventTarget();
 };
 
 Runtime.HALT = 0;
