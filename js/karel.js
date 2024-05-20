@@ -119,19 +119,19 @@ Runtime.PARAM = 27;
 
 Runtime.prototype.addEventListener = function (type, listener) {
   this.events.addEventListener(type,listener);
-}
+};
 
 Runtime.prototype.removeEventListener = function (type, listener) {
   this.events.removeEventListener(type,listener);
-}
+};
 
 Runtime.prototype.dispatchEvent = function (evt) {
   this.events.dispatchEvent(evt);
-}
+};
 
 Runtime.prototype.fireEvent = function (type, properties) {
   this.events.fireEvent(type, properties);
-}
+};
 
 Runtime.prototype.load = function (opcodes) {
   var self = this;
