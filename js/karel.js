@@ -85,9 +85,8 @@ var Runtime = function (world) {
   self.disableStackEvents = false;
 
   self.load([['HALT']]);
+  self.events = new EventTarget()
 };
-
-Runtime.prototype = new EventTarget();
 
 Runtime.HALT = 0;
 Runtime.LINE = 1;
@@ -117,6 +116,22 @@ Runtime.INC = 24;
 Runtime.CALL = 25;
 Runtime.RET = 26;
 Runtime.PARAM = 27;
+
+Runtime.prototype.addEventListener= function (type, listener) {
+  this.events.addEventListener(type,listener);
+}
+
+Runtime.prototype.removeEventListener= function (type, listener) {
+  this.events.removeEventListener(type,listener);
+}
+
+Runtime.prototype.dispatchEvent = function (evt) {
+  this.events.dispatchEvent(evt);
+}
+
+Runtime.prototype.fireEvent = function (type, properties) {
+  this.events.fireEvent(type, properties);
+}
 
 Runtime.prototype.load = function (opcodes) {
   var self = this;
