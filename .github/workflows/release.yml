@@ -19,6 +19,17 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Print Node.js version before setting the version 16
+        run: node -v
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+            node-version: ${{ matrix.node-version }}
+
+      - name: Print Node.js version after setting the version 16
+        run: node -v
+
       - name: Get the version
         id: get-version
         run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
