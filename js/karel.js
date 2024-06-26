@@ -118,11 +118,11 @@ Runtime.RET = 26;
 Runtime.PARAM = 27;
 
 Runtime.prototype.addEventListener = function (type, listener) {
-  this.events.addEventListener(type,listener);
+  this.events.addEventListener(type, listener);
 };
 
 Runtime.prototype.removeEventListener = function (type, listener) {
-  this.events.removeEventListener(type,listener);
+  this.events.removeEventListener(type, listener);
 };
 
 Runtime.prototype.dispatchEvent = function (evt) {
