@@ -1227,8 +1227,10 @@ $(document).ready(function () {
         wRender.moveSouth();
         saveWorld = false;
       } else if (currentCell && event.which >= 96 && event.which <= 105) {
+        // numpad 0 - numpad 9
         mundo.setBuzzers(currentCell.row, currentCell.column, event.which - 96);
       } else if (currentCell && event.which >= 48 && event.which <= 57) {
+        // 0 - 9
         mundo.setBuzzers(currentCell.row, currentCell.column, event.which - 48);
       } else if (currentCell && event.which == 73) {
         // I
@@ -1256,6 +1258,12 @@ $(document).ready(function () {
         // K
         mundo.move(currentCell.row, currentCell.column);
         mundo.rotate();
+      } else if (currentCell && event.which == 79) {
+        // O
+        mundo.rotate();
+      } else if (currentCell && event.which == 80) {
+        // P
+        mundo.move(currentCell.row, currentCell.column);
       } else {
         repaint = false;
       }
@@ -1509,13 +1517,12 @@ $(document).ready(function () {
   });
   $('#filas').blur(function (event) {
     var valor = parseInt($(this).val());
-    if (0 > valor || valor > 10000 || valor == h || Number.isNaN(valor)) {
+    if (valor <= 0 || valor > 10000 || valor == h || Number.isNaN(valor)) {
       $(this).val(h);
       return;
     }
     h = valor;
     mundo.resize(w, h);
-    addEventListeners(mundo);
     wRender = new WorldRender(context, h, w);
     wRender.paint(mundo, world.width, world.height, {
       editable: true,
@@ -1525,13 +1532,12 @@ $(document).ready(function () {
   });
   $('#columnas').blur(function (event) {
     var valor = parseInt($(this).val());
-    if (0 > valor || valor > 10000 || valor == w || Number.isNaN(valor)) {
+    if (valor <= 0 || valor > 10000 || valor == w || Number.isNaN(valor)) {
       $(this).val(w);
       return;
     }
     w = valor;
     mundo.resize(w, h);
-    addEventListeners(mundo);
     wRender = new WorldRender(context, h, w);
     wRender.paint(mundo, world.width, world.height, {
       editable: true,

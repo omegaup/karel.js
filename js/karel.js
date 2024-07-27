@@ -644,7 +644,6 @@ World.prototype.resize = function (w, h) {
   var oldW = self.w;
   var oldH = self.h;
   var oldMap = self.map;
-  var oldCurrentMap = self.oldCurrentMap;
   var oldWallMap = self.wallMap;
   var oldDumpCells = self.dumpCells;
 
@@ -1489,6 +1488,7 @@ World.prototype.errorMap = function (s) {
 World.prototype.move = function (i, j) {
   var self = this;
 
+  if (0 >= i || i > self.h || 0 >= j || j > self.w) return;
   self.i = self.start_i = i;
   self.j = self.start_j = j;
   self.dirty = true;
