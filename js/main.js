@@ -56,6 +56,21 @@ $(document).ready(function () {
     );
   }
 
+  function setMode(mode) {
+    editor.setOption('mode', mode);
+  }
+
+  function setLanguage(language) {
+    switch (language) {
+      case 'pascal':
+        setMode('karelpascal');
+        break;
+      case 'java':
+        setMode('kareljava');
+        break;
+    }
+  }
+
   function setTheme(theme) {
     if (codeMirrorThemes.indexOf(theme) === -1) return;
     editor.setOption('theme', theme);
@@ -66,7 +81,7 @@ $(document).ready(function () {
 
   function getParser(str) {
     language = detectLanguage(str);
-
+    setLanguage(language);
     switch (language) {
       case 'pascal':
         return { parser: new karelpascal.Parser(), name: 'pascal' };
@@ -395,6 +410,7 @@ $(document).ready(function () {
     var restoredSource = sessionStorage.getItem('karel.js:karelsource');
     if (restoredSource) {
       editor.setValue(restoredSource);
+      setLanguage(detectLanguage(editor.getValue()));
     }
     var restoredWorld = sessionStorage.getItem('karel.js:karelworld');
     if (restoredWorld) {
@@ -436,8 +452,7 @@ $(document).ready(function () {
       $('#mensajes').trigger('info', {
         mensaje: 'Breakpoint en la línea ' + (linea_actual + 1),
       });
-      clearInterval(interval);
-      interval = null;
+      stopAutoStep();
       $('#ejecutar em').removeClass('icon-pause').addClass('icon-play');
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
@@ -451,8 +466,7 @@ $(document).ready(function () {
     }
 
     if (!mundo.runtime.state.running) {
-      clearInterval(interval);
-      interval = null;
+      stopAutoStep();
       mensaje_final();
       highlightCurrentLine();
       // Aún no se permite editar el mundo, pero se podrá si se regresa a su
@@ -699,6 +713,21 @@ $(document).ready(function () {
     );
   }
 
+  function startAutoStep(delay) {
+    if (typeof delay === 'undefined') {
+      delay = $('#retraso_txt').val();
+    }
+    stopAutoStep();
+    interval = setInterval(step, delay);
+  }
+
+  function stopAutoStep() {
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
   $('#futuro').click(function (event) {
     if (!mundo_editable) {
       futuro();
@@ -837,7 +866,7 @@ $(document).ready(function () {
                 });
               }
               mundo.runtime.start();
-              interval = setInterval(step, $('#retraso_txt').val());
+              startAutoStep();
             },
             function (message) {
               $('#mensajes').trigger('error', {
@@ -851,10 +880,10 @@ $(document).ready(function () {
         }
       } else {
         $('#ejecutar').trigger('lock');
-        interval = setInterval(step, $('#retraso_txt').val());
+        startAutoStep();
       }
     } else {
-      clearInterval(interval);
+      stopAutoStep();
       $('#ejecutar em').removeClass('icon-pause').addClass('icon-play');
       $('#worldclean').removeAttr('disabled');
       $('#paso').removeAttr('disabled');
@@ -903,7 +932,7 @@ $(document).ready(function () {
     editor.focus();
   });
   $('#pascalsyntax').click(function (event) {
-    // editor.getSession().setMode("ace/mode/karelpascal");
+    setLanguage('pascal');
     editor.setValue(
       'iniciar-programa\n    inicia-ejecucion\n        { TODO poner codigo aquí }\n        apagate;\n    termina-ejecucion\nfinalizar-programa',
       1,
@@ -911,7 +940,7 @@ $(document).ready(function () {
     editor.focus();
   });
   $('#javasyntax').click(function (event) {
-    // editor.getSession().setMode("ace/mode/kareljava");
+    setLanguage('java');
     editor.setValue(
       'class program {\n    program () {\n        // TODO poner codigo aqui\n        turnoff();\n    }\n}',
       1,
@@ -924,8 +953,7 @@ $(document).ready(function () {
       valor -= 50;
       $('#retraso_txt').val(valor);
       if (interval) {
-        clearInterval(interval);
-        interval = setInterval(step, $('#retraso_txt').val());
+        startAutoStep();
       }
     }
   });
@@ -935,8 +963,7 @@ $(document).ready(function () {
       valor += 50;
       $('#retraso_txt').val(valor);
       if (interval) {
-        clearInterval(interval);
-        interval = setInterval(step, $('#retraso_txt').val());
+        startAutoStep();
       }
     }
   });
@@ -945,8 +972,7 @@ $(document).ready(function () {
     if (valor < 0 || valor > 1000) {
       $('#retraso_txt').val(500);
       if (interval) {
-        clearInterval(interval);
-        interval = setInterval(step, $('#retraso_txt').val());
+        startAutoStep();
       }
     }
   });
